@@ -1,8 +1,8 @@
 "use client";
 
-import { ArrowLeftIcon, ArrowRightIcon, SparklesIcon } from "lucide-react";
+import { ArrowLeftIcon, ArrowRightIcon, CheckIcon, Loader2Icon, SparklesIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { ChoiceCard, ChoiceChip } from "@/components/app/choice-card";
 import { Button } from "@/components/ui/button";
@@ -65,6 +65,41 @@ export function OnboardingFlow({ step }: { step: number }) {
   const router = useRouter();
   const { state, dispatch } = useTulAi();
   const profile = state.profile;
+  const [extracting, setExtracting] = useState(false);
+  const [extractionResult, setExtractionResult] = useState<string | null>(null);
+
+  const runAiExtract = async () => {
+    if (!profile.notes.trim() || extracting) return;
+    setExtracting(true);
+    setExtractionResult(null);
+    try {
+      const res = await fetch("/api/ai/extract", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: profile.notes }),
+      });
+      const json = await res.json();
+      if (json?.extracted) {
+        const ext = json.extracted;
+        if (ext.course && !profile.course) setField("course", ext.course);
+        if (ext.city && !profile.city) setField("city", ext.city);
+        if (ext.gwa && !profile.gwa) setField("gwa", ext.gwa);
+        if (ext.chips && Array.isArray(ext.chips)) {
+          ext.chips.forEach((c: string) => {
+            if (!profile.chips.includes(c)) {
+              dispatch({ type: "TOGGLE_CHIP", value: c });
+            }
+          });
+        }
+        setExtractionResult(ext.summary || "AI extracted structured details into your profile!");
+      }
+    } catch (err) {
+      console.error("AI extraction error:", err);
+    } finally {
+      setExtracting(false);
+    }
+  };
+
 
   const meta = STEP_META[step];
   const ready = canAdvance(step, profile);
@@ -405,6 +440,40 @@ export function OnboardingFlow({ step }: { step: number }) {
                 value={profile.notes}
                 onChange={(e) => setField("notes", e.target.value)}
               />
+
+              <div className="flex flex-col gap-3">
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={!profile.notes.trim() || extracting}
+                  onClick={runAiExtract}
+                  className="h-11 w-full justify-center gap-2 rounded-md border-hairline-dark/40 bg-canvas text-ink hover:bg-canvas-soft sm:w-auto"
+                >
+                  {extracting ? (
+                    <>
+                      <Loader2Icon className="size-4 animate-spin" />
+                      Parsing with Gemini AI…
+                    </>
+                  ) : (
+                    <>
+                      <SparklesIcon className="size-4 text-brand" />
+                      Extract profile details with AI
+                    </>
+                  )}
+                </Button>
+
+                {extractionResult && (
+                  <div className="flex items-start gap-3 rounded-lg border border-met/30 bg-met/10 p-4 [animation:rise_260ms_cubic-bezier(.2,.8,.3,1)_both]">
+                    <span className="grid size-5 flex-none place-items-center rounded-full bg-met text-white">
+                      <CheckIcon className="size-3" strokeWidth={3} />
+                    </span>
+                    <div className="text-sm">
+                      <p className="t-caption-strong text-ink">Extracted by Gemini AI</p>
+                      <p className="t-caption mt-0.5 text-ink-mute">{extractionResult}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
 
               <div className="flex gap-3.5 rounded-lg border border-hairline bg-canvas-soft p-4">
                 <span

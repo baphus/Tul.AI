@@ -1,106 +1,72 @@
 import { NextResponse } from "next/server";
-
+import { DATA } from "@/lib/scholarships";
 import { chatFor } from "@/lib/logic/chat";
-import { answerFor, type Answer } from "@/lib/logic/answerFor";
-import { DATA, type Scholarship } from "@/lib/scholarships";
-import { emptyProfile } from "@/lib/logic/state";
+import { generateTulAIResponse, resolveGeminiApiKey } from "@/lib/logic/ai-config";
+import type { Profile } from "@/lib/logic/state";
 
-type Body = {
-  question: string;
-  profile?: Record<string, unknown>;
-};
-
-/**
- * The chat widget's endpoint (AGENTS.md §7).
- *
- * The deterministic engine always answers first — `chatFor` composes the reply
- * from the onboarding answers, the eligibility engine and the published
- * records. The LLM, when configured, is allowed only to *rephrase that reply*
- * for a friendlier voice; it is never handed the role of deciding eligibility
- * or composing facts. If the LLM call fails, the deterministic reply is
- * returned unchanged.
- */
-export async function POST(req: Request) {
+export async function POST(request: Request) {
   try {
-    const body = (await req.json()) as Body;
-    const question = (body.question ?? "").trim();
-    if (!question) {
-      return NextResponse.json({ error: "missing_question" }, { status: 400 });
+    const body = await request.json();
+    const { question, profile } = body as { question?: string; profile?: Profile };
+
+    if (!question || typeof question !== "string") {
+      return NextResponse.json({ error: "Missing question" }, { status: 400 });
     }
 
-    // Merge whatever the client sent over a complete blank profile so missing
-    // fields can never crash the engine — unknowns, not errors.
-    const profile = { ...emptyProfile(), ...(body.profile ?? {}) };
-    const cards: Scholarship[] = DATA;
+    const safeProfile: Profile = profile ?? {
+      name: "",
+      city: "",
+      course: "",
+      school: "",
+      stage: "Senior High School",
+      year: "",
+      gwa: "",
+      income: "",
+      dependents: "",
+      chips: [],
+      notes: "",
+    };
 
-    // Source of truth, computed first and always valid.
-    const deterministic: Answer = chatFor(question, profile, cards);
+    // Compute ground-truth answer from deterministic engine
+    const groundTruth = chatFor(question, safeProfile, DATA);
 
-    const key = process.env.OPENAI_API_KEY;
-    const model = process.env.OPENAI_MODEL ?? "gpt-4o-mini";
-    const useLlm =
-      (process.env.AI_PROVIDER ?? (key ? "openai" : "none")) !== "none" && !!key;
-
-    if (!useLlm) {
-      return NextResponse.json({ answer: deterministic });
+    const apiKey = resolveGeminiApiKey(process.env);
+    if (!apiKey) {
+      return NextResponse.json({ answer: groundTruth });
     }
 
-    const card = findCard(question, cards);
-    const fact = card ? answerFor(question, card) : null;
+    const prompt = `Student Question: "${question}"
 
-    const system = [
-      "You are Tul.AI's chat assistant voice. A deterministic engine has already composed the answer below from the student's profile answers and published scholarship records.",
-      "Rephrase it in a friendly, concise voice (max 3 sentences). Keep every fact exactly as written: names, amounts, deadlines, tones (Strong match / Good match / Possible match / Not currently eligible), and any 'unknown' caveat.",
-      "Never add facts, never estimate chances, never promise an outcome. If the engine says information isn't published, keep that.",
-      "Return only the rephrased text, no quotes, no JSON.",
-    ].join(" ");
-    const user = `Deterministic answer: "${deterministic.text}"${fact && fact.text !== deterministic.text ? `\nSupporting record fact: "${fact.text}"` : ""}`;
+Student Profile:
+- City/Location: ${safeProfile.city || "Not provided"}
+- Course: ${safeProfile.course || "Not provided"}
+- Stage: ${safeProfile.stage || "Not provided"}
+- Year Level: ${safeProfile.year || "Not provided"}
+- GWA: ${safeProfile.gwa || "Not provided"}
+- Income: ${safeProfile.income || "Not provided"}
+- Circumstances: ${safeProfile.chips.join(", ") || "None"}
 
-    try {
-      const res = await fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${key}`,
-          "Content-Type": "application/json",
+Deterministic Ground Truth Fact:
+"${groundTruth.text}"
+
+Instructions:
+Synthesize a warm, clear, concise, and helpful response for the student based strictly on the Deterministic Ground Truth Fact above. Do NOT invent new requirements, do NOT estimate numeric win probabilities, and do NOT guarantee scholarship acceptance. Keep it conversational and supportive for a Filipino student.`;
+
+    const aiRes = await generateTulAIResponse(prompt);
+
+    if (aiRes.success && typeof aiRes.text === "string" && aiRes.text.trim()) {
+      return NextResponse.json({
+        answer: {
+          text: aiRes.text.trim(),
+          src: groundTruth.src,
         },
-        body: JSON.stringify({
-          model,
-          messages: [
-            { role: "system", content: system },
-            { role: "user", content: user },
-          ],
-          max_tokens: 300,
-          temperature: 0.2,
-        }),
       });
-
-      if (res.ok) {
-        const data = await res.json();
-        const msg = String(data?.choices?.[0]?.message?.content ?? "").trim();
-        if (msg) {
-          return NextResponse.json({ answer: { text: msg, src: deterministic.src } });
-        }
-      }
-    } catch {
-      // fall through to the deterministic reply
     }
 
-    return NextResponse.json({ answer: deterministic });
-  } catch (err) {
-    return NextResponse.json({ error: "server_error", detail: String(err) }, { status: 500 });
+    // Fallback to deterministic answer if AI call fails
+    return NextResponse.json({ answer: groundTruth });
+  } catch (error) {
+    console.error("Error in /api/ai/chat:", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
-}
-
-/** Find the programme a question names, mirroring lib/logic/chat.ts cardFor. */
-function findCard(question: string, cards: Scholarship[]): Scholarship | null {
-  const k = " " + question.trim().toLowerCase() + " ";
-  for (const card of cards) {
-    const terms = [
-      card.provider.toLowerCase(),
-      card.title.toLowerCase(),
-      card.id.toLowerCase(),
-    ];
-    if (terms.some((term) => k.includes(term))) return card;
-  }
-  return null;
 }

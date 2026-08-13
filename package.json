@@ -2,6 +2,7 @@
   "name": "tul.ai",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -12,8 +13,10 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
+    "@google/genai": "^2.17.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "dotenv": "^17.4.2",
     "lucide-react": "^1.31.0",
     "next": "16.3.0",
     "next-themes": "^0.4.6",
@@ -42,5 +45,21 @@
   "trustedDependencies": [
     "sharp",
     "unrs-resolver"
-  ]
+  ],
+  "description": "**Bridge to your next opportunity.** Tul.AI is an AI-powered opportunity discovery platform for Filipino students, starting with scholarships and financial aid. It matches students to programmes scattered across government agencies, universities, LGUs and foundations, explains *why* a match exists against the published requirements, and hands the student off to the official provider to apply.",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/baphus/Tul.AI.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/baphus/Tul.AI/issues"
+  },
+  "homepage": "https://github.com/baphus/Tul.AI#readme"
 }

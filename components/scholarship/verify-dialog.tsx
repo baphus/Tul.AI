@@ -23,6 +23,7 @@ import { cn } from "@/lib/utils";
 export function VerifyDialog({ card }: { card: Scholarship }) {
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(0);
+  const [aiVerifiedText, setAiVerifiedText] = useState<string | null>(null);
   const timers = useRef<number[]>([]);
   const reduced = usePrefersReducedMotion();
 
@@ -36,11 +37,27 @@ export function VerifyDialog({ card }: { card: Scholarship }) {
   const start = () => {
     clear();
     setStep(0);
+    setAiVerifiedText(null);
     setOpen(true);
     const gap = reduced ? 260 : 620;
     VERIFY_LABELS.forEach((_, i) => {
       timers.current.push(window.setTimeout(() => setStep(i + 1), (i + 1) * gap));
     });
+
+    fetch("/api/ai/verify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ cardId: card.id }),
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data?.verified) {
+          setAiVerifiedText(data.verified);
+        }
+      })
+      .catch(() => {
+        // Fallback silently
+      });
   };
 
   const done = step >= VERIFY_LABELS.length;
@@ -121,7 +138,7 @@ export function VerifyDialog({ card }: { card: Scholarship }) {
             <div className="mt-6 [animation:rise_300ms_cubic-bezier(.2,.8,.3,1)_both]">
               <div className="h-px bg-hairline" />
               <h3 className="t-display-md mt-5">What Tul.AI found</h3>
-              <p className="t-body mt-2 text-ink-mute text-pretty">{card.verify}</p>
+              <p className="t-body mt-2 text-ink-mute text-pretty">{aiVerifiedText || card.verify}</p>
 
               <ul className="mt-5 flex flex-col gap-2">
                 {card.sources.map((source) => (

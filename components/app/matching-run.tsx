@@ -21,6 +21,8 @@ import { isProfileReady } from "@/lib/logic/validation";
 import { SOURCE_LABELS, STAGE_LABELS, type Scholarship } from "@/lib/scholarships";
 import { cn } from "@/lib/utils";
 
+import { aiReRank } from "@/lib/logic/matching.ai";
+
 const STAGE_MS = 760;
 
 /**
@@ -33,6 +35,7 @@ export function MatchingRun() {
   const { state, dispatch, cards, ready } = useTulAi();
   const reduced = usePrefersReducedMotion();
   const [stage, setStage] = useState(0);
+  const [aiExplanations, setAiExplanations] = useState<Record<string, string>>({});
   const started = useRef(false);
   const timers = useRef<number[]>([]);
 
@@ -46,6 +49,19 @@ export function MatchingRun() {
   const relevant = ranked.filter((result) => result.tone !== "none");
   const top = relevant.slice(0, 3);
   const revealed = stage >= STAGE_LABELS.length;
+
+  useEffect(() => {
+    if (!revealed) return;
+    aiReRank(ranked, state.profile).then((res) => {
+      if (res.explanations) {
+        const map: Record<string, string> = {};
+        res.explanations.forEach((e) => {
+          if (e.reason) map[e.id] = e.reason;
+        });
+        setAiExplanations(map);
+      }
+    });
+  }, [revealed, ranked, state.profile]);
 
   useEffect(() => {
     if (!ready || !profileReady || started.current) return;
@@ -219,6 +235,7 @@ export function MatchingRun() {
                   index={index}
                   result={result}
                   rank={i + 1}
+                  aiExplanation={aiExplanations[result.id]}
                   delay={reduced ? undefined : `${120 + i * 120}ms`}
                 />
               );
@@ -300,12 +317,14 @@ function TopMatch({
   index,
   result,
   rank,
+  aiExplanation,
   delay,
 }: {
   card: Scholarship;
   index: number;
   result: RankedMatch;
   rank: number;
+  aiExplanation?: string;
   delay?: string;
 }) {
   const note =
@@ -335,12 +354,17 @@ function TopMatch({
           <p className="t-eyebrow text-ink-mute">{card.provider}</p>
           <h3 className="t-display-md mt-0.5 text-balance">{card.title}</h3>
 
-          {note && (
+          {aiExplanation ? (
+            <p className="t-caption mt-2 text-ink text-pretty flex items-start gap-1.5">
+              <SparklesIcon className="size-3.5 flex-none mt-0.5 text-brand" />
+              <span>{aiExplanation}</span>
+            </p>
+          ) : note ? (
             <p className="t-caption mt-2 text-ink-mute text-pretty">
               <span className="sr-only">Why: </span>
               {note}
             </p>
-          )}
+          ) : null}
 
           <div className="mt-3 flex flex-wrap items-center gap-2">
             <ToneBadge tone={result.tone} />
