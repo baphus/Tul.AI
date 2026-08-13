@@ -17,6 +17,14 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: "bg-primary text-primary-foreground hover:bg-brand-active",
+        /*
+         * The forest pill — the primary action on any lime surface. DESIGN.md
+         * forbids sitting the lime CTA on a lime band, and the brand's own
+         * answer there is the deep forest green rather than true black, which
+         * is what `--ink-deep` is. On any neutral surface, `default` (lime) is
+         * still the CTA.
+         */
+        onBrand: "bg-ink-deep text-white hover:bg-ink-deep-active",
         tertiary: "border-ink bg-canvas text-ink hover:bg-canvas-soft",
         outline:
           "border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",

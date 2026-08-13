@@ -47,7 +47,7 @@ export function Section({
   children: ReactNode;
   className?: string;
   id?: string;
-  tone?: "canvas" | "soft" | "pale" | "ink";
+  tone?: "canvas" | "soft" | "pale" | "brand" | "ink";
   size?: "default" | "tight" | "loose";
   labelledBy?: string;
 }) {
@@ -58,6 +58,9 @@ export function Section({
       className={cn(
         tone === "soft" && "canvas-sage",
         tone === "pale" && "bg-brand-pale",
+        /* The full-strength lime band. Anything primary on it is the ink pill,
+           not the lime one — see the `ink` button variant. */
+        tone === "brand" && "bg-brand text-ink",
         tone === "ink" && "canvas-ink",
         size === "tight" && "py-12 md:py-16",
         size === "default" && "py-16 md:py-24",
@@ -80,20 +83,30 @@ export function SectionHead({
   title,
   lead,
   tone = "ink",
+  align = "left",
+  caps = false,
   className,
 }: {
   id?: string;
   title: ReactNode;
   lead?: ReactNode;
   tone?: "ink" | "on-dark";
+  /** `center` is the brand's treatment for a band-opening head. */
+  align?: "left" | "center";
+  /** Uppercase the display. Reserved for centred band openers. */
+  caps?: boolean;
   className?: string;
 }) {
+  const centred = align === "center";
   return (
-    <div className={cn("flex flex-col gap-5", className)}>
+    <div
+      className={cn("flex flex-col gap-5", centred && "items-center text-center", className)}
+    >
       <h2
         id={id}
         className={cn(
           "t-display-xl max-w-[30ch] text-balance",
+          caps && "uppercase",
           tone === "on-dark" && "text-white"
         )}
       >

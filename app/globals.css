@@ -56,6 +56,7 @@
   --color-canvas-soft: var(--canvas-soft);
   --color-ink: var(--ink);
   --color-ink-deep: var(--ink-deep);
+  --color-ink-deep-active: var(--ink-deep-active);
   --color-ink-mute: var(--ink-mute);
   --color-ink-faint: var(--ink-faint);
   --color-on-dark-mute: var(--on-dark-mute);
@@ -102,6 +103,11 @@
 
   --ink: #0e0f0c;
   --ink-deep: #163300;
+  /* Hover for the forest pill that carries actions on lime bands. Not in
+     DESIGN.md's token list — added here rather than left as a bare hex at the
+     call site. Set as a solid colour, not an alpha of --ink-deep: #163300 at
+     any opacity over lime lands nowhere near this value. */
+  --ink-deep-active: #1f2919;
   --ink-mute: #454745; /* DESIGN.md `body` */
   --ink-faint: #868685; /* DESIGN.md `mute` */
 
@@ -210,6 +216,31 @@
     font-size: clamp(1.625rem, 2.9vw, 2.5rem);
     line-height: 1;
     letter-spacing: -0.012em;
+  }
+
+  /*
+   * The hero display — a compressed face, on one element only.
+   *
+   * Compressed type wants different settings from Manrope 800: it can run
+   * tall enough to take tighter leading, and it needs positive tracking rather
+   * than negative — a condensed face at display size with -0.018em closes the
+   * counters up. Set the face through `--font-hero` so swapping it is one line
+   * in layout.tsx; these values are tuned for Anton and would want revisiting
+   * for a different compressed face.
+   *
+   * The ceiling is 5rem rather than the 7.5rem first tried here: a condensed
+   * face reads visually larger than its point size, so matching the Manrope
+   * display's numbers overshot badly.
+   */
+  .t-hero {
+    font-family: var(--font-hero), var(--font-display), var(--font-sans), system-ui,
+      sans-serif;
+    /* Anton is static and already black — no variable axis to drive. */
+    font-variation-settings: normal;
+    font-weight: 400;
+    font-size: clamp(2.25rem, 5.6vw, 5rem);
+    line-height: 0.94;
+    letter-spacing: 0.006em;
   }
 
   /* Inter-rendered sub-displays and below. */
@@ -360,6 +391,24 @@
   .enter-card {
     animation: enter-card 1000ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
+  /*
+   * The coverage marquee. Three lanes drift downward at different durations,
+   * set inline per lane; the track is two identical copies of the record set
+   * and translates by exactly half its height, so the seam never lands.
+   *
+   * Pausing on hover AND focus-within is not a nicety — a lane that keeps
+   * moving under a pointer or a keyboard focus ring is WCAG 2.2.2, and the
+   * marquee runs longer than five seconds by design.
+   */
+  .marquee-lane {
+    animation: marquee-down 48s linear infinite;
+    will-change: transform;
+  }
+  .marquee:hover .marquee-lane,
+  .marquee:focus-within .marquee-lane {
+    animation-play-state: paused;
+  }
+
   .enter-d1 { animation-delay: 70ms; }
   .enter-d2 { animation-delay: 150ms; }
   .enter-d3 { animation-delay: 240ms; }
@@ -376,6 +425,12 @@
 }
 
 /* ── Motion ─────────────────────────────────────────────── */
+/* Half the track is one full copy of the record set, so ending at 0 puts the
+   second copy exactly where the first started. Downward, per the brief. */
+@keyframes marquee-down {
+  from { transform: translateY(-50%); }
+  to { transform: translateY(0); }
+}
 @keyframes orbit {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }

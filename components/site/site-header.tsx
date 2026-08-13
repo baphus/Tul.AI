@@ -27,22 +27,47 @@ const NAV = [
  * DESIGN.md `nav-bar`: a sticky bar in ink on a light surface, links set in
  * body-sm-strong, and exactly one lime pill.
  *
- * `tone="over"` sits on the sage hero band and matches it, so the bar and the
- * hero read as one surface until you scroll; `tone="light"` is the white bar on
- * body pages. Both are light — the brand has no dark navigation.
+ * Three tones:
+ *
+ *   `brand` — genuinely transparent, and NOT sticky. No background and no
+ *             backdrop blur, so the hero's lime band and its dot field read
+ *             straight through the bar. This only works because the hero pulls
+ *             itself up underneath the header (see the negative margin on the
+ *             landing page's hero); a transparent bar sitting in normal flow
+ *             above the hero would reveal the page background, not the dots.
+ *             Blur is off for the same reason — it would smear the dots it is
+ *             meant to show. It scrolls away with the hero rather than sticking,
+ *             which is also what keeps it legible: a transparent bar pinned to
+ *             the viewport would later float over the two near-black bands with
+ *             ink-coloured nav text on them.
+ *
+ *             It is still `relative`, not static, because it overlaps the hero
+ *             and needs a stacking position for `z-50` to beat it. Static would
+ *             let the lime band paint straight over the nav.
+ *   `over`  — matches the sage hero band, so bar and hero read as one surface.
+ *   `light` — the white bar on body pages.
+ *
+ * All three are light; the brand has no dark navigation. `brand` also swaps the
+ * bar's CTA to the forest pill, because a lime pill on lime is the one pairing
+ * DESIGN.md rules out outright.
  */
-export function SiteHeader({ tone = "light" }: { tone?: "over" | "light" }) {
+export function SiteHeader({
+  tone = "light",
+}: {
+  tone?: "brand" | "over" | "light";
+}) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const onSage = tone === "over";
+  const onBrand = tone === "brand";
 
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 w-full",
-        onSage
-          ? "bg-canvas-soft/95 backdrop-blur-md"
-          : "border-b border-hairline bg-canvas/95 backdrop-blur-md"
+        "z-50 w-full",
+        onBrand ? "relative" : "sticky top-0",
+        onBrand && "bg-transparent",
+        tone === "over" && "bg-canvas-soft/95 backdrop-blur-md",
+        tone === "light" && "border-b border-hairline bg-canvas/95 backdrop-blur-md"
       )}
     >
       <div className="mx-auto flex h-16 w-full max-w-[75rem] items-center gap-6 px-5 sm:h-20 sm:px-8">
@@ -80,6 +105,7 @@ export function SiteHeader({ tone = "light" }: { tone?: "over" | "light" }) {
             Browse all
           </Link>
           <ButtonLink
+            variant={onBrand ? "onBrand" : "default"}
             className="t-body-strong hidden h-12 px-6 text-base md:inline-flex"
             href={ROUTES.onboarding}
           >
