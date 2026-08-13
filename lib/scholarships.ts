@@ -48,6 +48,41 @@ export type VerificationStatus =
   | "Updated"
   | "Unknown";
 
+/**
+ * Published, structured eligibility criteria (PRD §16, AGENTS.md §6).
+ *
+ * Every field is optional because most programmes publish only some of these.
+ * An omitted dimension means the programme publishes no requirement for it —
+ * there is nothing to check, so the matching engine never guesses one into
+ * existence. This structure is the only input the deterministic eligibility
+ * engine reads (lib/logic/matching.ts); the free-text `why`/`rows` demo copy
+ * is presentation, never the source of a match decision.
+ */
+export interface Eligibility {
+  /** Minimum GWA on the 60–100 scale. Omitted = no published minimum. */
+  gwaMin?: number;
+  /** Student stages accepted (see STAGE_OPTS). */
+  stages?: string[];
+  /** Year levels accepted (see YEARS). */
+  years?: string[];
+  /** Courses/programmes this cycle is open to. */
+  courses?: string[];
+  /**
+   * What `courses` means. `published` — the list is a hard restriction (Not
+   * Met when absent). `priority` — the office may still accept outside the
+   * list, so an absent course resolves Unknown, never Not Met.
+   */
+  courseMode?: "published" | "priority";
+  /** Locations the student must be from / study in (see LOCATIONS). */
+  locations?: string[];
+  /** Maximum monthly household income. Omitted = not need-limited. */
+  incomeMax?: number;
+  /** Special circumstances that qualify (see CHIPS). */
+  special?: string[];
+  /** School the student must be enrolled at. */
+  school?: string;
+}
+
 export interface Scholarship {
   id: string;
   provider: string;
@@ -70,6 +105,8 @@ export interface Scholarship {
   host: string;
   verify: string;
   kind: ScholarshipKind;
+  /** Structured criteria the eligibility engine reads (PRD §16). */
+  eligibility: Eligibility;
   back: BackFacts;
   /** Trust metadata — never omit these on a new record. */
   verification: VerificationStatus;
@@ -83,6 +120,10 @@ export const DATA: Scholarship[] = [
   {
     id: "ched-merit-scholarship",
     provider: "CHED",
+    eligibility: {
+      gwaMin: 85,
+      stages: ["Incoming College", "College Student", "Graduate Student"],
+    },
     title: "Merit Scholarship Program",
     amount: 60000,
     amountNote: "per academic year",
@@ -131,6 +172,13 @@ export const DATA: Scholarship[] = [
   {
     id: "dost-sei-undergraduate-scholarship",
     provider: "DOST-SEI",
+    eligibility: {
+      gwaMin: 85,
+      stages: ["Incoming College", "College Student"],
+      years: ["1st Year"],
+      courses: ["BS Information Systems", "BS Computer Science", "BS Civil Engineering"],
+      courseMode: "published",
+    },
     title: "Undergraduate S&T Scholarship",
     amount: 40000,
     amountNote: "per semester",
@@ -183,6 +231,10 @@ export const DATA: Scholarship[] = [
   {
     id: "owwa-education-for-dependents",
     provider: "OWWA",
+    eligibility: {
+      stages: ["Incoming College", "College Student", "Graduate Student"],
+      special: ["OFW parent"],
+    },
     title: "Education for Dependents of OFWs",
     amount: 30000,
     amountNote: "per academic year",
@@ -227,6 +279,12 @@ export const DATA: Scholarship[] = [
   {
     id: "cebu-city-higher-education-assistance",
     provider: "Cebu City Government",
+    eligibility: {
+      gwaMin: 75,
+      stages: ["Incoming College", "College Student"],
+      locations: ["Cebu City"],
+      incomeMax: 30000,
+    },
     title: "Higher Education Assistance",
     amount: 20000,
     amountNote: "per semester",
@@ -271,6 +329,11 @@ export const DATA: Scholarship[] = [
   {
     id: "ctu-academic-excellence-grant",
     provider: "Cebu Technological University",
+    eligibility: {
+      gwaMin: 90,
+      stages: ["College Student", "Graduate Student"],
+      school: "Cebu Technological University",
+    },
     title: "Academic Excellence Grant",
     amount: 15000,
     amountNote: "per semester",
@@ -314,6 +377,13 @@ export const DATA: Scholarship[] = [
   {
     id: "province-of-cebu-provincial-scholarship",
     provider: "Province of Cebu",
+    eligibility: {
+      gwaMin: 80,
+      stages: ["Incoming College", "College Student", "Graduate Student"],
+      locations: ["Cebu City", "Elsewhere in Cebu"],
+      courses: ["BS Nursing", "BS Computer Science", "BS Civil Engineering"],
+      courseMode: "priority",
+    },
     title: "Provincial Scholarship Program",
     amount: 12000,
     amountNote: "per semester",

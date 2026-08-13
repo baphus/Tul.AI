@@ -66,5 +66,14 @@ export function TulAiProvider({
     [state, cards]
   );
 
-  return <TulAiContext.Provider value={value}>{children}</TulAiContext.Provider>;
+  // Avoid rendering children until persisted state is applied. If children
+  // mount before hydration they can dispatch updates (onboarding inputs)
+  // which the subsequent HYDRATE action would overwrite, causing a race and
+  // surprising behaviour where freshly-entered answers disappear. Hold the
+  // UI until `state.hydrated` is true so the initial snapshot is authoritative.
+  return (
+    <TulAiContext.Provider value={value}>
+      {state.hydrated ? children : null}
+    </TulAiContext.Provider>
+  );
 }
