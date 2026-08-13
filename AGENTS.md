@@ -153,13 +153,38 @@ Eligibility compatibility → deadline → student preferences → financial rel
 
 **Stack: Next.js** (via `create-next-app`). Before writing any code, read the block at the top of this file — this Next.js version may diverge from your training data, so check `node_modules/next/dist/docs/` for current API/convention guidance rather than assuming.
 
-> Note: the exact commands below are placeholders until the scaffold's `package.json` is finalized. Update this list to match the real `scripts` block, and keep it in sync — a stale AGENTS.md is worse than none.
+> Keep this list in sync with the `scripts` block in `package.json` — a stale AGENTS.md is worse than none.
 
-- **Setup:** `<package manager install command, e.g. npm install / pnpm install — check package.json>`, plus required env vars (document them in `.env.example`, not here)
-- **Run locally:** `<npm run dev, per package.json>`
-- **Tests:** `<fill in once a test runner is chosen>` — any PR touching the eligibility engine or verification-state logic must include or update tests; these are the parts of the system where a silent regression is a trust failure, not just a bug.
-- **Lint/format:** `<npm run lint, per package.json — check for an accompanying formatter config>`
-- **Before opening a PR:** run the test suite and linter locally; don't rely on CI to catch avoidable issues.
+- **Setup:** `bun install` (the repo pins `bun@1.3.14` via `packageManager`; `npm install` also works). No env vars are required yet — when the first one appears, document it in `.env.example`, not here.
+- **Run locally:** `npm run dev` (Next 16 + Turbopack)
+- **Tests:** `npm test` (Vitest, `vitest run`; config in `vitest.config.mts`, specs are `lib/**/*.test.ts`) — any PR touching the eligibility engine or verification-state logic must include or update tests; these are the parts of the system where a silent regression is a trust failure, not just a bug.
+- **Types:** `npm run typecheck` (`tsc --noEmit`)
+- **Lint:** `npm run lint` (ESLint 9 flat config in `eslint.config.mjs`, extending `eslint-config-next`; no separate formatter is configured)
+- **Before opening a PR:** run `npm run lint`, `npm run typecheck`, `npm test` and `npm run build` locally; don't rely on CI to catch avoidable issues.
+
+### Design language
+`DESIGN.md` is the authority for anything visual — palette, type scale, radii, spacing,
+section rhythm, the three-canvas rule (indigo hero → white body → deep-teal closing band).
+Implementation notes:
+- The system is **light-only** by decision; there is no dark variant and no theme toggle.
+- Type is Inter Variable at the brand's sub-default weights, applied through the `.t-*`
+  classes in `globals.css`. Don't set Tailwind font-weight utilities on those elements —
+  `font-variation-settings` wins and the two would disagree.
+- Requirement states (`met` / `attention` / `unknown`) are **functional status colours**,
+  not brand accents; that is the one sanctioned addition to DESIGN.md's palette. Colour is
+  never the only signal — every mark carries a glyph and a screen-reader label.
+
+### Where the current code lives
+- `lib/scholarships.ts` — domain types + the verified demo data set, behind `getScholarships()` (the swap seam for an API/Supabase read). Every record carries `verification`, `lastVerified` and `sourceTier`.
+- `lib/logic/` — all pure, tested logic: `state.ts` (reducer + selectors), `storage.ts` (localStorage), `routes.ts` (route builders and param parsing), `validation.ts`, `advisory.ts`, `deadlines.ts`, `answerFor.ts`, `format.ts`.
+- `hooks/use-tul-ai.tsx` — the client store: reducer context, hydration, persistence. It does **not** own navigation; the URL does.
+- `components/site/` — chrome and marketing primitives. `components/scholarship/` — the record in all its forms, including the ask/verify/apply client islands. `components/app/` — the student flow (deck, onboarding, review, saved, profile).
+- Mobile-first, with desktop (`lg:`) surfaces layered on. The scholarship record renders from one `ScholarshipDetail` used by the page, the desktop pane and the phone sheet, so those three can never drift apart.
+
+### Routing rules
+- Real routes, not client-side screens: `/onboarding?step=N`, `/discover?card=<id>`, `/scholarships/[id]`. Build every link from `ROUTES` in `lib/logic/routes.ts`.
+- Bad params degrade rather than throw: an unknown `?card=` closes the pane, an out-of-range `?step=` clamps.
+- Never bake a relative date into prerendered HTML. Absolute deadlines render on the server; "17 days left" is added client-side via `useToday()`, because a prerendered countdown is wrong the next morning.
 
 ### Commit / PR conventions
 - Keep PRs scoped to one feature/fix from the PRD's feature list (§14–§27) where possible, and reference the feature number/name in the PR description.
@@ -182,3 +207,17 @@ MVP = **50–200 verified scholarships** from CHED, DOST-SEI, OWWA, selected Ceb
 ## 12. Success signal to keep in mind while building
 
 The product's north star is **Verified Opportunity Connections** — a student viewing a relevant, source-backed opportunity and proceeding toward the official provider — not raw AI-query volume or database size. When in doubt about a UX or ranking tradeoff, optimize for a student credibly reaching an official application, not for engagement metrics.
+
+---
+
+## 13. Document history
+
+Versioning is tracked in-file rather than in the filename: this document's path is
+load-bearing (agent tooling and `CLAUDE.md`'s `@AGENTS.md` include both resolve it by
+name), so a renamed copy would silently stop being read.
+
+| Version | Date | Change |
+| --- | --- | --- |
+| v1.0.0 | 2026-08-12 | Initial AGENTS.md. |
+| v1.1.0 | 2026-08-13 | §10 replaced placeholder commands with the real `package.json` scripts; added a "Where the current code lives" map for the Tul.AI front-end implementation. |
+| v1.2.0 | 2026-08-13 | §10: added the design-language section pointing at `DESIGN.md` (light-only, `.t-*` type scale, status-colour exception), rewrote the code map for the `site`/`scholarship`/`app` component split, and added routing rules now that the URL owns navigation. |

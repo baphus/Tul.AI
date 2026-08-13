@@ -1,36 +1,98 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Tul.AI
 
-## Getting Started
+**Bridge to your next opportunity.** Tul.AI is an AI-powered opportunity discovery
+platform for Filipino students, starting with scholarships and financial aid. It matches
+students to programmes scattered across government agencies, universities, LGUs and
+foundations, explains *why* a match exists against the published requirements, and hands
+the student off to the official provider to apply.
 
-First, run the development server:
+> **AI assists. Verified information decides.** Matching is produced by a deterministic
+> engine over structured data. The AI explains that result — it never decides eligibility,
+> never invents a requirement, and never promises an outcome.
+
+Product intent lives in [`PRD.md`](./PRD.md). Engineering rules live in
+[`AGENTS.md`](./AGENTS.md). The visual language lives in [`DESIGN.md`](./DESIGN.md). Read
+the one that governs what you're about to change.
+
+## Getting started
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+bun install      # or npm install
+npm run dev      # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+No environment variables are required yet. Scholarship data is the verified demo set in
+`lib/scholarships.ts`, served through `getScholarships()` — the seam to swap for an API or
+Supabase read.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Script | What it does |
+| --- | --- |
+| `npm run dev` | Next 16 + Turbopack dev server |
+| `npm run build` | Production build |
+| `npm run start` | Serve the production build |
+| `npm test` | Vitest over the pure logic in `lib/` |
+| `npm run typecheck` | `tsc --noEmit` |
+| `npm run lint` | ESLint 9 flat config |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Run lint, typecheck, test and build before opening a PR.
 
-## Learn More
+## Routes
 
-To learn more about Next.js, take a look at the following resources:
+**Marketing** (`app/(marketing)`) — public, prerendered:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Route | Purpose |
+| --- | --- |
+| `/` | Landing: the problem, how it works, explainability, verification, FAQ |
+| `/how-it-works` | Matching pipeline, the three requirement states, source tiers, boundaries |
+| `/for-institutions` | Universities, LGUs and providers |
+| `/privacy` | Every field, why it's collected, and how to delete it |
+| `/scholarships` | Directory with search, filter and sort |
+| `/scholarships/[id]` | The full record — server-rendered and shareable |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**App** (`app/(app)`) — the student flow:
 
-## Deploy on Vercel
+| Route | Purpose |
+| --- | --- |
+| `/onboarding?step=1…5` | The conversation: one question per screen |
+| `/matching` | The research moment, then a redirect to the deck |
+| `/discover?card=<id>` | Swipe deck with the full record beside it |
+| `/review` | Shortlist before applying, with cross-scholarship advice |
+| `/saved` | Deadline tracking and per-application document checklists |
+| `/profile` | View, change or delete everything stored |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Layout of the code
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+app/(marketing)      public pages; header per page so the hero can float its nav
+app/(app)            student flow, wrapped in TulAiProvider
+components/site      chrome and marketing primitives (header, footer, teal CTA band)
+components/scholarship  the record: card, detail, marks, badges, ask/verify/apply islands
+components/app       deck, onboarding, review, saved, profile
+components/ui        shadcn primitives (Base UI) — generated, avoid hand-editing
+hooks                client store + media-query/date hooks
+lib/logic            pure, tested logic: reducer, storage, routes, validation,
+                     advisory, deadlines, answers, formatting
+lib/scholarships.ts  domain types, the verified demo data and getScholarships()
+```
+
+Anything that can be a pure function in `lib/logic` should be, because that is the part
+covered by tests. The eligibility and verification paths are where a silent regression is a
+trust failure rather than a bug.
+
+## Non-negotiables
+
+These are enforced in review, not preference (see `AGENTS.md` §3):
+
+- `Unknown` is never rendered or treated as `Not Eligible`.
+- No unexplained AI confidence scores — only `Strong match`, `Good match`,
+  `Possible match`, `Not currently eligible`, plus an auditable `x of y requirements met`.
+- Every scholarship record carries a verification state, a `lastVerified` date and a source
+  tier. Nothing is `Verified` on Tier 4 evidence alone.
+- Generated copy never promises an award.
+- The hand-off to the official provider stays explicit.
+
+## State of the build
+
+A working prototype of the student experience on demo data. There is no account system and
+no server-side database: profile, shortlist and checklists live in the browser's local
+storage. Institutional features are described on `/for-institutions` but not implemented.

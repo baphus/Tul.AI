@@ -1,26 +1,412 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+ * Tul.AI design system — implements DESIGN.md (Superhumon-inspired editorial).
+ *
+ * Three-canvas rhythm: indigo navy hero → white body → deep-teal closing band.
+ * Light-only by design; there is no dark variant and no theme toggle.
+ * Type is Inter Variable at the brand's sub-default weights (460/540/600) —
+ * always via the .t-* classes below, never via Tailwind font-weight utilities
+ * (font-variation-settings would win over font-weight and they would disagree).
+ */
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --font-heading: var(--font-sans);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+
+  /* Brand surfaces (DESIGN.md §Colors) */
+  --color-indigo: var(--indigo);
+  --color-indigo-deep: var(--indigo-deep);
+  --color-violet-soft: var(--violet-soft);
+  --color-teal-deep: var(--teal-deep);
+  --color-teal-mid: var(--teal-mid);
+  --color-canvas: var(--canvas);
+  --color-canvas-soft: var(--canvas-soft);
+  --color-hairline: var(--hairline);
+  --color-hairline-dark: var(--hairline-dark);
+  --color-ink: var(--ink);
+  --color-ink-mute: var(--ink-mute);
+  --color-ink-faint: var(--ink-faint);
+  --color-on-dark-mute: var(--on-dark-mute);
+
+  /* Functional requirement states — status, not brand accent. */
+  --color-met: var(--met);
+  --color-attention: var(--attention);
+  --color-attention-ink: var(--attention-ink);
+  --color-unknown: var(--unknown);
+
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+  --radius-3xl: 24px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  /* DESIGN.md palette, verbatim */
+  --indigo: #1b1938;
+  --indigo-deep: #0e0c1f;
+  --violet-soft: #c9b4fa;
+  --teal-deep: #0e3030;
+  --teal-mid: #155555;
+  --canvas: #ffffff;
+  --canvas-soft: #fafaf8;
+  --hairline: #e8e4dd;
+  --hairline-dark: #3f3a52;
+  --ink: #292827;
+  --ink-mute: #73706d;
+  --ink-faint: #9a9794;
+  --on-dark-mute: #bcbac9;
+
+  /* Requirement states. Colour is never the only signal — every mark also
+     carries a glyph and a screen-reader label. */
+  --met: #155555;
+  --attention: #9a6412;
+  --attention-ink: #7a4f0e;
+  --unknown: #73706d;
+
+  /* shadcn token mapping */
+  --background: var(--canvas);
+  --foreground: var(--ink);
+  --card: var(--canvas);
+  --card-foreground: var(--ink);
+  --popover: var(--canvas);
+  --popover-foreground: var(--ink);
+  --primary: var(--indigo);
+  --primary-foreground: #ffffff;
+  --secondary: var(--canvas-soft);
+  --secondary-foreground: var(--ink);
+  --muted: var(--canvas-soft);
+  --muted-foreground: var(--ink-mute);
+  --accent: var(--canvas-soft);
+  --accent-foreground: var(--indigo);
+  --destructive: #a3352b;
+  --border: var(--hairline);
+  --input: var(--hairline);
+  --ring: var(--indigo);
+  --radius: 8px;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-variation-settings: "wght" 460;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  /* Skip-link and in-page anchors clear the sticky header. */
+  :target {
+    scroll-margin-top: 6rem;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ── Type scale (DESIGN.md §Typography) ─────────────────────
+   Display sizes stair-step 64 → 48 → 36 → 28 → 22px across breakpoints. */
+@layer components {
+  .t-display-xxl {
+    font-size: 2.25rem;
+    line-height: 1;
+    letter-spacing: -0.025em;
+    font-variation-settings: "wght" 540;
+  }
+  .t-display-xl {
+    font-size: 1.875rem;
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    font-variation-settings: "wght" 460;
+  }
+  .t-display-lg {
+    font-size: 1.5rem;
+    line-height: 1.14;
+    letter-spacing: -0.022em;
+    font-variation-settings: "wght" 540;
+  }
+  .t-display-md {
+    font-size: 1.25rem;
+    line-height: 1.15;
+    letter-spacing: -0.014em;
+    font-variation-settings: "wght" 460;
+  }
+  .t-heading {
+    font-size: 1.125rem;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    font-variation-settings: "wght" 540;
+  }
+  .t-body-lg {
+    font-size: 1.0625rem;
+    line-height: 1.5;
+    letter-spacing: -0.008em;
+    font-variation-settings: "wght" 460;
+  }
+  .t-body {
+    font-size: 1rem;
+    line-height: 1.5;
+    font-variation-settings: "wght" 460;
+  }
+  .t-body-strong {
+    font-size: 1rem;
+    line-height: 1.5;
+    font-variation-settings: "wght" 600;
+  }
+  .t-caption {
+    font-size: 0.875rem;
+    line-height: 1.4;
+    font-variation-settings: "wght" 460;
+  }
+  .t-micro {
+    font-size: 0.75rem;
+    line-height: 1.4;
+    font-variation-settings: "wght" 540;
+  }
+  .t-eyebrow {
+    font-size: 0.75rem;
+    line-height: 1.4;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    font-variation-settings: "wght" 600;
+  }
+  .t-num {
+    font-variant-numeric: tabular-nums;
+  }
+  /* A figure that is content: peso amounts, dates, counts. Same display token,
+     lined up so a column of them reads as a column. */
+  .t-figure {
+    font-size: 1.5rem;
+    line-height: 1.1;
+    letter-spacing: -0.022em;
+    font-variation-settings: "wght" 540;
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (min-width: 768px) {
+    .t-display-xxl {
+      font-size: 3.25rem;
+      line-height: 0.96;
+    }
+    .t-display-xl {
+      font-size: 2.5rem;
+      line-height: 0.98;
+    }
+    .t-display-lg {
+      font-size: 1.75rem;
+    }
+    .t-display-md {
+      font-size: 1.375rem;
+      line-height: 1.1;
+    }
+    .t-heading {
+      font-size: 1.25rem;
+      line-height: 1.2;
+    }
+    .t-body-lg {
+      font-size: 1.125rem;
+    }
+    .t-figure {
+      font-size: 1.75rem;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .t-display-xxl {
+      font-size: 4rem;
+    }
+    .t-display-xl {
+      font-size: 3rem;
+      line-height: 0.96;
+      letter-spacing: -0.0275em;
+    }
+  }
+}
+
+/* ── Surfaces ───────────────────────────────────────────── */
+@layer components {
+  /* Scroll regions that keep the app-like look: scrollable, no visible bar. */
+  .sc {
+    scrollbar-width: none;
+  }
+  .sc::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* The hero's violet-sky atmospheric wash over indigo (DESIGN.md §Elevation). */
+  .canvas-indigo {
+    background-color: var(--indigo);
+    background-image:
+      radial-gradient(90% 70% at 78% 8%, rgb(201 180 250 / 0.34) 0%, transparent 62%),
+      radial-gradient(70% 60% at 12% 4%, rgb(126 155 255 / 0.2) 0%, transparent 58%),
+      linear-gradient(180deg, transparent 45%, var(--indigo-deep) 100%);
+    color: #ffffff;
+  }
+  .canvas-teal {
+    background-color: var(--teal-deep);
+    background-image: radial-gradient(
+      80% 70% at 82% 0%,
+      rgb(21 85 85 / 0.85) 0%,
+      transparent 60%
+    );
+    color: #ffffff;
+  }
+
+  /*
+   * Per-provider tinting. A tinted element sets --th (hue) and --ts
+   * (saturation, unitless) inline from lib/scholarships THEME; the tints are
+   * derived from those two numbers so one rule set serves every provider.
+   */
+  .tinted {
+    --tint-border: hsl(var(--th) calc(var(--ts) * 0.36%) 88%);
+    --tint-ink: hsl(var(--th) calc(var(--ts) * 0.75%) 27%);
+    --tint-wash: hsl(var(--th) calc(var(--ts) * 0.5%) 96.5%);
+    --tint-face: linear-gradient(
+      158deg,
+      hsl(var(--th) calc(var(--ts) * 0.6%) 96%) 0%,
+      hsl(var(--th) calc(var(--ts) * 0.35%) 99%) 46%,
+      var(--canvas) 100%
+    );
+    --tint-face-back: linear-gradient(
+      200deg,
+      hsl(var(--th) calc(var(--ts) * 0.5%) 96.5%) 0%,
+      var(--canvas) 44%
+    );
+  }
+
+  /* Focus ring that reads on both polarities. */
+  .ring-brand {
+    outline: none;
+  }
+  .ring-brand:focus-visible {
+    outline: 2px solid var(--indigo);
+    outline-offset: 2px;
+  }
+  .canvas-indigo .ring-brand:focus-visible,
+  .canvas-teal .ring-brand:focus-visible {
+    outline-color: var(--violet-soft);
+  }
+}
+
+/* ── The authored moment ────────────────────────────────
+   One entrance, on the hero, on load. Nothing else on the site animates in on
+   scroll: a single arrival reads as craft, the same effect on nine sections
+   reads as a template. Exponential ease-out, and the reduced-motion block below
+   collapses all of it to an instant. */
+@layer components {
+  .enter {
+    animation: enter 720ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .enter-card {
+    animation: enter-card 1000ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .enter-d1 { animation-delay: 70ms; }
+  .enter-d2 { animation-delay: 150ms; }
+  .enter-d3 { animation-delay: 240ms; }
+  .enter-d4 { animation-delay: 340ms; }
+
+  /* The nav resolves from transparent-over-hero to a solid bar as the hero
+     leaves. Where scroll-driven animation is unsupported the @supports fallback
+     below keeps it solid from the start — never white-on-white. */
+  .nav-resolve {
+    animation: nav-resolve linear both;
+    animation-timeline: scroll(root block);
+    animation-range: 64px 180px;
+  }
+  @supports not (animation-timeline: scroll(root block)) {
+    .nav-resolve {
+      animation: none;
+      background-color: var(--indigo);
+    }
+  }
+}
+
+@keyframes enter {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes enter-card {
+  from { opacity: 0; transform: translateY(24px) scale(0.985); filter: blur(7px); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+@keyframes nav-resolve {
+  from { background-color: transparent; box-shadow: none; }
+  to {
+    background-color: color-mix(in oklab, var(--indigo) 92%, transparent);
+    box-shadow: 0 1px 0 var(--hairline-dark);
+  }
+}
+
+/* ── Motion ─────────────────────────────────────────────── */
+@keyframes orbit {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes drift {
+  0% { transform: translateY(0) rotate(-3deg); opacity: 0.18; }
+  50% { opacity: 0.42; }
+  100% { transform: translateY(-46px) rotate(3deg); opacity: 0.18; }
+}
+@keyframes breathe {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.06); }
+}
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes fadein {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes nudgeL {
+  0%, 70%, 100% { transform: translateX(0); opacity: 0.55; }
+  80% { transform: translateX(-4px); opacity: 1; }
+}
+@keyframes nudgeR {
+  0%, 70%, 100% { transform: translateX(0); opacity: 0.55; }
+  80% { transform: translateX(4px); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  /* The nav's resolve is legibility, not decoration: with animation off it has
+     to be solid from the first pixel or white text would land on white. */
+  .nav-resolve {
+    animation: none !important;
+    background-color: var(--indigo);
+  }
 }
