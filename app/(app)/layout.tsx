@@ -1,3 +1,4 @@
+import { TulAiChat } from "@/components/app/tul-ai-chat";
 import { TulAiProvider } from "@/hooks/use-tul-ai";
 import { getScholarships } from "@/lib/scholarships";
 
@@ -20,6 +21,7 @@ export default async function AppLayout({ children }: LayoutProps<"/">) {
           Skip to content
         </a>
         {children}
+        <TulAiChat />
       </div>
     </TulAiProvider>
   );
