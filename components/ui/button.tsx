@@ -1,5 +1,7 @@
 import { Button as ButtonPrimitive } from "@base-ui/react/button"
 import { cva, type VariantProps } from "class-variance-authority"
+import Link from "next/link"
+import type { ComponentProps } from "react"
 
 import { cn } from "@/lib/utils"
 
@@ -55,19 +57,36 @@ function Button({
   return (
     <ButtonPrimitive
       data-slot="button"
-      // NOTE: most CTAs here are links wearing button chrome
-      // (`render={<Link/>}`), so Base UI logs a dev-only warning that the
-      // element is not a native <button>. Do NOT silence that with
-      // `nativeButton={false}` — Base UI answers it by putting `role="button"`
-      // on the element (see internals/use-button/useButton.js), which strips
-      // link semantics from a real <a href>: it leaves the screen-reader links
-      // rotor and stops announcing as navigation. A console warning is much
-      // cheaper than that. The real fix is to stop routing link CTAs through
-      // this primitive and put `buttonVariants()` on a plain <Link>.
       className={cn(buttonVariants({ variant, size, className }))}
       {...props}
     />
   )
 }
 
-export { Button, buttonVariants }
+/**
+ * A link that wears button chrome — use this for any CTA that navigates.
+ *
+ * Do NOT write `<Button render={<Link/>}>` instead. Base UI's Button assumes a
+ * native <button>, so it warns on every render; and the flag it suggests,
+ * `nativeButton={false}`, answers by putting `role="button"` on the element
+ * (see @base-ui/react/internals/use-button/useButton.js), which strips link
+ * semantics from a real <a href> — it leaves the screen-reader links rotor and
+ * stops announcing as navigation. Neither is acceptable, so a navigating CTA
+ * skips the primitive entirely and takes only the class names.
+ */
+function ButtonLink({
+  className,
+  variant = "default",
+  size = "default",
+  ...props
+}: ComponentProps<typeof Link> & VariantProps<typeof buttonVariants>) {
+  return (
+    <Link
+      data-slot="button-link"
+      className={cn(buttonVariants({ variant, size, className }))}
+      {...props}
+    />
+  )
+}
+
+export { Button, ButtonLink, buttonVariants }

@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Agent worktrees are scratch clones of this repo, each with its own
+    // node_modules. Without this, `npm run lint` walks them and reports
+    // thousands of problems that belong to dependencies, not to us.
+    ".claude/**",
   ]),
 ]);
 

@@ -5,7 +5,7 @@ import Link from "next/link";
 
 import { DeadlineCountdown } from "@/components/scholarship/deadline-chip";
 import { ProviderCrest } from "@/components/scholarship/provider-logo";
-import { Button } from "@/components/ui/button";
+import { ButtonLink } from "@/components/ui/button";
 import { useTulAi } from "@/hooks/use-tul-ai";
 import { formatPeso } from "@/lib/logic/format";
 import { ROUTES } from "@/lib/logic/routes";
@@ -85,13 +85,13 @@ export function ShortlistPanel() {
       )}
 
       {saved.length > 0 && (
-        <Button
+        <ButtonLink
           variant="outline"
           className="mt-5 h-11 w-full rounded-md border-hairline-dark"
-          render={<Link href={ROUTES.review} />}
+          href={ROUTES.review}
         >
           Review before applying
-        </Button>
+        </ButtonLink>
       )}
 
       <p className="t-micro mt-8 flex items-start gap-2 border-t border-hairline pt-6 text-ink-mute">

@@ -3,7 +3,7 @@
 import { ExternalLinkIcon } from "lucide-react";
 import { useState } from "react";
 
-import { Button } from "@/components/ui/button";
+import { Button, ButtonLink } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -65,20 +65,16 @@ export function ApplyDialog({
             requirements can change after our last check.
           </p>
 
-          <Button
+          <ButtonLink
             className="mt-6 h-12 w-full rounded-md"
-            render={
-              <a
-                href={`https://${card.host}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setOpen(false)}
-              />
-            }
+            href={`https://${card.host}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => setOpen(false)}
           >
             Continue to {card.host}
             <ExternalLinkIcon />
-          </Button>
+          </ButtonLink>
           <Button
             variant="ghost"
             className="mt-2 h-11 w-full text-ink-mute"

@@ -4,7 +4,7 @@ import { ArrowRightIcon, ChevronDownIcon } from "lucide-react";
 import Link from "next/link";
 import { useId, useMemo, useState } from "react";
 
-import { Button } from "@/components/ui/button";
+import { ButtonLink } from "@/components/ui/button";
 import { formatIsoDate } from "@/lib/logic/deadlines";
 import {
   PROVIDER_GROUPS,
@@ -112,12 +112,12 @@ export function SupportEstimator({
       </dl>
 
       <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
-        <Button
+        <ButtonLink
           className="t-body-strong h-12 w-full px-6 text-base sm:w-auto"
-          render={<Link href={ROUTES.onboarding} />}
+          href={ROUTES.onboarding}
         >
           Find my scholarships
-        </Button>
+        </ButtonLink>
         <Link
           href={ROUTES.scholarships}
           className="ring-brand t-caption-strong inline-flex items-center gap-1.5 rounded-xs px-1 text-ink underline decoration-hairline underline-offset-4 hover:decoration-ink"

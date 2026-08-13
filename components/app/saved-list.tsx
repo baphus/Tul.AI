@@ -8,7 +8,7 @@ import { DeadlineChip } from "@/components/scholarship/deadline-chip";
 import { MatchMetric } from "@/components/scholarship/match-metric";
 import { ProviderCrest } from "@/components/scholarship/provider-logo";
 import { VerificationBadge } from "@/components/scholarship/verification-badge";
-import { Button } from "@/components/ui/button";
+import { Button, ButtonLink } from "@/components/ui/button";
 import { useToday } from "@/hooks/use-today";
 import { useTulAi } from "@/hooks/use-tul-ai";
 import { daysUntil, deadlineLabel, deadlineTone } from "@/lib/logic/deadlines";
@@ -42,16 +42,16 @@ export function SavedList() {
           deadline and a document checklist you can work through.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <Button className="h-12 rounded-md px-6" render={<Link href={ROUTES.discover} />}>
+          <ButtonLink className="h-12 rounded-md px-6" href={ROUTES.discover}>
             Open the deck
-          </Button>
-          <Button
+          </ButtonLink>
+          <ButtonLink
             variant="outline"
             className="h-12 rounded-md border-hairline-dark px-5"
-            render={<Link href={ROUTES.scholarships} />}
+            href={ROUTES.scholarships}
           >
             Browse everything
-          </Button>
+          </ButtonLink>
         </div>
       </div>
     );

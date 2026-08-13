@@ -50,7 +50,10 @@ export function firstIncompleteStep(profile: Profile): number {
 
 /** Enough of a profile to run matching at all. */
 export function isProfileReady(profile: Profile): boolean {
-  return canAdvance(1, profile) && canAdvance(2, profile) && canAdvance(3, profile);
+  // Matching requires the two onboarding answers that determine which
+  // programmes apply at all: where the student studies and what they study.
+  // GWA and other details are optional and resolve to Unknown, never Not Met.
+  return canAdvance(1, profile) && canAdvance(2, profile);
 }
 
 /** How much of the profile is filled in — drives the completeness meter. */

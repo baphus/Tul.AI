@@ -1,7 +1,6 @@
-import Link from "next/link";
 
 import { Container } from "@/components/site/layout-primitives";
-import { Button } from "@/components/ui/button";
+import { ButtonLink } from "@/components/ui/button";
 import { ROUTES } from "@/lib/logic/routes";
 
 /**
@@ -28,9 +27,9 @@ export function ClosingCta({
           </h2>
           <p className="t-body-lg max-w-[36rem] text-on-dark-mute text-pretty">{body}</p>
           <div>
-            <Button className="t-body-strong h-12 px-6 text-base" render={<Link href={href} />}>
+            <ButtonLink className="t-body-strong h-12 px-6 text-base" href={href}>
               {cta}
-            </Button>
+            </ButtonLink>
           </div>
         </div>
       </Container>

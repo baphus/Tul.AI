@@ -184,11 +184,12 @@ footer carrying a lime headline. Implementation notes:
 - Requirement states (`met` / `attention` / `unknown`) are **functional status colours**,
   not brand accents; that is the one sanctioned addition to DESIGN.md's palette. Colour is
   never the only signal — every mark carries a glyph and a screen-reader label.
-- Most CTAs are links wearing button chrome (`<Button render={<Link/>}>`), which makes
-  Base UI log a dev-only "expected a native &lt;button&gt;" warning. **Don't silence it with
-  `nativeButton={false}`** — Base UI answers that by putting `role="button"` on the
-  element, which strips link semantics from a real `<a href>`. The warning is the cheaper
-  of the two; the real fix is to put `buttonVariants()` on a plain `<Link>`.
+- **A CTA that navigates uses `ButtonLink`, not `Button`.** `ButtonLink` is a `next/link`
+  wearing the button chrome from `buttonVariants()`. Don't write
+  `<Button render={<Link/>}>`: Base UI's Button assumes a native `<button>` and warns on
+  every render, and the flag it suggests — `nativeButton={false}` — answers by putting
+  `role="button"` on the element, which strips link semantics from a real `<a href>`.
+  `Button` is for things that really are buttons.
 
 ### Where the current code lives
 - `lib/scholarships.ts` — domain types + the verified demo data set, behind `getScholarships()` (the swap seam for an API/Supabase read). Every record carries `verification`, `lastVerified` and `sourceTier`.
@@ -238,3 +239,4 @@ name), so a renamed copy would silently stop being read.
 | v1.1.0 | 2026-08-13 | §10 replaced placeholder commands with the real `package.json` scripts; added a "Where the current code lives" map for the Tul.AI front-end implementation. |
 | v1.2.0 | 2026-08-13 | §10: added the design-language section pointing at `DESIGN.md` (light-only, `.t-*` type scale, status-colour exception), rewrote the code map for the `site`/`scholarship`/`app` component split, and added routing rules now that the URL owns navigation. |
 | v1.3.0 | 2026-08-13 | §10: design language rewritten for the Wise-inspired `DESIGN.md` — lime/sage/ink palette with a single accent, Manrope 800 + Inter two-face type, 24px radius, surface-contrast elevation. Code map notes `lib/logic/estimate.ts`. |
+| v1.3.1 | 2026-08-13 | §10: navigating CTAs use `ButtonLink` (a link wearing button chrome) rather than `Button render={<Link/>}`, which cost link semantics. |
