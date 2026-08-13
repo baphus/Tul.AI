@@ -1,22 +1,13 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
-  images: {
-    /*
-     * Provider crests. 26 of the 32 records in data/scholarships.json carry a
-     * `logo_url` on this host; without it declared here, next/image refuses the
-     * URL and the crest renders empty. Narrowed to the exact host and path
-     * prefix rather than a wildcard: an open image host is an open proxy, and
-     * these URLs are the only remote images the app renders.
-     */
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "res.cloudinary.com",
-        pathname: "/**",
-      },
-    ],
-  },
-};
+/*
+ * No `images.remotePatterns` on purpose. Provider crests were briefly loaded
+ * from the Cloudinary URLs in data/scholarships.json; those 26 files now live in
+ * public/logos/providers/ and are resolved by `providerLogo()` in
+ * lib/scholarships.ts, so the app renders no remote images at all. Keep it that
+ * way unless something genuinely needs a third-party host — an allowed image
+ * host is an image proxy, and this app has no reason to be one.
+ */
+const nextConfig: NextConfig = {};
 
 export default nextConfig;

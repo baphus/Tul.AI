@@ -73,11 +73,26 @@ export function OfferPills({
       return !seen.has(key) && seen.add(key);
     });
 
+  /*
+   * Institutions that published a crest go first.
+   *
+   * Six of the 32 records carry no logo, and the data set happens to open with
+   * one of them — so the pill's first face, the one on screen for the first
+   * three seconds and the one the reduced-motion fallback freezes on, was
+   * rendering as the monogram "IF" rather than a recognisable mark. There are
+   * plenty of logo-bearing institutions to fill six slots; the monogram is a
+   * fallback for records, not a thing to lead with.
+   */
+  const ordered = [
+    ...distinct.filter(({ card }) => card.logo),
+    ...distinct.filter(({ card }) => !card.logo),
+  ];
+
   /* Six faces, cycling if fewer institutions are available. The index carried
      here is the record's position in the full data set, because ProviderCrest
      derives its tint from that and must not re-tint per slot. */
   const faces = Array.from({ length: SLOTS }, (_, slot) => {
-    const { card, index } = distinct[slot % distinct.length];
+    const { card, index } = ordered[slot % ordered.length];
     return { card, index, slot };
   });
 
@@ -89,10 +104,17 @@ export function OfferPills({
         className
       )}
     >
-      <div className="flex w-72 items-center gap-3 rounded-full bg-canvas py-2 pr-5 pl-2 shadow-[0_12px_32px_-14px_rgba(14,15,12,0.5)] sm:w-88 sm:gap-4 sm:py-2.5 sm:pr-7 sm:pl-2.5">
-        {/* Crest well. Fixed size so the pill never reflows mid-flip. */}
+      <div className="flex w-80 items-center gap-3 rounded-full bg-canvas py-2 pr-5 pl-2 shadow-[0_12px_32px_-14px_rgba(14,15,12,0.5)] sm:w-96 sm:gap-4 sm:py-2.5 sm:pr-7 sm:pl-2.5">
+        {/*
+         * Crest well — a landscape plate, not the circle Wise uses for its
+         * country flags. Five of the sixteen published crests are wide
+         * wordmarks (aboitiz.png is 584×206, ayala.png 1681×669); in a circular
+         * 36px well, `object-contain` scaled those to a ~13px-tall sliver.
+         * Institution logos are mostly horizontal lockups, so the well is too.
+         * Fixed size, so the pill never reflows mid-flip.
+         */}
         <span
-          className="relative block size-9 flex-none sm:size-12"
+          className="relative block h-9 w-14 flex-none sm:h-10 sm:w-16"
           style={{ perspective: "600px" }}
         >
           {faces.map(({ card, index, slot }) => (
@@ -105,7 +127,7 @@ export function OfferPills({
                 index={index}
                 provider={card.provider}
                 logo={card.logo}
-                className="size-full rounded-full"
+                className="size-full rounded-lg"
               />
             </span>
           ))}
@@ -117,7 +139,7 @@ export function OfferPills({
               index={faces[0].index}
               provider={faces[0].card.provider}
               logo={faces[0].card.logo}
-              className="size-full rounded-full"
+              className="size-full rounded-lg"
             />
           </span>
         </span>

@@ -154,6 +154,24 @@ function sourceHost(url: string | null | undefined, fallback: string): string {
 function sourceName(url: string, provider: string): string {
   try { return new URL(url).hostname.replace(/^www\./, ""); } catch { return provider; }
 }
+/**
+ * The provider crest, served from the repo rather than the remote host the raw
+ * record points at.
+ *
+ * `data/scholarships.json` carries absolute Cloudinary URLs; all 26 of those
+ * files now live in `public/logos/providers/` under the same basename, so the
+ * mapping is derived rather than tabulated — nothing to keep in sync when a
+ * record is added, beyond dropping the file in. Self-hosting also means no
+ * third-party request on first paint and no remote image host to allow in
+ * next.config.ts.
+ *
+ * Returns null when the record publishes no crest, which renders as a monogram.
+ */
+function providerLogo(record: RawScholarship): string | null {
+  if (!record.logo_url) return null;
+  const basename = record.logo_url.split("/").pop();
+  return basename ? `/logos/providers/${basename}` : null;
+}
 function benefitAmount(record: RawScholarship): number {
   const text = strings(record.benefits?.items).join(" ");
   const values = [...text.matchAll(/[₱]\s*([0-9,]+)/g)].map((match) => Number(match[1].replace(/,/g, "")));
@@ -210,7 +228,7 @@ function adapt(record: RawScholarship): Scholarship {
   const lastVerified = dateOnly(record.last_verified_at) || "Unknown"; const verification = verificationStatus(record);
   const amount = benefitAmount(record); const deadlineIso = dateOnly(record.deadline) || "9999-12-31";
   return {
-    id: String(record.id), provider: record.provider, logo: record.logo_url ?? null, title: record.name, amount,
+    id: String(record.id), provider: record.provider, logo: providerLogo(record), title: record.name, amount,
     amountNote: amount ? "published benefit" : "see provider details", deadline: displayDate(record.deadline), deadlineIso,
     match: "Possible match", matchShort: "Review " + rows.length + " published requirement" + (rows.length === 1 ? "" : "s"),
     tone: "possible", met: 0, total: rows.length,

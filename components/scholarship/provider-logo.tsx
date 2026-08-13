@@ -73,14 +73,14 @@ export function ProviderCrest({
           src={src}
           alt={`${provider} logo`}
           fill
-          sizes="56px"
+          sizes="72px"
           className="object-contain p-1"
         />
       ) : (
         <span
           aria-label={`${provider} — no logo published`}
           role="img"
-          className="grid size-full place-items-center px-0.5 text-center text-[0.5rem] leading-none font-semibold tracking-tight text-[color:var(--tint-ink)] tabular-nums"
+          className="grid size-full place-items-center px-0.5 text-center text-[0.625rem] leading-none font-semibold tracking-tight text-[color:var(--tint-ink)] tabular-nums"
         >
           {providerMonogram(provider)}
         </span>
