@@ -4,7 +4,7 @@ import { SparklesIcon } from "lucide-react";
 import Link from "next/link";
 
 import { ScholarshipSummaryCard } from "@/components/scholarship/scholarship-summary-card";
-import { Button } from "@/components/ui/button";
+import { Button, ButtonLink } from "@/components/ui/button";
 import { useTulAi } from "@/hooks/use-tul-ai";
 import { advisory, type Decision } from "@/lib/logic/advisory";
 import { ROUTES } from "@/lib/logic/routes";
@@ -36,9 +36,9 @@ export function ReviewList() {
           Go through the deck once and this becomes your shortlist — with the deadlines,
           overlapping documents and anything worth knowing before you apply.
         </p>
-        <Button className="mt-8 h-12 rounded-md px-6" render={<Link href={ROUTES.discover} />}>
+        <ButtonLink className="mt-8 h-12 rounded-md px-6" href={ROUTES.discover}>
           Open the deck
-        </Button>
+        </ButtonLink>
       </div>
     );
   }
@@ -112,13 +112,13 @@ export function ReviewList() {
           Prepare {saved.length > 0 ? saved.length : "your"} application
           {saved.length === 1 ? "" : "s"}
         </Button>
-        <Button
+        <ButtonLink
           variant="outline"
           className="h-12 rounded-md border-hairline-dark px-5"
-          render={<Link href={ROUTES.discover} />}
+          href={ROUTES.discover}
         >
           Back to the deck
-        </Button>
+        </ButtonLink>
       </div>
       <p className="t-micro mt-4 text-ink-mute">
         Meeting published requirements does not guarantee selection. Each provider makes
@@ -173,13 +173,13 @@ function Group({
                 muted={muted}
                 actions={
                   <>
-                    <Button
+                    <ButtonLink
                       variant="outline"
                       className="h-10 rounded-md border-hairline"
-                      render={<Link href={ROUTES.scholarship(card.id)} />}
+                      href={ROUTES.scholarship(card.id)}
                     >
                       View full record
-                    </Button>
+                    </ButtonLink>
                     <Button
                       variant="secondary"
                       className="h-10 rounded-md"

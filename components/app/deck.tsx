@@ -9,12 +9,11 @@ import {
   Undo2Icon,
   XIcon,
 } from "lucide-react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { ScholarshipCard } from "@/components/scholarship/scholarship-card";
-import { Button } from "@/components/ui/button";
+import { Button, ButtonLink } from "@/components/ui/button";
 import { usePrefersReducedMotion } from "@/hooks/use-media-query";
 import { useTulAi } from "@/hooks/use-tul-ai";
 import { clamp01 } from "@/lib/logic/format";
@@ -279,9 +278,9 @@ export function Deck({ detailOpen }: { detailOpen: boolean }) {
                 : `You marked ${saved} opportunities as interesting.`}
             </p>
             <div className="mt-7 flex flex-wrap justify-center gap-3">
-              <Button className="h-12 rounded-md px-6" render={<Link href={ROUTES.review} />}>
+              <ButtonLink className="h-12 rounded-md px-6" href={ROUTES.review}>
                 Review before applying
-              </Button>
+              </ButtonLink>
               <Button
                 variant="outline"
                 className="h-12 rounded-md border-hairline-dark px-5"

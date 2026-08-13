@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 import { BrandMark } from "@/components/site/brand";
-import { Button } from "@/components/ui/button";
+import { Button, ButtonLink } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -79,12 +79,12 @@ export function SiteHeader({ tone = "light" }: { tone?: "over" | "light" }) {
           >
             Browse all
           </Link>
-          <Button
+          <ButtonLink
             className="t-body-strong hidden h-12 px-6 text-base md:inline-flex"
-            render={<Link href={ROUTES.onboarding} />}
+            href={ROUTES.onboarding}
           >
             Find my scholarships
-          </Button>
+          </ButtonLink>
 
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger
@@ -117,12 +117,12 @@ export function SiteHeader({ tone = "light" }: { tone?: "over" | "light" }) {
                   </Link>
                 ))}
               </nav>
-              <Button
+              <ButtonLink
                 className="t-body-strong mt-8 h-12 text-base"
-                render={<Link href={ROUTES.onboarding} onClick={() => setOpen(false)} />}
+                href={ROUTES.onboarding} onClick={() => setOpen(false)}
               >
                 Find my scholarships
-              </Button>
+              </ButtonLink>
               <p className="t-caption mt-4 text-ink-mute">
                 Free for students. No account needed to explore.
               </p>

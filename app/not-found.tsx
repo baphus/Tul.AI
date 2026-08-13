@@ -1,8 +1,7 @@
-import Link from "next/link";
 
 import { BrandMark } from "@/components/site/brand";
 import { Container } from "@/components/site/layout-primitives";
-import { Button } from "@/components/ui/button";
+import { ButtonLink } from "@/components/ui/button";
 import { ROUTES } from "@/lib/logic/routes";
 
 export default function NotFound() {
@@ -24,16 +23,16 @@ export default function NotFound() {
             removed from our verified set. The directory is the best place to start again.
           </p>
           <div className="mt-9 flex flex-wrap gap-3">
-            <Button className="h-12 rounded-md px-6" render={<Link href={ROUTES.scholarships} />}>
+            <ButtonLink className="h-12 rounded-md px-6" href={ROUTES.scholarships}>
               Browse all scholarships
-            </Button>
-            <Button
+            </ButtonLink>
+            <ButtonLink
               variant="outline"
               className="h-12 rounded-md border-hairline-dark px-6"
-              render={<Link href={ROUTES.home} />}
+              href={ROUTES.home}
             >
               Back to home
-            </Button>
+            </ButtonLink>
           </div>
         </Container>
       </main>

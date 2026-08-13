@@ -1,11 +1,10 @@
 "use client";
 
 import { CheckIcon, SparklesIcon } from "lucide-react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
-import { Button } from "@/components/ui/button";
+import { ButtonLink } from "@/components/ui/button";
 import { usePrefersReducedMotion } from "@/hooks/use-media-query";
 import { useTulAi } from "@/hooks/use-tul-ai";
 import { ROUTES } from "@/lib/logic/routes";
@@ -72,16 +71,16 @@ export function MatchingRun() {
           all. Everything after that is optional.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <Button className="h-12 rounded-md px-6" render={<Link href={ROUTES.onboarding} />}>
+          <ButtonLink className="h-12 rounded-md px-6" href={ROUTES.onboarding}>
             Answer two questions
-          </Button>
-          <Button
+          </ButtonLink>
+          <ButtonLink
             variant="outline"
             className="h-12 rounded-md border-hairline-dark px-6"
-            render={<Link href={ROUTES.scholarships} />}
+            href={ROUTES.scholarships}
           >
             Just browse everything
-          </Button>
+          </ButtonLink>
         </div>
       </div>
     );

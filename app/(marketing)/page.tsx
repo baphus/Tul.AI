@@ -15,7 +15,7 @@ import {
 import { SiteHeader } from "@/components/site/site-header";
 import { SupportEstimator } from "@/components/site/support-estimator";
 import { VerificationLedger } from "@/components/site/verification-ledger";
-import { Button } from "@/components/ui/button";
+import { ButtonLink } from "@/components/ui/button";
 import { formatIsoDate } from "@/lib/logic/deadlines";
 import { formatPeso } from "@/lib/logic/format";
 import { ROUTES } from "@/lib/logic/routes";
@@ -181,19 +181,19 @@ export default async function LandingPage() {
                 </p>
 
                 <div className="enter enter-d2 mt-9 flex flex-col gap-4 sm:flex-row sm:items-center">
-                  <Button
+                  <ButtonLink
                     className="t-body-strong h-13 px-7 text-base"
-                    render={<Link href={ROUTES.onboarding} />}
+                    href={ROUTES.onboarding}
                   >
                     Find my scholarships
-                  </Button>
-                  <Button
+                  </ButtonLink>
+                  <ButtonLink
                     variant="tertiary"
                     className="t-body-strong h-13 px-7 text-base"
-                    render={<Link href={ROUTES.scholarships} />}
+                    href={ROUTES.scholarships}
                   >
                     Read all {cards.length} records
-                  </Button>
+                  </ButtonLink>
                 </div>
 
                 <p className="t-caption enter enter-d2 mt-6 text-ink-mute">
@@ -510,12 +510,12 @@ export default async function LandingPage() {
                   </RuledRow>
                 </dl>
 
-                <Button
+                <ButtonLink
                   className="t-body-strong mt-10 h-12 px-6 text-base"
-                  render={<Link href={ROUTES.discover} />}
+                  href={ROUTES.discover}
                 >
                   Try the deck with demo data
-                </Button>
+                </ButtonLink>
               </div>
 
               <div className="lg:col-span-6">
@@ -573,13 +573,13 @@ export default async function LandingPage() {
                 </p>
               </div>
               <div className="lg:col-span-4 lg:text-right">
-                <Button
+                <ButtonLink
                   variant="tertiary"
                   className="t-body-strong h-12 px-6 text-base"
-                  render={<Link href={ROUTES.institutions} />}
+                  href={ROUTES.institutions}
                 >
                   For institutions
-                </Button>
+                </ButtonLink>
               </div>
             </div>
           </Container>
