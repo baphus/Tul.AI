@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Manrope, Geist_Mono } from "next/font/google";
+import { Anton, Inter, Manrope, Geist_Mono } from "next/font/google";
 
 import "./globals.css";
 
@@ -13,6 +13,24 @@ import "./globals.css";
  *
  * Both are loaded variable so the .t-* classes can drive weight through
  * font-variation-settings rather than swapping static files.
+ *
+ * A third face, `--font-hero`, is used by exactly one element: the landing
+ * page's `<h1>` (see `.t-hero` in globals.css). It exists as its own variable
+ * so the compressed display face is swappable without touching the type scale.
+ *
+ * To swap in a licensed Futura PT Condensed, replace the Anton import with:
+ *
+ *   import localFont from "next/font/local";
+ *   const hero = localFont({
+ *     src: "./fonts/futura-condensed-pt-medium.woff2",
+ *     variable: "--font-hero",
+ *     display: "swap",
+ *   });
+ *
+ * ...and nothing else changes. Note that the only condensed cut Paratype ships
+ * in the bundle we looked at is Medium, so `.t-hero` would want a heavier
+ * optical treatment — or a genuinely bold condensed face — to carry the weight
+ * DESIGN.md asks of a display.
  */
 const inter = Inter({
   variable: "--font-sans",
@@ -22,6 +40,16 @@ const inter = Inter({
 
 const manrope = Manrope({
   variable: "--font-display",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+/* Anton ships a single weight and is already black, so there is no variable
+   axis to drive — `.t-hero` sets font-weight explicitly rather than reaching
+   for font-variation-settings the way the Manrope displays do. */
+const hero = Anton({
+  variable: "--font-hero",
+  weight: "400",
   subsets: ["latin"],
   display: "swap",
 });
@@ -62,7 +90,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${manrope.variable} ${mono.variable} h-full`}
+      className={`${inter.variable} ${manrope.variable} ${hero.variable} ${mono.variable} h-full`}
     >
       <body className="t-body min-h-full">{children}</body>
     </html>

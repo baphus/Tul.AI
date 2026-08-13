@@ -41,6 +41,19 @@ const COLUMNS: { title: string; links: { href: string; label: string }[] }[] = [
   },
 ];
 
+/**
+ * The legal bar. Every entry resolves to a page that exists — a legal bar of
+ * plausible-looking dead links is worse than a short one, and the standing
+ * disclosure that Tul.AI is not the application portal belongs here rather
+ * than only in the fine print.
+ */
+const LEGAL: { href: string; label: string }[] = [
+  { href: ROUTES.privacy, label: "Privacy policy" },
+  { href: `${ROUTES.privacy}#data`, label: "Your data" },
+  { href: `${ROUTES.howItWorks}#limits`, label: "What Tul.AI does not do" },
+  { href: ROUTES.profile, label: "Edit or delete your data" },
+];
+
 /** DESIGN.md `footer`: the dark band. Ink surface, sage text, body-sm links. */
 export function SiteFooter() {
   return (
@@ -79,13 +92,31 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div className="mt-14 flex flex-col gap-3 border-t border-white/15 pt-8 sm:flex-row sm:items-center sm:justify-between">
-          <p className="t-caption text-on-dark-mute">
-            © {new Date().getFullYear()} Tul.AI · Made for Filipino students
-          </p>
-          <p className="t-caption text-on-dark-mute">
-            Prototype · demo scholarship data · not an official application portal
-          </p>
+        {/* The legal bar, as wise.com carries one: the standing obligations
+            sit on their own rule, above the copyright line, so they are
+            reachable from every page without hunting through a column. */}
+        <div className="mt-14 border-t border-white/15 pt-8">
+          <ul className="flex flex-wrap items-center gap-x-6 gap-y-3">
+            {LEGAL.map((link) => (
+              <li key={link.href + link.label}>
+                <Link
+                  href={link.href}
+                  className="ring-brand t-caption rounded-xs text-on-dark-mute hover:text-white hover:underline hover:underline-offset-4"
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <p className="t-caption text-on-dark-mute">
+              © {new Date().getFullYear()} Tul.AI · Made for Filipino students
+            </p>
+            <p className="t-caption text-on-dark-mute">
+              Prototype · demo scholarship data · not an official application portal
+            </p>
+          </div>
         </div>
       </Container>
     </footer>
