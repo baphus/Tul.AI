@@ -1,10 +1,11 @@
 "use client";
 
 import { ArrowUpIcon } from "lucide-react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { usePrefersReducedMotion } from "@/hooks/use-media-query";
 import { answerFor, SUGGESTIONS, type Answer } from "@/lib/logic/answerFor";
 import { useTulAiOptional } from "@/hooks/use-tul-ai";
 import type { Scholarship } from "@/lib/scholarships";
@@ -25,8 +26,12 @@ export function AskPanel({ card }: { card: Scholarship }) {
   const [thread, setThread] = useState<Entry[]>([]);
   const [input, setInput] = useState("");
   const [pending, setPending] = useState(false);
+  const timers = useRef<number[]>([]);
+  const reduced = usePrefersReducedMotion();
   const ctx = useTulAiOptional();
   const profile = ctx?.state.profile;
+
+  useEffect(() => () => timers.current.forEach(window.clearTimeout), []);
 
   const ask = useCallback(
     (question: string) => {
@@ -35,30 +40,44 @@ export function AskPanel({ card }: { card: Scholarship }) {
       setThread((current) => [...current, { q, a: null }]);
       setInput("");
       setPending(true);
-      // Always ask the grounded API — it answers with the scholarly record via
-      // the LLM when configured and falls back to the deterministic rule set,
-      // so a typed question is never limited to the suggestion bubbles.
-      fetch("/api/ai/answer", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: q, cardId: card.id, profile }),
-      })
-        .then((r) => r.json())
-        .then((json) => {
-          const ans = (json?.answer as Answer | null) ?? answerFor(q, card);
-          setThread((current) =>
-            current.map((entry, i) => (i === current.length - 1 ? { ...entry, a: ans } : entry))
-          );
+      const useAi = process.env.NEXT_PUBLIC_AI_QA_ENABLED === "1";
+      if (useAi) {
+        fetch("/api/ai/answer", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question: q, cardId: card.id, profile }),
         })
-        .catch(() => {
-          const ans = answerFor(q, card);
-          setThread((current) =>
-            current.map((entry, i) => (i === current.length - 1 ? { ...entry, a: ans } : entry))
-          );
-        })
-        .finally(() => setPending(false));
+          .then((r) => r.json())
+          .then((json) => {
+            const ans = (json?.answer as Answer | null) ?? answerFor(q, card);
+            setThread((current) =>
+              current.map((entry, i) => (i === current.length - 1 ? { ...entry, a: ans } : entry))
+            );
+          })
+          .catch(() => {
+            const ans = answerFor(q, card);
+            setThread((current) =>
+              current.map((entry, i) => (i === current.length - 1 ? { ...entry, a: ans } : entry))
+            );
+          })
+          .finally(() => setPending(false));
+      } else {
+        const t = window.setTimeout(
+          () => {
+            const answer = answerFor(q, card);
+            setThread((current) =>
+              current.map((entry, i) =>
+                i === current.length - 1 ? { ...entry, a: answer } : entry
+              )
+            );
+            setPending(false);
+          },
+          reduced ? 350 : 850
+        );
+        timers.current.push(t);
+      }
     },
-    [card, pending, profile]
+    [card, pending, profile, reduced]
   );
 
   return (
