@@ -31,6 +31,11 @@ export function useTulAi(): TulAiContextValue {
   return ctx;
 }
 
+/** Optional variant that returns `null` when the provider is not mounted. */
+export function useTulAiOptional(): TulAiContextValue | null {
+  return useContext(TulAiContext);
+}
+
 /** How long a piece of cross-scholarship advice stays on screen. */
 const ADVICE_MS = 9000;
 
@@ -66,5 +71,14 @@ export function TulAiProvider({
     [state, cards]
   );
 
-  return <TulAiContext.Provider value={value}>{children}</TulAiContext.Provider>;
+  // Avoid rendering children until persisted state is applied. If children
+  // mount before hydration they can dispatch updates (onboarding inputs)
+  // which the subsequent HYDRATE action would overwrite, causing a race and
+  // surprising behaviour where freshly-entered answers disappear. Hold the
+  // UI until `state.hydrated` is true so the initial snapshot is authoritative.
+  return (
+    <TulAiContext.Provider value={value}>
+      {state.hydrated ? children : null}
+    </TulAiContext.Provider>
+  );
 }

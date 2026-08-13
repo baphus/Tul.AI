@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { ChoiceChip } from "@/components/app/choice-card";
-import { Button } from "@/components/ui/button";
+import { Button, ButtonLink } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -276,13 +276,15 @@ export function ProfileEditor() {
       </form>
 
       <div className="mt-8 flex flex-wrap items-center gap-3">
-        <Button
-          className="h-12 rounded-md px-6"
-          disabled={!complete}
-          render={complete ? <Link href={ROUTES.matching} /> : undefined}
-        >
-          Re-run matching
-        </Button>
+        {complete ? (
+          <ButtonLink className="h-12 rounded-md px-6" href={ROUTES.matching}>
+            Re-run matching
+          </ButtonLink>
+        ) : (
+          <Button className="h-12 rounded-md px-6" disabled>
+            Re-run matching
+          </Button>
+        )}
         <p className="t-micro text-ink-mute">
           Changes are saved to this device as you type.
         </p>

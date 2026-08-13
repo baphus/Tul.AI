@@ -54,7 +54,7 @@ Run lint, typecheck, test and build before opening a PR.
 | Route | Purpose |
 | --- | --- |
 | `/onboarding?step=1…5` | The conversation: one question per screen |
-| `/matching` | The research moment, then a redirect to the deck |
+| `/matching` | The research moment, then the ranked top matches for the profile |
 | `/discover?card=<id>` | Swipe deck with the full record beside it |
 | `/review` | Shortlist before applying, with cross-scholarship advice |
 | `/saved` | Deadline tracking and per-application document checklists |
