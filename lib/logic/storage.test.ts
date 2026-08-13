@@ -93,7 +93,10 @@ describe("hydrateState", () => {
       // JSON.stringify writes array holes as null.
       persisted({ decisions: JSON.parse('["yes",null,"no",null,null,null]') })
     );
-    expect(s.decisions).toEqual(["yes", undefined, "no", undefined, undefined, undefined]);
+    const expected = Array(DATA.length).fill(undefined);
+    expected[0] = "yes";
+    expected[2] = "no";
+    expect(s.decisions).toEqual(expected);
     expect(savedCount(s)).toBe(1);
   });
 
@@ -129,7 +132,7 @@ describe("round trip through storage", () => {
       ...createInitialState(),
       profile: { ...createInitialState().profile, city: "Cebu City", gwa: "94.5" },
       idx: 3,
-      decisions: ["yes", "yes", "no", undefined, undefined, undefined],
+      decisions: ["yes", "yes", "no", ...Array(DATA.length - 3).fill(undefined)],
       docs: { [DATA[2].id]: [DATA[2].needs[1]] },
     };
 

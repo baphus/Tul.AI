@@ -8,6 +8,8 @@
  * replace its body with an API/Supabase fetch later without touching clients.
  */
 
+import rawScholarships from "@/data/scholarships.json";
+
 export type RequirementState = "ok" | "warn" | "none";
 
 export interface RequirementRow {
@@ -116,318 +118,106 @@ export interface Scholarship {
   sourceTier: 1 | 2 | 3 | 4;
 }
 
-export const DATA: Scholarship[] = [
-  {
-    id: "ched-merit-scholarship",
-    provider: "CHED",
-    eligibility: {
-      gwaMin: 85,
-      stages: ["Incoming College", "College Student", "Graduate Student"],
-    },
-    title: "Merit Scholarship Program",
-    amount: 60000,
-    amountNote: "per academic year",
-    deadline: "Aug. 30, 2026",
-    deadlineIso: "2026-08-30",
-    match: "Strong match",
-    matchShort: "8 of 9 requirements met",
-    tone: "strong",
-    met: 8,
-    total: 9,
-    why: [
-      { state: "ok", label: "GWA requirement met" },
-      { state: "ok", label: "Course requirement met" },
-      { state: "ok", label: "Student category matched" },
-    ],
-    rows: [
-      { state: "ok", label: "GWA", text: "Your 94.5% meets the published requirement." },
-      { state: "ok", label: "Course", text: "Your program is listed as eligible." },
-      { state: "ok", label: "Location", text: "Your location matches the program’s requirement." },
-      { state: "ok", label: "Student status", text: "Your current year level matches." },
-      { state: "warn", label: "Documentation", text: "You may need additional income documentation." },
-    ],
-    needs: ["PSA birth certificate", "Grade records", "Enrollment document", "Income documentation"],
-    sources: [
-      { name: "CHED Official Website", date: "Verified Aug. 11, 2026", short: "Aug 11" },
-      { name: "CHED Scholarship Memorandum", date: "Verified Aug. 11, 2026", short: "Aug 11" },
-    ],
-    host: "ched.gov.ph",
-    verification: "Verified",
-    lastVerified: "2026-08-11",
-    sourceTier: 1,
-    verify:
-      "The program is currently open and the published deadline has not changed. The academic requirement still matches your GWA. One item is unclear: the income documentation list was updated this year, so bring both an income certificate and the latest tax exemption form if you have one.",
-    kind: "national",
-    back: {
-      about:
-        "A nationwide merit program for students entering or continuing a four-year degree at a recognised institution. Awards are released per semester through the student’s school.",
-      facts: [
-        ["Who it’s for", "Full-time undergraduates with strong academic standing"],
-        ["Coverage", "Tuition support plus a book and living allowance"],
-        ["Renewal", "Reviewed every semester against your grades"],
-        ["Selection", "Ranked nationally, then allocated per region"],
-      ],
-    },
-  },
-  {
-    id: "dost-sei-undergraduate-scholarship",
-    provider: "DOST-SEI",
-    eligibility: {
-      gwaMin: 85,
-      stages: ["Incoming College", "College Student"],
-      years: ["1st Year"],
-      courses: ["BS Information Systems", "BS Computer Science", "BS Civil Engineering"],
-      courseMode: "published",
-    },
-    title: "Undergraduate S&T Scholarship",
-    amount: 40000,
-    amountNote: "per semester",
-    deadline: "Sept. 15, 2026",
-    deadlineIso: "2026-09-15",
-    match: "Strong match",
-    matchShort: "7 of 8 requirements met",
-    tone: "strong",
-    met: 7,
-    total: 8,
-    why: [
-      { state: "ok", label: "Science & technology course" },
-      { state: "ok", label: "Academic standing met" },
-      { state: "ok", label: "Filipino citizenship" },
-    ],
-    rows: [
-      { state: "ok", label: "Course", text: "Information Systems falls under the priority S&T fields." },
-      { state: "ok", label: "GWA", text: "Your 94.5% is above the published academic cut-off." },
-      { state: "ok", label: "Year level", text: "First-year applicants are accepted for this cycle." },
-      { state: "warn", label: "Qualifying exam", text: "You still need to sit the scholarship examination." },
-    ],
-    needs: [
-      "PSA birth certificate",
-      "Certificate of good moral character",
-      "Form 138 / grade records",
-      "Certificate of indigency (optional)",
-    ],
-    sources: [
-      { name: "DOST-SEI Official Website", date: "Verified Aug. 11, 2026", short: "Aug 11" },
-      { name: "DOST-SEI Application Notice", date: "Verified Aug. 10, 2026", short: "Aug 10" },
-    ],
-    host: "sei.dost.gov.ph",
-    verification: "Verified",
-    lastVerified: "2026-08-11",
-    sourceTier: 1,
-    verify:
-      "Applications for this cycle are open. The qualifying examination schedule for Region VII was published last week, and the nearest testing centre is in Cebu City. Everything else in your profile still lines up with the published criteria.",
-    kind: "national",
-    back: {
-      about:
-        "A science and technology scholarship for students in priority fields. Applicants sit a qualifying examination before the award is granted.",
-      facts: [
-        ["Who it’s for", "Students in priority S&T degree programs"],
-        ["Coverage", "Tuition, monthly stipend, book and transport allowance"],
-        ["Renewal", "Continuous, subject to academic performance"],
-        ["Selection", "Qualifying exam plus academic record"],
-      ],
-    },
-  },
-  {
-    id: "owwa-education-for-dependents",
-    provider: "OWWA",
-    eligibility: {
-      stages: ["Incoming College", "College Student", "Graduate Student"],
-      special: ["OFW parent"],
-    },
-    title: "Education for Dependents of OFWs",
-    amount: 30000,
-    amountNote: "per academic year",
-    deadline: "Aug. 28, 2026",
-    deadlineIso: "2026-08-28",
-    match: "Possible match",
-    matchShort: "5 of 8 requirements met",
-    tone: "possible",
-    met: 5,
-    total: 8,
-    why: [
-      { state: "ok", label: "Household context matched" },
-      { state: "ok", label: "Enrolled in a state university" },
-      { state: "warn", label: "Membership needs checking" },
-    ],
-    rows: [
-      { state: "ok", label: "Household context", text: "You indicated an OFW parent in your profile." },
-      { state: "ok", label: "School", text: "State universities are covered by this program." },
-      { state: "warn", label: "Membership", text: "The parent’s OWWA membership must be active at the time of application." },
-      { state: "none", label: "Slots", text: "The provider has not published the slot allocation for this cycle." },
-    ],
-    needs: ["Proof of OWWA membership", "PSA birth certificate", "Certificate of enrollment", "Grade records"],
-    sources: [{ name: "OWWA Official Website", date: "Verified Aug. 11, 2026", short: "Aug 11" }],
-    host: "owwa.gov.ph",
-    verification: "Needs Verification",
-    lastVerified: "2026-08-11",
-    sourceTier: 1,
-    verify:
-      "The program page is live, but the slot allocation for this cycle has not been published yet. Membership status is the deciding factor here, so it is worth confirming with the regional office before preparing the rest of the documents.",
-    kind: "national",
-    back: {
-      about:
-        "An education benefit for the children and dependents of overseas Filipino workers, administered through the regional welfare office.",
-      facts: [
-        ["Who it’s for", "Dependents of active member OFWs"],
-        ["Coverage", "Annual education assistance paid per school year"],
-        ["Renewal", "Requires proof of continued membership"],
-        ["Selection", "Slot-based, allocated per region"],
-      ],
-    },
-  },
-  {
-    id: "cebu-city-higher-education-assistance",
-    provider: "Cebu City Government",
-    eligibility: {
-      gwaMin: 75,
-      stages: ["Incoming College", "College Student"],
-      locations: ["Cebu City"],
-      incomeMax: 30000,
-    },
-    title: "Higher Education Assistance",
-    amount: 20000,
-    amountNote: "per semester",
-    deadline: "Aug. 22, 2026",
-    deadlineIso: "2026-08-22",
-    match: "Strong match",
-    matchShort: "6 of 6 requirements met",
-    tone: "strong",
-    met: 6,
-    total: 6,
-    why: [
-      { state: "ok", label: "Cebu City residency met" },
-      { state: "ok", label: "Income bracket matched" },
-      { state: "ok", label: "Enrolled locally" },
-    ],
-    rows: [
-      { state: "ok", label: "Residency", text: "Your registered address is within Cebu City." },
-      { state: "ok", label: "Income", text: "Your bracket falls within the published ceiling." },
-      { state: "ok", label: "School", text: "Your university is on the accredited list." },
-      { state: "ok", label: "Academic standing", text: "No failing grades is the only academic condition." },
-    ],
-    needs: ["Barangay certificate of residency", "Certificate of enrollment", "Grade records", "Income documentation"],
-    sources: [{ name: "Cebu City Scholarship Office Notice", date: "Verified Aug. 11, 2026", short: "Aug 11" }],
-    host: "cebucity.gov.ph",
-    verification: "Verified",
-    lastVerified: "2026-08-11",
-    sourceTier: 2,
-    verify:
-      "The city scholarship office is accepting walk-in submissions until the published deadline. Residency and enrollment are the two documents they check first, so prepare those before anything else.",
-    kind: "lgu",
-    back: {
-      about:
-        "A city-funded assistance program for residents enrolled in accredited colleges and universities within Cebu City.",
-      facts: [
-        ["Who it’s for", "Registered Cebu City residents"],
-        ["Coverage", "Cash assistance released per semester"],
-        ["Renewal", "Re-applied each semester with updated grades"],
-        ["Selection", "First-come, subject to residency verification"],
-      ],
-    },
-  },
-  {
-    id: "ctu-academic-excellence-grant",
-    provider: "Cebu Technological University",
-    eligibility: {
-      gwaMin: 90,
-      stages: ["College Student", "Graduate Student"],
-      school: "Cebu Technological University",
-    },
-    title: "Academic Excellence Grant",
-    amount: 15000,
-    amountNote: "per semester",
-    deadline: "Sept. 5, 2026",
-    deadlineIso: "2026-09-05",
-    match: "Strong match",
-    matchShort: "5 of 5 requirements met",
-    tone: "strong",
-    met: 5,
-    total: 5,
-    why: [
-      { state: "ok", label: "Enrolled at CTU" },
-      { state: "ok", label: "GWA above the cut-off" },
-      { state: "ok", label: "Full academic load" },
-    ],
-    rows: [
-      { state: "ok", label: "School", text: "You are enrolled at the granting university." },
-      { state: "ok", label: "GWA", text: "Your 94.5% is above the published 90% cut-off." },
-      { state: "ok", label: "Load", text: "A full academic load is required and your year level qualifies." },
-    ],
-    needs: ["Certificate of registration", "Grade records", "Application form from the registrar"],
-    sources: [{ name: "CTU Scholarship Portal", date: "Verified Aug. 11, 2026", short: "Aug 11" }],
-    host: "ctu.edu.ph",
-    verification: "Verified",
-    lastVerified: "2026-08-11",
-    sourceTier: 1,
-    verify:
-      "The grant is administered per campus. The Cebu City campus published its own submission window, which closes earlier than the university-wide date, so treat the earlier date as your deadline.",
-    kind: "university",
-    back: {
-      about:
-        "A university-administered grant recognising students who maintain a high general weighted average across a full academic load.",
-      facts: [
-        ["Who it’s for", "Enrolled CTU students with a full load"],
-        ["Coverage", "Partial tuition discount per semester"],
-        ["Renewal", "Automatic while the GWA is maintained"],
-        ["Selection", "Handled by each campus registrar"],
-      ],
-    },
-  },
-  {
-    id: "province-of-cebu-provincial-scholarship",
-    provider: "Province of Cebu",
-    eligibility: {
-      gwaMin: 80,
-      stages: ["Incoming College", "College Student", "Graduate Student"],
-      locations: ["Cebu City", "Elsewhere in Cebu"],
-      courses: ["BS Nursing", "BS Computer Science", "BS Civil Engineering"],
-      courseMode: "priority",
-    },
-    title: "Provincial Scholarship Program",
-    amount: 12000,
-    amountNote: "per semester",
-    deadline: "Aug. 30, 2026",
-    deadlineIso: "2026-08-30",
-    match: "Possible match",
-    matchShort: "4 of 7 requirements met",
-    tone: "possible",
-    met: 4,
-    total: 7,
-    why: [
-      { state: "ok", label: "Provincial residency" },
-      { state: "warn", label: "Priority course list" },
-      { state: "none", label: "Income ceiling unpublished" },
-    ],
-    rows: [
-      { state: "ok", label: "Residency", text: "Cebu residents across the province may apply." },
-      { state: "warn", label: "Course", text: "Information Systems is not on this year’s published priority list." },
-      { state: "none", label: "Income", text: "The provider has not published an income ceiling for this cycle." },
-      { state: "ok", label: "Academic standing", text: "Your GWA is comfortably above the minimum." },
-    ],
-    needs: ["Barangay certificate", "Certificate of enrollment", "Grade records"],
-    sources: [{ name: "Provincial Scholarship Notice", date: "Verified Aug. 9, 2026", short: "Aug 9" }],
-    host: "cebu.gov.ph",
-    verification: "Needs Verification",
-    lastVerified: "2026-08-09",
-    sourceTier: 2,
-    verify:
-      "The priority course list for this cycle is narrower than last year and does not currently include your program. The office may still accept applications under a general category, but that is not published, so treat this as unconfirmed.",
-    kind: "lgu",
-    back: {
-      about:
-        "A provincial program supporting students from across Cebu province, with priority given to a published list of courses each cycle.",
-      facts: [
-        ["Who it’s for", "Cebu province residents in any accredited school"],
-        ["Coverage", "Semestral assistance, amount set per cycle"],
-        ["Renewal", "Re-applied each cycle"],
-        ["Selection", "Priority courses first, then general applicants"],
-      ],
-    },
-  },
-];
+type RawScholarship = {
+  id: number; name: string; provider: string; provider_type?: string | null;
+  description?: string | null; benefits?: { items?: unknown } | null;
+  application_url?: string | null; official_url?: string | null; deadline?: string | null;
+  status?: string | null; eligible_courses?: unknown; eligible_year_levels?: unknown;
+  minimum_gwa?: number | null; income_requirements?: Record<string, unknown> | null;
+  geographic_requirements?: Record<string, unknown> | null; special_categories?: unknown;
+  required_documents?: unknown; source_urls?: unknown; last_verified_at?: string | null;
+  verification_status?: string | null;
+};
 
-/** Hue/saturation sampled from each provider's logo. */
+const rawRecords = rawScholarships as RawScholarship[];
+
+function strings(value: unknown): string[] {
+  return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string" && item.trim().length > 0) : [];
+}
+function dateOnly(value: string | null | undefined): string { return value ? value.slice(0, 10) : ""; }
+function displayDate(value: string | null | undefined): string {
+  const iso = dateOnly(value);
+  if (!iso) return "No published deadline";
+  return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" }).format(new Date(iso + "T00:00:00Z"));
+}
+function sourceHost(url: string | null | undefined, fallback: string): string {
+  if (!url) return fallback;
+  try { return new URL(url).hostname.replace(/^www\./, ""); } catch { return fallback; }
+}
+function sourceName(url: string, provider: string): string {
+  try { return new URL(url).hostname.replace(/^www\./, ""); } catch { return provider; }
+}
+function benefitAmount(record: RawScholarship): number {
+  const text = strings(record.benefits?.items).join(" ");
+  const values = [...text.matchAll(/[₱]\s*([0-9,]+)/g)].map((match) => Number(match[1].replace(/,/g, "")));
+  return values.length ? Math.max(...values) : 0;
+}
+function locations(record: RawScholarship): string[] | undefined {
+  const geo = record.geographic_requirements ?? {};
+  const values = [geo.locations, geo.cities, geo.provinces, geo.scope].flatMap(strings);
+  if (values.some((value) => value.toLowerCase().includes("nationwide"))) return undefined;
+  return values.length ? values : undefined;
+}
+function incomeMax(record: RawScholarship): number | undefined {
+  const income = record.income_requirements ?? {};
+  const monthly = income.max_monthly_income_php;
+  if (typeof monthly === "number") return monthly;
+  const annual = income.max_annual_gross_family_income_php;
+  return typeof annual === "number" ? Math.round(annual / 12) : undefined;
+}
+function verificationStatus(record: RawScholarship): VerificationStatus {
+  const raw = (record.verification_status ?? "").toUpperCase();
+  if (record.status?.toUpperCase() === "CLOSED" || raw.includes("CLOSED")) return "Expired";
+  if (raw === "VERIFIED" || raw.startsWith("VERIFIED_")) return "Verified";
+  if (raw.includes("UPDATED")) return "Updated";
+  return "Needs Verification";
+}
+function kindFor(record: RawScholarship): ScholarshipKind {
+  const type = (record.provider_type ?? "").toLowerCase();
+  if (type.includes("university") || type.includes("school")) return "university";
+  if (type.includes("lgu") || type.includes("local")) return "lgu";
+  return "national";
+}
+function criteriaFor(record: RawScholarship): Eligibility {
+  const courses = strings(record.eligible_courses);
+  const years = strings(record.eligible_year_levels);
+  return {
+    gwaMin: typeof record.minimum_gwa === "number" ? record.minimum_gwa : undefined,
+    courses: courses.length ? courses : undefined, courseMode: courses.length ? "published" : undefined,
+    years: years.length ? years : undefined, locations: locations(record), incomeMax: incomeMax(record),
+    special: strings(record.special_categories),
+  };
+}
+function rowsFor(criteria: Eligibility): RequirementRow[] {
+  const rows: RequirementRow[] = [];
+  if (criteria.gwaMin !== undefined) rows.push({ state: "none", label: "GWA", text: "Published minimum: " + criteria.gwaMin + "%." });
+  if (criteria.courses?.length) rows.push({ state: "none", label: "Course", text: "Published eligible courses include " + criteria.courses.slice(0, 4).join(", ") + "." });
+  if (criteria.years?.length) rows.push({ state: "none", label: "Year level", text: "Published eligible year levels include " + criteria.years.join(", ") + "." });
+  if (criteria.locations?.length) rows.push({ state: "none", label: "Location", text: "Published location scope: " + criteria.locations.join(", ") + "." });
+  if (criteria.incomeMax !== undefined) rows.push({ state: "none", label: "Household income", text: "Published monthly income ceiling: ₱" + criteria.incomeMax.toLocaleString("en-PH") + "." });
+  if (criteria.special?.length) rows.push({ state: "none", label: "Special circumstances", text: "Published categories include " + criteria.special.slice(0, 4).join(", ") + "." });
+  return rows.length ? rows : [{ state: "none", label: "Published criteria", text: "The provider has not published enough structured criteria for an automatic comparison." }];
+}
+function adapt(record: RawScholarship): Scholarship {
+  const eligibility = criteriaFor(record); const rows = rowsFor(eligibility); const urls = strings(record.source_urls);
+  const lastVerified = dateOnly(record.last_verified_at) || "Unknown"; const verification = verificationStatus(record);
+  const amount = benefitAmount(record); const deadlineIso = dateOnly(record.deadline) || "9999-12-31";
+  return {
+    id: String(record.id), provider: record.provider, title: record.name, amount,
+    amountNote: amount ? "published benefit" : "see provider details", deadline: displayDate(record.deadline), deadlineIso,
+    match: "Possible match", matchShort: "Review " + rows.length + " published requirement" + (rows.length === 1 ? "" : "s"),
+    tone: "possible", met: 0, total: rows.length,
+    why: rows.slice(0, 3).map((row) => ({ state: row.state, label: row.label + " published" })), rows,
+    needs: strings(record.required_documents).length ? strings(record.required_documents) : ["Check the provider's official application instructions"],
+    sources: urls.length ? urls.map((url) => ({ name: sourceName(url, record.provider), date: "Checked " + lastVerified, short: lastVerified.slice(5) })) : [{ name: record.provider, date: "Checked " + lastVerified, short: lastVerified.slice(5) }],
+    host: sourceHost(record.application_url || record.official_url, record.provider),
+    verify: record.description ?? "Review the provider's official source for current details.", kind: kindFor(record), eligibility,
+    back: { about: record.description ?? "No description published.", facts: [["Provider type", record.provider_type ?? "Not published"], ["Status", record.status ?? "Not published"], ["Source count", String(urls.length)]] },
+    verification, lastVerified, sourceTier: record.official_url ? 1 : 2,
+  };
+}
+export const DATA: Scholarship[] = rawRecords.map(adapt);
+
 export const THEME: { h: number; s: number }[] = [
   { h: 222, s: 42 },
   { h: 196, s: 78 },
@@ -446,14 +236,7 @@ export const LOGOS = [
   "/logos/cebu-province.png",
 ];
 
-export const KIND: ScholarshipKind[] = [
-  "national",
-  "national",
-  "national",
-  "lgu",
-  "university",
-  "lgu",
-];
+export const KIND: ScholarshipKind[] = DATA.map((card) => card.kind);
 
 export const STAGE_LABELS = [
   "Understanding your profile",
