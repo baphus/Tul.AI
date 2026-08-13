@@ -85,7 +85,8 @@ describe("scholarship data", () => {
   it("keeps the display deadline consistent with the ISO one", () => {
     for (const card of DATA) {
       const year = card.deadlineIso.slice(0, 4);
-      expect(card.deadline).toContain(year);
+      if (year === "9999") expect(card.deadline).toBe("No published deadline");
+      else expect(card.deadline).toContain(year);
     }
   });
 });

@@ -30,7 +30,7 @@ describe("answerFor", () => {
 
   it("answers about required documents", () => {
     const a = answerFor("What documents do I need?", CHED);
-    expect(a.text).toContain("PSA birth certificate");
+    expect(a.text).toContain(CHED.needs[0]);
   });
 
   it("answers about the amount", () => {

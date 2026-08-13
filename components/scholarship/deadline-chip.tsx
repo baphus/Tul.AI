@@ -30,7 +30,8 @@ export function DeadlineChip({
   withIcon?: boolean;
 }) {
   const today = useToday();
-  const days = today ? daysUntil(deadlineIso, today) : Number.NaN;
+  const hasDeadline = deadlineIso !== "9999-12-31";
+  const days = hasDeadline && today ? daysUntil(deadlineIso, today) : Number.NaN;
   const tone = today ? deadlineTone(days) : "open";
 
   return (
@@ -42,9 +43,9 @@ export function DeadlineChip({
       )}
     >
       {withIcon && <CalendarClockIcon className="size-3" aria-hidden="true" />}
-      <time dateTime={deadlineIso}>{deadline}</time>
-      {today && <span aria-hidden="true">·</span>}
-      {today && <span>{deadlineLabel(days)}</span>}
+      {hasDeadline ? <time dateTime={deadlineIso}>{deadline}</time> : <span>{deadline}</span>}
+      {hasDeadline && today && <span aria-hidden="true">·</span>}
+      {hasDeadline && today && <span>{deadlineLabel(days)}</span>}
     </span>
   );
 }
@@ -58,7 +59,7 @@ export function DeadlineCountdown({
   className?: string;
 }) {
   const today = useToday();
-  if (!today) return null;
+  if (!today || deadlineIso === "9999-12-31") return null;
   const days = daysUntil(deadlineIso, today);
   const tone = deadlineTone(days);
 
