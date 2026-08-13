@@ -46,7 +46,7 @@ export function DeckPreview({
           </div>
 
           <div className="mt-5 flex items-center gap-2.5">
-            <ProviderCrest index={index} provider={card.provider} className="size-9" />
+            <ProviderCrest index={index} provider={card.provider} logo={card.logo} className="size-9" />
             <span className="t-caption text-[color:var(--tint-ink)]">{card.provider}</span>
           </div>
 

@@ -47,7 +47,7 @@ export function ScholarshipDetail({
       >
         {topSlot}
         <div className="mt-4 flex items-center gap-3">
-          <ProviderCrest index={index} provider={card.provider} />
+          <ProviderCrest index={index} provider={card.provider} logo={card.logo} />
           <p className="t-eyebrow text-[color:var(--tint-ink)]">{card.provider}</p>
         </div>
         <h1 className="t-display-xl mt-4 text-balance">{card.title}</h1>

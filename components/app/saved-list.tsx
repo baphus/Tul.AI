@@ -109,7 +109,7 @@ function SavedCard({ card, index }: { card: Scholarship; index: number }) {
   return (
     <article className="rounded-lg border border-hairline bg-canvas p-5 sm:p-6">
       <div className="flex items-start gap-4">
-        <ProviderCrest index={index} provider={card.provider} />
+        <ProviderCrest index={index} provider={card.provider} logo={card.logo} />
         <div className="min-w-0 flex-1">
           <p className="t-eyebrow text-ink-mute">{card.provider}</p>
           <h2 className="t-display-md mt-1">

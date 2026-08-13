@@ -1,4 +1,4 @@
-import { DATA } from "@/lib/scholarships";
+import { CHIP_EXCLUSIVE, DATA } from "@/lib/scholarships";
 import { advisory, type Advice, type Decision } from "./advisory";
 
 /**
@@ -16,9 +16,19 @@ export interface Profile {
   school: string;
   course: string;
   year: string;
+  /**
+   * The band a student picked, e.g. "90–94". The primary academic answer: it is
+   * coarser than an exact figure, so it discloses less for the same matching
+   * power (AGENTS.md §9, spec §2.5).
+   */
+  gwaBand: string;
+  /** An exact GWA, optional. Where present it wins, because a point settles a
+   *  comparison a band can only straddle — see `gwaBounds` in matching.ts. */
   gwa: string;
   income: string;
   /** Household size changes what an income bracket means for need-based aid. */
+  householdBand: string;
+  /** An exact household size, optional. Read by no eligibility check. */
   dependents: string;
   chips: string[];
   notes: string;
@@ -76,8 +86,10 @@ export function emptyProfile(): Profile {
     school: "",
     course: "",
     year: "",
+    gwaBand: "",
     gwa: "",
     income: "",
+    householdBand: "",
     dependents: "",
     chips: [],
     notes: "",
@@ -141,10 +153,32 @@ export function reducer(state: AppState, action: Action): AppState {
     case "SET_FIELD":
       return { ...state, profile: { ...state.profile, [action.field]: action.value } };
 
+    /**
+     * Circumstance chips, with the two exclusive answers enforced here rather
+     * than in the UI so the profile editor and the onboarding step cannot
+     * disagree (spec §2.3).
+     *
+     * "None" and "Prefer not to say" are statements about the whole list, so
+     * they clear every other selection and each other; picking an actual
+     * circumstance clears them. A state where "None" sits beside "4Ps household"
+     * is unrepresentable, which is what lets `specialCheck` read "None" as
+     * evidence rather than as a contradiction.
+     */
     case "TOGGLE_CHIP": {
-      const chips = state.profile.chips.includes(action.value)
-        ? state.profile.chips.filter((c) => c !== action.value)
-        : [...state.profile.chips, action.value];
+      const current = state.profile.chips;
+      const value = action.value;
+
+      if (current.includes(value)) {
+        return {
+          ...state,
+          profile: { ...state.profile, chips: current.filter((c) => c !== value) },
+        };
+      }
+
+      const chips = CHIP_EXCLUSIVE.includes(value)
+        ? [value]
+        : [...current.filter((c) => !CHIP_EXCLUSIVE.includes(c)), value];
+
       return { ...state, profile: { ...state.profile, chips } };
     }
 

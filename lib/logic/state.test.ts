@@ -45,6 +45,47 @@ describe("profile", () => {
     expect(s.profile.chips).toEqual(["PWD"]);
   });
 
+  /*
+   * Exclusivity lives in the reducer rather than the UI so the onboarding step
+   * and the profile editor cannot disagree — and so a state where "None" sits
+   * beside a disclosed circumstance is unrepresentable, which is what lets the
+   * engine read "None" as evidence rather than as a contradiction (spec §2.3).
+   */
+  describe("exclusive circumstance answers", () => {
+    it("clears every circumstance when 'None' is picked", () => {
+      let s = reducer(createInitialState(), { type: "TOGGLE_CHIP", value: "OFW parent" });
+      s = reducer(s, { type: "TOGGLE_CHIP", value: "PWD" });
+      s = reducer(s, { type: "TOGGLE_CHIP", value: "None" });
+      expect(s.profile.chips).toEqual(["None"]);
+    });
+
+    it("clears every circumstance when 'Prefer not to say' is picked", () => {
+      let s = reducer(createInitialState(), { type: "TOGGLE_CHIP", value: "4Ps household" });
+      s = reducer(s, { type: "TOGGLE_CHIP", value: "Prefer not to say" });
+      expect(s.profile.chips).toEqual(["Prefer not to say"]);
+    });
+
+    it("clears the exclusive answer when a circumstance is picked", () => {
+      let s = reducer(createInitialState(), { type: "TOGGLE_CHIP", value: "None" });
+      s = reducer(s, { type: "TOGGLE_CHIP", value: "OFW parent" });
+      expect(s.profile.chips).toEqual(["OFW parent"]);
+    });
+
+    it("keeps the two exclusive answers mutually exclusive", () => {
+      let s = reducer(createInitialState(), { type: "TOGGLE_CHIP", value: "None" });
+      s = reducer(s, { type: "TOGGLE_CHIP", value: "Prefer not to say" });
+      expect(s.profile.chips).toEqual(["Prefer not to say"]);
+      s = reducer(s, { type: "TOGGLE_CHIP", value: "None" });
+      expect(s.profile.chips).toEqual(["None"]);
+    });
+
+    it("still lets an exclusive answer be unticked back to nothing", () => {
+      let s = reducer(createInitialState(), { type: "TOGGLE_CHIP", value: "None" });
+      s = reducer(s, { type: "TOGGLE_CHIP", value: "None" });
+      expect(s.profile.chips).toEqual([]);
+    });
+  });
+
   it("fills a demo profile", () => {
     const s = reducer(createInitialState(), { type: "DEMO_FILL" });
     expect(s.profile).toMatchObject({

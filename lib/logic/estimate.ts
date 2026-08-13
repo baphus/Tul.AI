@@ -28,7 +28,11 @@ export interface SupportSummary {
   count: number;
   /** How many of those carry a `Verified` state right now. */
   verifiedCount: number;
-  /** Published support range, in pesos. `null` when the group is empty. */
+  /**
+   * Published support range, in pesos — over records whose benefit reduced to a
+   * figure. `null` when the group is empty, and also when no record in it
+   * publishes a parseable amount.
+   */
   lowest: number | null;
   highest: number | null;
   /** ISO date of the nearest deadline in the group, or `null` when empty. */
@@ -75,7 +79,18 @@ export function summariseSupport(
     };
   }
 
-  const amounts = slice.map((card) => card.amount);
+  /*
+   * Only records whose published benefit reduced to a figure. `amount` is 0 when
+   * the provider states its benefit in prose the data adapter could not parse —
+   * "full tuition coverage", "a monthly stipend" — and that is an absence of a
+   * number, not an offer of nothing. Including those zeros made the range read
+   * "₱0 – ₱177,000", which understates every provider in the set and reads as a
+   * programme that pays nothing.
+   *
+   * The range is therefore over priced records only, while `count` stays the
+   * whole slice: the group really does hold that many programmes.
+   */
+  const amounts = slice.map((card) => card.amount).filter((amount) => amount > 0);
   const deadlines = slice.map((card) => card.deadlineIso).sort();
   const checks = slice.map((card) => card.lastVerified).sort();
 
@@ -83,8 +98,8 @@ export function summariseSupport(
     group,
     count: slice.length,
     verifiedCount: slice.filter((card) => card.verification === "Verified").length,
-    lowest: Math.min(...amounts),
-    highest: Math.max(...amounts),
+    lowest: amounts.length ? Math.min(...amounts) : null,
+    highest: amounts.length ? Math.max(...amounts) : null,
     soonestDeadlineIso: deadlines[0] ?? null,
     lastVerified: checks.at(-1) ?? null,
   };

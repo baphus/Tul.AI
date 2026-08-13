@@ -43,7 +43,7 @@ function Row({ card, index }: { card: Scholarship; index: number }) {
        visibly steps. */
     <div className="mb-3.5 rounded-xl bg-canvas p-4">
       <div className="flex items-center gap-3">
-        <ProviderCrest index={index} provider={card.provider} className="size-9" />
+        <ProviderCrest index={index} provider={card.provider} logo={card.logo} className="size-9" />
         <div className="min-w-0 flex-1">
           <p className="t-micro truncate text-ink-mute">{card.provider}</p>
           <p className="t-caption-strong truncate text-ink">{card.title}</p>
@@ -51,10 +51,18 @@ function Row({ card, index }: { card: Scholarship; index: number }) {
       </div>
 
       <div className="mt-3.5 flex items-baseline justify-between gap-3 border-t border-hairline pt-3">
-        <p className="t-caption-strong t-num text-ink">
-          {formatPeso(card.amount)}{" "}
-          <span className="t-micro text-ink-mute">{card.amountNote}</span>
-        </p>
+        {/* `amount` is 0 when the provider states its benefit in prose the
+            adapter can't parse into a figure; `amountNote` then reads "see
+            provider details". Printing ₱0 alongside it would assert the
+            provider offers nothing. */}
+        {card.amount > 0 ? (
+          <p className="t-caption-strong t-num text-ink">
+            {formatPeso(card.amount)}{" "}
+            <span className="t-micro text-ink-mute">{card.amountNote}</span>
+          </p>
+        ) : (
+          <p className="t-caption-strong text-ink-mute">{card.amountNote}</p>
+        )}
         <p
           className={`t-micro inline-flex flex-none items-center gap-1 ${
             confirmed ? "text-met" : "text-attention-ink"

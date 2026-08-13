@@ -9,7 +9,9 @@
  * the UI can never surface a fabricated confidence score.
  */
 
-import type { Scholarship } from "@/lib/scholarships";
+import { GWA_BANDS, bandByValue, upperExclusive } from "@/lib/reference/bands";
+import { CHIP_NONE, PLANNING, type Scholarship } from "@/lib/scholarships";
+import { matchCohort, matchCourse } from "./normalize";
 import type { Profile } from "./state";
 
 export type CheckState = "met" | "not-met" | "unknown";
@@ -27,7 +29,18 @@ export interface RankedMatch {
   id: string;
   met: number;
   total: number;
+  /** Requirements that could not be resolved either way. */
+  unknown: number;
   tone: MatchTone4;
+  /**
+   * Share of published requirements confirmed met, 0–100.
+   *
+   * `null` — not 0 — when the provider publishes nothing checkable, because a
+   * programme with no published criteria has not been failed, it has simply not
+   * been measured. Rendering 0% there would read as a rejection the arithmetic
+   * never made (AGENTS.md §3, spec §2.1).
+   */
+  percent: number | null;
   /** The plain-language bucket, e.g. "Strong match". */
   match: string;
   checks: RequirementCheck[];
@@ -56,13 +69,28 @@ function gwaOf(profile: Profile): number | null {
   return Number.isFinite(n) ? n : null;
 }
 
+/**
+ * The interval a profile's GWA answer describes: a degenerate point when they
+ * gave an exact figure, a half-open interval when they picked a band, `null` when
+ * they did neither.
+ *
+ * `highExclusive` rather than an inclusive upper bound because a band labelled
+ * "90–94" holds every mark below 95, fractions included — see the note on `Band`.
+ * The exact figure wins where both exist, because a point can settle a comparison
+ * a band can only straddle (see `gwaCheck`).
+ */
+export function gwaBounds(
+  profile: Profile
+): { low: number; highExclusive: number } | null {
+  const exact = gwaOf(profile);
+  if (exact !== null) return { low: exact, highExclusive: exact };
+  const band = bandByValue(GWA_BANDS, profile.gwaBand);
+  return band ? { low: band.low, highExclusive: upperExclusive(band) } : null;
+}
+
 /** `null` when the bracket is empty or "Prefer not to say" — both are unknown. */
 function incomeOf(profile: Profile): number | null {
   return INCOME_MIDPOINT[profile.income] ?? null;
-}
-
-function sameField(list: string[], value: string): boolean {
-  return list.some((entry) => entry.trim().toLowerCase() === value.trim().toLowerCase());
 }
 
 /**
@@ -75,61 +103,60 @@ export function matchScholarship(card: Scholarship, profile: Profile): RankedMat
   const el = card.eligibility;
 
   if (el.gwaMin !== undefined) {
-    const gwa = gwaOf(profile);
-    const met = gwa !== null && gwa >= el.gwaMin;
-    checks.push({
-      label: "GWA",
-      state: gwa === null ? "unknown" : met ? "met" : "not-met",
-      detail:
-        gwa === null
-          ? `No GWA on your profile — cannot confirm the ${el.gwaMin}% minimum.`
-          : met
-            ? `Your ${gwa}% meets the published ${el.gwaMin}% minimum.`
-            : `Your ${gwa}% is below the published ${el.gwaMin}% minimum.`,
-    });
+    checks.push(gwaCheck(el.gwaMin, profile));
   }
 
   if (el.courses && el.courses.length > 0) {
     const course = profile.course.trim();
-    const listed = sameField(el.courses, course);
+    const verdict = matchCourse(el.courses, course);
     checks.push({
       label: "Course",
-      state: listed ? "met" : !course || el.courseMode === "priority" ? "unknown" : "not-met",
-      detail: listed
-        ? `${course} is on the published eligible list.`
-        : !course
-          ? "No course on your profile — cannot confirm the eligible list."
-          : el.courseMode === "priority"
-            ? `${course} is not on this cycle's priority list, but the office may still accept general applicants.`
+      state: verdict.state,
+      detail: verdict.openToAny
+        ? course
+          ? "This programme is open to any undergraduate course, so your course qualifies."
+          : "This programme is open to any undergraduate course — add yours and we'll confirm it."
+        : verdict.state === "met"
+          ? `${course} matches the published entry “${verdict.matched}”.`
+          : verdict.state === "unknown"
+            ? course
+              ? `${course} is not named on this cycle's list, but the list is a priority or partial one — the office may still accept you.`
+              : "No course on your profile — cannot confirm the eligible list."
             : `${course} is not on the published eligible list.`,
     });
   }
 
   if (el.years && el.years.length > 0) {
-    const year = profile.year.trim();
-    const listed = el.years.includes(year);
+    const verdict = matchCohort(el.years, profile.stage, profile.year);
+    const where = describeCohort(profile);
     checks.push({
       label: "Year level",
-      state: !year ? "unknown" : listed ? "met" : "not-met",
-      detail: !year
-        ? "No year level on your profile — cannot confirm which cycles accept you."
-        : listed
-          ? `${year} is accepted for this cycle.`
-          : `${year} is not accepted for this cycle.`,
+      state: verdict.state,
+      detail:
+        verdict.state === "met"
+          ? `${where} is accepted for this cycle — published as “${verdict.matched}”.`
+          : verdict.state === "unknown"
+            ? where === null
+              ? "Nothing on your profile places you in a year level yet — cannot confirm which cycles accept you."
+              : `The published year levels don't resolve to a clear cohort, so this stays unknown rather than counting against you.`
+            : `${where} is outside the published year levels for this cycle.`,
     });
   }
 
   if (el.stages && el.stages.length > 0) {
     const stage = profile.stage.trim();
+    const placeable = stage !== "" && stage !== PLANNING;
     const listed = el.stages.includes(stage);
     checks.push({
       label: "Student status",
-      state: !stage ? "unknown" : listed ? "met" : "not-met",
+      state: !placeable ? "unknown" : listed ? "met" : "not-met",
       detail: !stage
         ? "No student status on your profile — cannot confirm the accepted group."
-        : listed
-          ? `${stage} is within the published group.`
-          : `${stage} is outside the published group.`,
+        : stage === PLANNING
+          ? "You're still planning where to study, so this requirement stays unknown."
+          : listed
+            ? `${stage} is within the published group.`
+            : `${stage} is outside the published group.`,
     });
   }
 
@@ -164,39 +191,138 @@ export function matchScholarship(card: Scholarship, profile: Profile): RankedMat
 
   if (el.school) {
     const school = profile.school.trim();
+    const same = school.toLowerCase() === el.school.trim().toLowerCase();
     checks.push({
       label: "School",
-      state: !school ? "unknown" : school === el.school ? "met" : "not-met",
+      state: !school ? "unknown" : same ? "met" : "not-met",
       detail: !school
         ? "No school on your profile — cannot confirm where you are enrolled."
-        : school === el.school
+        : same
           ? `${school} is the granting university.`
           : `This grant is for students enrolled at ${el.school}.`,
     });
   }
 
   if (el.special && el.special.length > 0) {
-    const special = el.special;
-    const picked = profile.chips;
-    const matched = picked.filter((chip) => special.includes(chip));
-    const withheld = picked.includes("Prefer not to say") || picked.length === 0;
-    checks.push({
-      label: "Special circumstances",
-      state: matched.length > 0 ? "met" : withheld ? "unknown" : "not-met",
-      detail:
-        matched.length > 0
-          ? `You indicated ${matched.join(" and ")} — this programme is for you.`
-          : withheld
-            ? "No circumstances on your profile — this requirement stays unknown."
-            : `This programme is for ${special.join(" or ")} households.`,
-    });
+    checks.push(specialCheck(el.special, profile));
   }
 
   const total = checks.length;
   const met = checks.filter((check) => check.state === "met").length;
+  const unknown = checks.filter((check) => check.state === "unknown").length;
   const tone = toneFor(checks, met, total);
 
-  return { id: card.id, met, total, tone, match: TONE_LABEL[tone], checks };
+  return {
+    id: card.id,
+    met,
+    total,
+    unknown,
+    tone,
+    percent: total === 0 ? null : Math.round((met / total) * 100),
+    match: TONE_LABEL[tone],
+    checks,
+  };
+}
+
+/**
+ * A GWA answer against a published minimum.
+ *
+ * An exact figure is a point and settles the comparison. A band is an interval,
+ * and an interval that *straddles* the minimum settles nothing: a student in the
+ * 90–94 band facing a 92% cut-off may or may not clear it, and calling that Not
+ * Met would fail them on evidence we do not have (AGENTS.md §3, spec §2.2). So
+ * the straddle resolves Unknown, and the detail names the exact-GWA field as the
+ * way to resolve it — which is the whole reason that optional input still exists.
+ */
+function gwaCheck(gwaMin: number, profile: Profile): RequirementCheck {
+  const bounds = gwaBounds(profile);
+  if (bounds === null) {
+    return {
+      label: "GWA",
+      state: "unknown",
+      detail: `No GWA on your profile — cannot confirm the ${gwaMin}% minimum.`,
+    };
+  }
+
+  const exact = bounds.low === bounds.highExclusive;
+  const shown = exact ? `${bounds.low}%` : `${profile.gwaBand} band`;
+
+  if (bounds.low >= gwaMin) {
+    return {
+      label: "GWA",
+      state: "met",
+      detail: `Your ${shown} ${exact ? "meets" : "clears"} the published ${gwaMin}% minimum.`,
+    };
+  }
+
+  /* Every mark the answer could represent falls short. For a band this is the
+     exclusive upper bound, so "90–94" against a 95% minimum is a genuine miss
+     while the same band against 94% is not. */
+  if (bounds.highExclusive <= gwaMin) {
+    return {
+      label: "GWA",
+      state: "not-met",
+      detail: `Your ${shown} is below the published ${gwaMin}% minimum.`,
+    };
+  }
+
+  return {
+    label: "GWA",
+    state: "unknown",
+    detail: `Your ${profile.gwaBand} band straddles the published ${gwaMin}% minimum — add your exact GWA to resolve it.`,
+  };
+}
+
+/**
+ * Special-circumstance categories against what a student disclosed.
+ *
+ * Three distinct answers, and conflating any two of them would be a §3 failure
+ * (spec §2.3):
+ *
+ *   - a matching circumstance          → met
+ *   - "None of these apply"            → not-met. The student told us something.
+ *   - "Prefer not to say", or nothing  → unknown. We have no evidence either way.
+ *
+ * The middle case is the one worth being careful about. It is honest — a
+ * 4Ps-only programme genuinely does not fit a student who says no listed
+ * circumstance applies — and it is only reachable because the chip is exclusive,
+ * so "None" can never sit alongside a disclosed circumstance.
+ */
+function specialCheck(special: string[], profile: Profile): RequirementCheck {
+  const picked = profile.chips;
+  const matched = picked.filter((chip) => special.includes(chip));
+
+  if (matched.length > 0) {
+    return {
+      label: "Special circumstances",
+      state: "met",
+      detail: `You indicated ${matched.join(" and ")} — this programme is for you.`,
+    };
+  }
+
+  if (picked.includes(CHIP_NONE)) {
+    return {
+      label: "Special circumstances",
+      state: "not-met",
+      detail: `You told us none of the listed circumstances apply, and this programme is for ${special.slice(0, 3).join(" or ")} applicants.`,
+    };
+  }
+
+  /* "Prefer not to say", or no answer at all. */
+  return {
+    label: "Special circumstances",
+    state: "unknown",
+    detail: "No circumstances on your profile — this requirement stays unknown.",
+  };
+}
+
+/** How to name the student's cohort in a requirement detail. */
+function describeCohort(profile: Profile): string | null {
+  const stage = profile.stage.trim();
+  const year = profile.year.trim();
+  if (!stage || stage === PLANNING) return null;
+  if (stage === "College Student" && year) return `${year} (${stage.toLowerCase()})`;
+  return stage;
 }
 
 /**
@@ -224,8 +350,19 @@ function toneFor(checks: RequirementCheck[], met: number, total: number): MatchT
  * (PRD §19, AGENTS.md §6).
  */
 export function rankScholarships(cards: Scholarship[], profile: Profile): RankedMatch[] {
-  return cards
-    .map((card) => ({ card, result: matchScholarship(card, profile) }))
+  return sortMatches(cards.map((card) => ({ card, result: matchScholarship(card, profile) })));
+}
+
+/**
+ * Order already-computed results. Exported so a caller that needs the raw checks
+ * as well as the ranking (the research passes) can reuse this exact ordering
+ * rather than keeping a second copy of it that could drift.
+ */
+export function sortMatches(
+  pairs: { card: Scholarship; result: RankedMatch }[]
+): RankedMatch[] {
+  return pairs
+    .slice()
     .sort((a, b) => compare(a.result, a.card, b.result, b.card))
     .map(({ result }) => result);
 }

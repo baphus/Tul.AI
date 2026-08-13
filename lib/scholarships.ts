@@ -88,6 +88,13 @@ export interface Eligibility {
 export interface Scholarship {
   id: string;
   provider: string;
+  /**
+   * The provider's own crest, as published with the record. `null` when the
+   * record carries none — which must render as a monogram, never as another
+   * provider's logo. Attributing CHED's crest to a private foundation is a
+   * source-integrity failure, not a cosmetic one (AGENTS.md §5).
+   */
+  logo: string | null;
   title: string;
   amount: number;
   amountNote: string;
@@ -126,7 +133,7 @@ type RawScholarship = {
   minimum_gwa?: number | null; income_requirements?: Record<string, unknown> | null;
   geographic_requirements?: Record<string, unknown> | null; special_categories?: unknown;
   required_documents?: unknown; source_urls?: unknown; last_verified_at?: string | null;
-  verification_status?: string | null;
+  verification_status?: string | null; logo_url?: string | null;
 };
 
 const rawRecords = rawScholarships as RawScholarship[];
@@ -203,7 +210,7 @@ function adapt(record: RawScholarship): Scholarship {
   const lastVerified = dateOnly(record.last_verified_at) || "Unknown"; const verification = verificationStatus(record);
   const amount = benefitAmount(record); const deadlineIso = dateOnly(record.deadline) || "9999-12-31";
   return {
-    id: String(record.id), provider: record.provider, title: record.name, amount,
+    id: String(record.id), provider: record.provider, logo: record.logo_url ?? null, title: record.name, amount,
     amountNote: amount ? "published benefit" : "see provider details", deadline: displayDate(record.deadline), deadlineIso,
     match: "Possible match", matchShort: "Review " + rows.length + " published requirement" + (rows.length === 1 ? "" : "s"),
     tone: "possible", met: 0, total: rows.length,
@@ -270,22 +277,69 @@ export const INCOMES = [
   "Prefer not to say",
 ];
 
-export const CHIPS = [
+/**
+ * Circumstances that unlock specific programmes. Optional and sensitive
+ * (AGENTS.md §9) — a student may disclose none of them and lose nothing.
+ */
+export const CIRCUMSTANCE_CHIPS = [
   "4Ps household",
   "OFW parent",
   "Solo-parent household",
   "PWD",
   "Indigenous community",
-  "None",
-  "Prefer not to say",
 ];
+
+/**
+ * "None" and "Prefer not to say" are answers *about* the list rather than
+ * entries in it, so they are exclusive: picking either clears every other
+ * selection, and picking a circumstance clears them.
+ *
+ * They are not interchangeable. "None" is evidence — the student told us no
+ * listed circumstance applies — and resolves a category requirement to Not Met.
+ * "Prefer not to say" is the absence of evidence and resolves to Unknown. See
+ * `specialCheck` in lib/logic/matching.ts (spec §2.3).
+ *
+ * The stored value of "None" stays the bare string it has always been so that
+ * profiles already in localStorage keep their answer; only the label changed.
+ */
+export const CHIP_NONE = "None";
+export const CHIP_WITHHELD = "Prefer not to say";
+export const CHIP_EXCLUSIVE = [CHIP_NONE, CHIP_WITHHELD];
+
+export const CHIPS = [...CIRCUMSTANCE_CHIPS, ...CHIP_EXCLUSIVE];
+
+const CHIP_LABELS: Record<string, string> = {
+  [CHIP_NONE]: "None of these apply",
+};
+
+/** What a chip reads as on screen, which can differ from what we store. */
+export function chipLabel(value: string): string {
+  return CHIP_LABELS[value] ?? value;
+}
+
+/**
+ * A student who has not committed to a school yet — someone securing funding
+ * before they enrol. They are asked no question that presumes enrolment, and
+ * every cohort requirement resolves Unknown for them rather than Not Met.
+ */
+export const PLANNING = "Still planning to study";
 
 export const STAGE_OPTS = [
   "Grade 12",
   "Incoming College",
   "College Student",
   "Graduate Student",
+  PLANNING,
 ];
+
+/** What each stage means, shown under the option on step 1. */
+export const STAGE_NOTES: Record<string, string> = {
+  "Grade 12": "Finishing senior high and looking ahead to college",
+  "Incoming College": "Accepted or enrolling, but classes haven't started",
+  "College Student": "Currently enrolled in an undergraduate programme",
+  "Graduate Student": "Taking a master's, doctorate or professional degree",
+  [PLANNING]: "Securing funding first — no school decided yet",
+};
 
 export const CITIES = [
   "Cebu City",
@@ -319,7 +373,51 @@ export const COURSE_SUGGESTIONS = [
 
 export const DEPENDENT_HINT = "Including yourself, how many people depend on that income?";
 
-export const YEARS = ["1st Year", "2nd Year", "3rd Year", "4th Year"];
+/** Five, because Architecture and several engineering programmes run five years. */
+export const YEARS = ["1st Year", "2nd Year", "3rd Year", "4th Year", "5th Year"];
+
+/**
+ * Openers for the free-text step (spec §2.4).
+ *
+ * Two kinds, and the distinction is a privacy requirement rather than a style
+ * choice. A message whose meaning is already modelled as a structured field sets
+ * that field (`chip`) instead of writing sensitive prose we would then have to
+ * store, justify and delete — AGENTS.md §9 prefers the reviewed structured field
+ * over the paragraph. Only genuinely unstructured context reaches `notes`.
+ */
+export interface QuickNote {
+  label: string;
+  /** Sets this circumstance chip instead of appending text. */
+  chip?: string;
+  /** Appended to the notes field, in the student's own voice. */
+  text?: string;
+}
+
+export const QUICK_NOTES: QuickNote[] = [
+  { label: "One of my parents works overseas", chip: "OFW parent" },
+  { label: "We're a 4Ps household", chip: "4Ps household" },
+  { label: "I'm from a solo-parent household", chip: "Solo-parent household" },
+  {
+    label: "I'm the first in my family to go to college",
+    text: "I'm the first in my family to go to college.",
+  },
+  {
+    label: "I'm working while studying",
+    text: "I'm working while studying, so I need something that fits around a job.",
+  },
+  {
+    label: "I need allowance, not just tuition",
+    text: "Tuition is only part of the problem — I need help with allowance, transport and books too.",
+  },
+  {
+    label: "I had to stop studying for a while",
+    text: "I had to stop studying for a while and I'm returning now.",
+  },
+  {
+    label: "I'm planning to shift courses",
+    text: "I'm planning to shift courses, so I'm open to programmes tied to a different field.",
+  },
+];
 
 export const BRAND = "oklch(0.5 0.12 200)";
 export const BRAND_DARK = "oklch(0.66 0.11 200)";
@@ -327,8 +425,13 @@ export const OK = "oklch(0.55 0.12 155)";
 export const WARN = "oklch(0.66 0.13 80)";
 export const GREY = "oklch(0.78 0.012 230)";
 
+/*
+ * Cycles rather than clamps. `Math.min(index, length - 1)` gave every record
+ * past the sixth the same hue, which with a 32-record data set meant 27 of them
+ * shared one tint.
+ */
 export function providerHue(index: number) {
-  return THEME[Math.min(index, THEME.length - 1)];
+  return THEME[index % THEME.length];
 }
 
 export function scholarshipLogo(index: number) {

@@ -8,7 +8,9 @@ function mk(id: string, met: number, total: number, tone: MatchTone4): RankedMat
     id,
     met,
     total,
+    unknown: total - met,
     tone,
+    percent: total === 0 ? null : Math.round((met / total) * 100),
     match: tone,
     checks: [],
   } as RankedMatch;

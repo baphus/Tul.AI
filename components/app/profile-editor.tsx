@@ -19,7 +19,16 @@ import {
   isProfileReady,
   profileCompleteness,
 } from "@/lib/logic/validation";
-import { CHIPS, CITIES, INCOMES, STAGE_OPTS, YEARS } from "@/lib/scholarships";
+import { GWA_BANDS, HOUSEHOLD_BANDS } from "@/lib/reference/bands";
+import {
+  CHIP_EXCLUSIVE,
+  CIRCUMSTANCE_CHIPS,
+  CITIES,
+  INCOMES,
+  STAGE_OPTS,
+  YEARS,
+  chipLabel,
+} from "@/lib/scholarships";
 import { cn } from "@/lib/utils";
 
 const fieldClass = "h-12 rounded-md border-hairline bg-canvas px-4";
@@ -177,7 +186,28 @@ export function ProfileEditor() {
               </select>
             </div>
             <div className="grid gap-2.5">
-              <Label htmlFor="gwa">GWA</Label>
+              <Label htmlFor="gwaBand">GWA range</Label>
+              <select
+                id="gwaBand"
+                className={selectClass}
+                value={profile.gwaBand}
+                onChange={(e) => set("gwaBand", e.target.value)}
+              >
+                <option value="">Prefer not to say</option>
+                {GWA_BANDS.map((band) => (
+                  <option key={band.value} value={band.value}>
+                    {band.value}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="mt-5 grid gap-5 sm:max-w-xs">
+            <div className="grid gap-2.5">
+              <Label htmlFor="gwa">
+                Exact GWA <span className="t-micro text-ink-mute">— optional</span>
+              </Label>
               <Input
                 id="gwa"
                 inputMode="decimal"
@@ -185,12 +215,17 @@ export function ProfileEditor() {
                 placeholder="e.g. 94.5"
                 value={profile.gwa}
                 aria-invalid={gwaError(profile.gwa)}
-                aria-describedby={gwaError(profile.gwa) ? "gwa-error" : undefined}
+                aria-describedby={gwaError(profile.gwa) ? "gwa-error" : "gwa-hint"}
                 onChange={(e) => set("gwa", e.target.value)}
               />
-              {gwaError(profile.gwa) && (
+              {gwaError(profile.gwa) ? (
                 <p id="gwa-error" role="alert" className="t-micro text-destructive">
                   Use a number between 60 and 100, or leave it blank.
+                </p>
+              ) : (
+                <p id="gwa-hint" className="t-micro text-ink-mute text-pretty">
+                  Only needed when your range sits across a provider&apos;s cut-off — the
+                  match will say so when it does.
                 </p>
               )}
             </div>
@@ -219,34 +254,65 @@ export function ProfileEditor() {
               </select>
             </div>
             <div className="grid gap-2.5">
-              <Label htmlFor="dependents">Household size</Label>
-              <Input
-                id="dependents"
-                inputMode="numeric"
-                className={fieldClass}
-                placeholder="e.g. 5"
-                value={profile.dependents}
-                aria-invalid={dependentsError(profile.dependents)}
-                onChange={(e) => set("dependents", e.target.value)}
-              />
-              {dependentsError(profile.dependents) && (
-                <p role="alert" className="t-micro text-destructive">
-                  Use a whole number between 0 and 20.
-                </p>
-              )}
+              <Label htmlFor="householdBand">Household size</Label>
+              <select
+                id="householdBand"
+                className={selectClass}
+                value={profile.householdBand}
+                onChange={(e) => set("householdBand", e.target.value)}
+              >
+                <option value="">Prefer not to say</option>
+                {HOUSEHOLD_BANDS.map((band) => (
+                  <option key={band.value} value={band.value}>
+                    {band.value}
+                  </option>
+                ))}
+              </select>
             </div>
+          </div>
+
+          <div className="mt-5 grid gap-2.5 sm:max-w-xs">
+            <Label htmlFor="dependents">
+              Exact household size{" "}
+              <span className="t-micro text-ink-mute">— optional</span>
+            </Label>
+            <Input
+              id="dependents"
+              inputMode="numeric"
+              className={fieldClass}
+              placeholder="e.g. 5"
+              value={profile.dependents}
+              aria-invalid={dependentsError(profile.dependents)}
+              onChange={(e) => set("dependents", e.target.value)}
+            />
+            {dependentsError(profile.dependents) && (
+              <p role="alert" className="t-micro text-destructive">
+                Use a whole number between 0 and 20.
+              </p>
+            )}
           </div>
 
           <div className="mt-6">
             <p className="t-body-strong">Circumstances you&apos;ve shared</p>
-            <p className="t-caption mt-1 mb-3.5 text-ink-mute">
-              Each one unlocks specific programmes. Remove any at any time.
+            <p className="t-caption mt-1 mb-3.5 text-ink-mute text-pretty">
+              Each one unlocks specific programmes. Remove any at any time. The two below
+              the line are answers about the whole list, so picking either clears the rest.
             </p>
             <div className="flex flex-wrap gap-2">
-              {CHIPS.map((option) => (
+              {CIRCUMSTANCE_CHIPS.map((option) => (
                 <ChoiceChip
                   key={option}
                   label={option}
+                  pressed={profile.chips.includes(option)}
+                  onToggle={() => dispatch({ type: "TOGGLE_CHIP", value: option })}
+                />
+              ))}
+            </div>
+            <div className="mt-3.5 flex flex-wrap gap-2 border-t border-hairline pt-3.5">
+              {CHIP_EXCLUSIVE.map((option) => (
+                <ChoiceChip
+                  key={option}
+                  label={chipLabel(option)}
                   pressed={profile.chips.includes(option)}
                   onToggle={() => dispatch({ type: "TOGGLE_CHIP", value: option })}
                 />

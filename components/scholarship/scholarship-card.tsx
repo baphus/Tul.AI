@@ -133,7 +133,7 @@ export function ScholarshipCard({
           <FlipButton onClick={onFlip} label="Flip back to the match summary" />
 
           <div className="mb-3 flex items-center gap-2.5">
-            <ProviderCrest index={index} provider={card.provider} />
+            <ProviderCrest index={index} provider={card.provider} logo={card.logo} />
             <p className="t-eyebrow text-[color:var(--tint-ink)]">{card.provider}</p>
           </div>
           <h3 className="t-display-md mb-4 text-balance">{card.title}</h3>

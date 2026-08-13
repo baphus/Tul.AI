@@ -9,7 +9,15 @@ export function formatPeso(amount: number): string {
 export interface RequirementMetric {
   met: number;
   total: number;
-  pct: number;
+  /**
+   * `null` when the provider publishes nothing checkable.
+   *
+   * Not 0. A programme with no published criteria has not been failed, it has
+   * not been measured, and printing 0% would read as a rejection the arithmetic
+   * never made (AGENTS.md §3, spec §2.1). Callers must render the distinction
+   * rather than coercing it to a number.
+   */
+  pct: number | null;
   tone: MatchTone;
 }
 
@@ -19,11 +27,17 @@ export interface RequirementMetric {
  * AI-generated confidence score. Warnings and unknown ("none") requirements
  * count as *not met* so the metric never overstates eligibility.
  */
-export function requirementMetric(card: Pick<Scholarship, "met" | "total" | "tone">): RequirementMetric {
-  const total = Math.max(1, card.total);
+export function requirementMetric(
+  card: Pick<Scholarship, "met" | "total" | "tone">
+): RequirementMetric {
+  const total = Math.max(0, card.total);
   const met = Math.max(0, Math.min(card.met, total));
-  const pct = Math.round((met / total) * 100);
-  return { met, total, pct, tone: card.tone };
+  return {
+    met,
+    total,
+    pct: total === 0 ? null : Math.round((met / total) * 100),
+    tone: card.tone,
+  };
 }
 
 /** Constrain to [0, 1]. */

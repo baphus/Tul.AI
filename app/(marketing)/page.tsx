@@ -19,6 +19,7 @@ import {
   InstitutionMarquee,
 } from "@/components/site/institution-marquee";
 import { Container, Section, SectionHead } from "@/components/site/layout-primitives";
+import { OfferPills } from "@/components/site/offer-pills";
 import { SiteHeader } from "@/components/site/site-header";
 import { SupportEstimator } from "@/components/site/support-estimator";
 import { ButtonLink } from "@/components/ui/button";
@@ -104,8 +105,8 @@ const FAQ: [string, string][] = [
     "No. A rules engine compares your answers against each published requirement and reports met, needs attention, or unknown. The AI explains that result in plain language — it never overrides it, and unknown never means ineligible.",
   ],
   [
-    "Why is there no match percentage?",
-    "Because a number like 97.8% would be invented. You get a count you can audit — eight of nine published requirements met — and you can open each one to read the requirement itself.",
+    "What does the match percentage actually measure?",
+    "Exactly one thing: the share of a provider's own published requirements your profile already meets — eight of nine is 89%. It is arithmetic you can audit, and every requirement behind it opens so you can read it yourself. What it is not is a prediction: it says nothing about your chance of being awarded the scholarship, and no AI produces it. Where a provider publishes nothing we can check, we say so instead of showing 0%.",
   ],
   [
     "How current is the information?",
@@ -123,15 +124,29 @@ const FAQ: [string, string][] = [
 
 export default async function LandingPage() {
   const cards = await getScholarships();
-  const hero = cards[0];
-  const featured = cards[1];
+
+  /*
+   * Records whose published benefit reduces to a figure. The adapter in
+   * lib/scholarships.ts returns `amount: 0` when a provider states its benefit
+   * in prose it cannot parse — 12 of the 32 records today — and sets
+   * `amountNote` to "see provider details" instead. So anything on this page
+   * that prints a peso figure must draw from `priced`, never from every record,
+   * or the range collapses to "₱0 to …" and cards render a bare ₱0.
+   */
+  const priced = cards.filter((card) => card.amount > 0);
+
+  /* Showcase records: the two full cards below quote a figure, so they have to
+     come from `priced`. Falling back to the raw list keeps the page rendering
+     if a future data set has no parseable amounts at all. */
+  const hero = priced[0] ?? cards[0];
+  const featured = priced[1] ?? priced[0] ?? cards[0];
 
   /* A range, not a total: these amounts are per year for some programmes and
      per semester for others, so summing them would overstate what a student
      could actually receive. */
-  const amounts = cards.map((card) => card.amount);
-  const lowest = Math.min(...amounts);
-  const highest = Math.max(...amounts);
+  const amounts = priced.map((card) => card.amount);
+  const lowest = amounts.length ? Math.min(...amounts) : 0;
+  const highest = amounts.length ? Math.max(...amounts) : 0;
   const lastChecked = cards
     .map((card) => card.lastVerified)
     .sort()
@@ -151,7 +166,7 @@ export default async function LandingPage() {
       BanknoteIcon,
       `${formatPeso(lowest)}–${formatPeso(highest)}`,
       "Published per student",
-      "The figures each provider prints in its own notice — some per academic year, some per semester. Every record says which of the two it is.",
+      `The figures ${priced.length} of these ${cards.length} providers print in their own notices — some per academic year, some per semester, and each record says which. The rest describe their benefit in words we don't reduce to a number.`,
     ],
     [
       ShieldCheckIcon,
@@ -211,9 +226,9 @@ export default async function LandingPage() {
                 `ink-mute`, which falls to roughly 3:1 on lime and would fail
                 WCAG 1.4.3 as body text. */}
             <p className="t-body-lg enter enter-d1 mx-auto mt-7 max-w-[54ch] text-ink-deep text-pretty">
-              {cards.length} scholarships from national agencies, LGUs and universities —
-              each shown with the published requirement behind it, the official source, and
-              the date we last checked it.
+              {cards.length} scholarships from national agencies, LGUs, universities and
+              foundations — each shown with the published requirement behind it, the
+              official source, and the date we last checked it.
             </p>
 
             <div className="enter enter-d2 mt-9 flex justify-center">
@@ -240,8 +255,11 @@ export default async function LandingPage() {
            *   - the plate is painted before the Container in DOM order, so the
            *     photograph sits on top of it rather than under it.
            *
-           * Capped at the file's native 1024px — wider and a 1024×536 source
-           * is being upscaled. `priority` because it is the LCP element.
+           * The photograph now runs the full container width rather than being
+           * capped at its native 1024px. That is a ~17% upscale at desktop —
+           * acceptable for a photograph, but it is the ceiling: see the note in
+           * the report about supplying a larger source before going full-bleed.
+           * `priority` because it is the LCP element.
            */}
           <div className="relative mt-14 md:mt-16">
             <div
@@ -249,15 +267,24 @@ export default async function LandingPage() {
               className="absolute inset-x-0 bottom-0 h-1/2 bg-canvas"
             />
             <Container className="relative">
-              <Image
-                src="/hero-pic.png"
-                alt="Four students walking together on a campus path, looking at a phone one of them is holding."
-                width={1024}
-                height={536}
-                priority
-                sizes="(min-width: 1088px) 64rem, 100vw"
-                className="enter enter-d3 mx-auto w-full max-w-5xl rounded-xl"
-              />
+              {/* This wrapper exists so the pills can be positioned against the
+                  photograph itself. It holds nothing but the image and the
+                  absolutely-positioned overlay, so the seam's height maths —
+                  wrapper height == image height — still holds exactly. */}
+              <div className="relative">
+                <Image
+                  src="/hero-pic.png"
+                  alt="Four students walking together on a campus path, looking at a phone one of them is holding."
+                  width={1024}
+                  height={536}
+                  priority
+                  sizes="(min-width: 1264px) 75rem, 100vw"
+                  className="enter enter-d3 w-full rounded-xl"
+                />
+                {/* `priced`, not `cards`: a pill reading "Offers ₱0" is worse
+                    than one fewer institution in the rotation. */}
+                <OfferPills cards={priced} />
+              </div>
             </Container>
           </div>
         </section>
@@ -510,6 +537,7 @@ export default async function LandingPage() {
                   <ProviderCrest
                     index={index}
                     provider={card.provider}
+                    logo={card.logo}
                     className="size-10"
                   />
                   <p className="t-body mt-5 flex-1 text-ink text-pretty">

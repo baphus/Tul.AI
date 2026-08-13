@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getScholarships } from "@/lib/scholarships";
 import { chatFor } from "@/lib/logic/chat";
 import { generateTulAIResponse, resolveGeminiApiKey } from "@/lib/logic/ai-config";
-import type { Profile } from "@/lib/logic/state";
+import { emptyProfile, type Profile } from "@/lib/logic/state";
 
 export async function POST(request: Request) {
   try {
@@ -13,18 +13,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Missing question" }, { status: 400 });
     }
 
+    /* Built from emptyProfile() rather than an inline literal so a new Profile
+       field cannot silently leave this default incomplete. */
     const safeProfile: Profile = profile ?? {
-      name: "",
-      city: "",
-      course: "",
-      school: "",
+      ...emptyProfile(),
       stage: "Senior High School",
-      year: "",
-      gwa: "",
-      income: "",
-      dependents: "",
-      chips: [],
-      notes: "",
     };
 
     // Fetch scholarships through the swap seam
