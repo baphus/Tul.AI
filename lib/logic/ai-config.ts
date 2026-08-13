@@ -5,7 +5,7 @@ export function resolveGeminiApiKey(env: NodeJS.ProcessEnv): string {
 }
 
 export function resolveGeminiModel(env: NodeJS.ProcessEnv): string {
-  return env.GEMINI_MODEL ?? 'gemini-2.0-flash';
+  return env.GEMINI_MODEL ?? 'gemini-3.6-flash';
 }
 
 export function resolveAiProvider(env: NodeJS.ProcessEnv): 'gemini' | 'openai' | 'none' {

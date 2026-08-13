@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { DATA } from "@/lib/scholarships";
+import { getScholarships } from "@/lib/scholarships";
 import { chatFor } from "@/lib/logic/chat";
 import { generateTulAIResponse, resolveGeminiApiKey } from "@/lib/logic/ai-config";
 import type { Profile } from "@/lib/logic/state";
@@ -27,8 +27,11 @@ export async function POST(request: Request) {
       notes: "",
     };
 
+    // Fetch scholarships through the swap seam
+    const scholarships = await getScholarships();
+
     // Compute ground-truth answer from deterministic engine
-    const groundTruth = chatFor(question, safeProfile, DATA);
+    const groundTruth = chatFor(question, safeProfile, scholarships);
 
     const apiKey = resolveGeminiApiKey(process.env);
     if (!apiKey) {
