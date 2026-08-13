@@ -22,6 +22,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useTulAi } from "@/hooks/use-tul-ai";
 import { ONBOARDING_STEPS, ROUTES } from "@/lib/logic/routes";
+import { useLanguage } from "@/lib/logic/language";
 import type { Profile } from "@/lib/logic/state";
 import { canAdvance, dependentsError, gwaError, isPlanning } from "@/lib/logic/validation";
 import { GWA_BANDS, HOUSEHOLD_BANDS } from "@/lib/reference/bands";
@@ -114,10 +115,12 @@ function metaFor(step: number, planning: boolean): StepMeta {
 export function OnboardingFlow({ step }: { step: number }) {
   const router = useRouter();
   const { state, dispatch } = useTulAi();
+  const language = useLanguage();
   const profile = state.profile;
 
   const [extracting, setExtracting] = useState(false);
   const [extractionResult, setExtractionResult] = useState<string | null>(null);
+  const [extractConsent, setExtractConsent] = useState(false);
 
   const planning = isPlanning(profile);
   const meta = metaFor(step, planning);
@@ -145,7 +148,7 @@ export function OnboardingFlow({ step }: { step: number }) {
       const res = await fetch("/api/ai/extract", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: profile.notes }),
+        body: JSON.stringify({ text: profile.notes, consent: extractConsent, language }),
       });
       const json = await res.json();
       if (json?.extracted) {
@@ -609,19 +612,19 @@ export function OnboardingFlow({ step }: { step: number }) {
               <Button
                 type="button"
                 variant="outline"
-                disabled={!profile.notes.trim() || extracting}
+                disabled={!profile.notes.trim() || extracting || !extractConsent}
                 onClick={runAiExtract}
                 className="h-11 w-full justify-center gap-2 rounded-md border-hairline-dark/40 bg-canvas text-ink hover:bg-canvas-soft sm:w-auto"
               >
                 {extracting ? (
                   <>
                     <Loader2Icon className="size-4 animate-spin" />
-                    Parsing with Gemini AI…
+                    Parsing with OpenAI…
                   </>
                 ) : (
                   <>
                     <SparklesIcon className="size-4 text-brand" />
-                    Extract profile details with AI
+                      Extract profile details with AI
                   </>
                 )}
               </Button>
@@ -635,7 +638,7 @@ export function OnboardingFlow({ step }: { step: number }) {
                     <CheckIcon className="size-3" strokeWidth={3} />
                   </span>
                   <div>
-                    <p className="t-caption-strong text-ink">Extracted by Gemini AI</p>
+                    <p className="t-caption-strong text-ink">Extracted by AI</p>
                     <p className="t-caption mt-0.5 text-ink-mute text-pretty">
                       {extractionResult}
                     </p>
@@ -647,6 +650,11 @@ export function OnboardingFlow({ step }: { step: number }) {
                 </div>
               )}
             </div>
+
+            <label className="flex items-start gap-2.5">
+              <input type="checkbox" checked={extractConsent} onChange={(event) => setExtractConsent(event.target.checked)} className="mt-1 size-4 accent-ink" />
+              <span className="t-micro max-w-[58ch] text-ink-mute">I agree to send this text to OpenAI to propose editable profile fields. Tul.AI will not use it to decide eligibility.</span>
+            </label>
 
             <div className="flex gap-3.5 rounded-lg border border-hairline bg-canvas-soft p-4">
               <span

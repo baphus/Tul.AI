@@ -250,6 +250,9 @@
     letter-spacing: -0.03em;
     font-variation-settings: "wght" 600;
   }
+  .t-wordmark-strong {
+    font-variation-settings: "wght" 800;
+  }
   .t-heading {
     font-size: 1.25rem;
     line-height: 1.3;

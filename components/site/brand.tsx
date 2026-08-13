@@ -1,61 +1,44 @@
 import Link from "next/link";
+import Image from "next/image";
 
 import { ROUTES } from "@/lib/logic/routes";
 import { cn } from "@/lib/utils";
 
 /**
- * The wordmark. Tul.AI is a bridge (PRD §44), so the mark is two piers and a
- * span — drawn, not photographed, and legible at 20px.
+ * The supplied Tul.AI logo, kept in the shared brand primitive so it appears
+ * consistently anywhere the product identifies itself.
  */
-export function BrandGlyph({
-  className,
-  tone = "ink",
-}: {
-  className?: string;
-  tone?: "ink" | "on-dark";
-}) {
+export function BrandGlyph({ className }: { className?: string }) {
   return (
-    <svg
-      viewBox="0 0 24 24"
+    <Image
+      src="/tulai-logo.png"
+      alt=""
+      width={48}
+      height={48}
       aria-hidden="true"
-      className={cn("size-6", className)}
-      fill="none"
-    >
-      <path
-        d="M2 15c4.8 0 7.2-8 10-8s5.2 8 10 8"
-        stroke={tone === "ink" ? "var(--ink)" : "var(--brand)"}
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M5 15v5M19 15v5"
-        stroke={tone === "ink" ? "var(--ink)" : "var(--brand)"}
-        strokeWidth="2"
-        strokeLinecap="round"
-        opacity="0.45"
-      />
-      {/* The span's keystone carries the brand accent on both polarities —
-          decorative, and never the only way a state is communicated. */}
-      <circle cx="12" cy="7" r="2.4" fill="var(--brand)" />
-    </svg>
+      className={cn("size-7 shrink-0", className)}
+    />
   );
 }
 
 export function BrandMark({
   className,
   tone = "ink",
+  strong = false,
   asLink = true,
 }: {
   className?: string;
   tone?: "ink" | "on-dark";
+  strong?: boolean;
   asLink?: boolean;
 }) {
   const content = (
     <>
-      <BrandGlyph tone={tone} className="size-6 shrink-0" />
+      <BrandGlyph />
       <span
         className={cn(
           "t-display-md font-display",
+          strong && "t-wordmark-strong",
           tone === "ink" ? "text-ink" : "text-white"
         )}
       >

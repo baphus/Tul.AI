@@ -3,7 +3,6 @@
 import { FlipHorizontalIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import { MatchMetric } from "@/components/scholarship/match-metric";
 import {
   ProviderCrest,
   ProviderWatermark,
@@ -13,6 +12,7 @@ import { RequirementMark } from "@/components/scholarship/requirement-mark";
 import { VerificationBadge } from "@/components/scholarship/verification-badge";
 import { DeadlineCountdown } from "@/components/scholarship/deadline-chip";
 import { formatPeso } from "@/lib/logic/format";
+import type { RankedMatch } from "@/lib/logic/matching";
 import type { Scholarship } from "@/lib/scholarships";
 import { cn } from "@/lib/utils";
 
@@ -50,12 +50,14 @@ export function ScholarshipCard({
   flipped,
   reduced,
   onFlip,
+  result,
 }: {
   card: Scholarship;
   index: number;
   flipped: boolean;
   reduced: boolean;
   onFlip: () => void;
+  result: RankedMatch;
 }) {
   return (
     <div
@@ -87,6 +89,14 @@ export function ScholarshipCard({
           <p className="t-eyebrow mt-4 text-[color:var(--tint-ink)]">{card.provider}</p>
           <h3 className="t-display-lg mt-1.5 mb-4 text-balance">{card.title}</h3>
 
+          <div className="mb-4 flex items-end justify-between border-y border-hairline py-3.5">
+            <div>
+              <p className="t-micro text-ink-mute">Requirements matched</p>
+              <p className="t-display-md t-num mt-1">{result.percent === null ? "—" : `${result.percent}%`}</p>
+            </div>
+            <p className="t-caption max-w-[15ch] text-right text-ink-mute">{result.met} of {result.total} published requirements{result.unknown ? ` · ${result.unknown} to confirm` : ""}</p>
+          </div>
+
           <p className="t-micro text-ink-mute">Up to</p>
           <p className="mb-4 flex flex-wrap items-baseline gap-2">
             <AmountCounter key={card.id} value={card.amount} reduced={reduced} />
@@ -94,17 +104,7 @@ export function ScholarshipCard({
           </p>
 
           <div className="mb-3.5 h-px bg-hairline" />
-          <p className="t-eyebrow mb-2.5 text-ink-mute">Why you match</p>
-          <ul className="mb-auto flex flex-col gap-2">
-            {card.why.map((w) => (
-              <li key={w.label} className="flex items-center gap-2.5">
-                <RequirementMark state={w.state} />
-                <span className="t-caption text-ink">{w.label}</span>
-              </li>
-            ))}
-          </ul>
-
-          <MatchMetric card={card} className="mt-4" />
+          <p className="t-caption mb-auto text-ink-mute text-pretty">{result.match}. Flip this card to inspect each published requirement before you save it.</p>
 
           <div className="mt-4 flex items-end justify-between border-t border-hairline pt-3.5">
             <div>
@@ -118,7 +118,7 @@ export function ScholarshipCard({
                 card.tone === "strong" ? "text-met" : "text-attention-ink"
               )}
             >
-              {card.match}
+              {result.match}
             </p>
           </div>
         </article>
@@ -138,17 +138,16 @@ export function ScholarshipCard({
           </div>
           <h3 className="t-display-md mb-4 text-balance">{card.title}</h3>
 
-          <p className="t-eyebrow mb-2 text-ink-mute">About this programme</p>
-          <p className="t-caption mb-4 text-ink-mute text-pretty">{card.back.about}</p>
+          <p className="t-eyebrow mb-2 text-ink-mute">Published requirements</p>
           <div className="mb-3.5 h-px bg-hairline" />
-          <dl className="mb-auto flex flex-col gap-3">
-            {card.back.facts.map(([label, value]) => (
-              <div key={label}>
-                <dt className="t-micro text-ink-mute">{label}</dt>
-                <dd className="t-caption mt-0.5 text-ink">{value}</dd>
-              </div>
+          <ul className="mb-auto flex flex-col gap-3">
+            {result.checks.map((check) => (
+              <li key={check.label} className="flex gap-2.5">
+                <RequirementMark state={check.state === "met" ? "ok" : check.state === "not-met" ? "warn" : "none"} />
+                <div><p className="t-caption-strong text-ink">{check.label}</p><p className="t-micro mt-0.5 text-ink-mute">{check.detail}</p></div>
+              </li>
             ))}
-          </dl>
+          </ul>
           <div className="flex items-center justify-between border-t border-hairline pt-3.5">
             <p className="t-micro text-ink-mute">Tap to flip back</p>
             <p className="t-micro text-ink-mute">Demo data</p>

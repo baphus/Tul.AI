@@ -24,7 +24,7 @@ export function AppHeader() {
   return (
     <header className="sticky top-0 z-50 flex-none border-b border-hairline bg-canvas/90 backdrop-blur-md">
       <div className="mx-auto flex h-16 w-full max-w-[80rem] items-center gap-4 px-5 sm:px-8">
-        <BrandMark />
+        <BrandMark strong />
 
         <nav
           className="sc -mx-1 ml-auto flex items-center gap-1 overflow-x-auto px-1"
@@ -62,7 +62,7 @@ export function OnboardingHeader() {
   return (
     <header className="flex-none">
       <div className="mx-auto flex h-16 w-full max-w-[46rem] items-center px-5 sm:h-18 sm:px-8">
-        <BrandMark />
+        <BrandMark strong />
         <Link
           href={ROUTES.home}
           className="ring-brand t-caption ml-auto rounded-xs text-ink-mute hover:text-ink"

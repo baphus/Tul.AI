@@ -68,8 +68,8 @@ export type Action =
   | { type: "CLEAR_PROFILE" }
   | { type: "SET_MATCH_STAGE"; n: number }
   | { type: "RESET_DECK" }
-  | { type: "FLING"; dir: 1 | -1 }
-  | { type: "COMMIT_FLING" }
+  | { type: "FLING"; dir: 1 | -1; index?: number }
+  | { type: "COMMIT_FLING"; index?: number }
   | { type: "UNDO" }
   | { type: "TAP_CARD" }
   | { type: "SET_FLIPPED"; value: boolean }
@@ -216,9 +216,10 @@ export function reducer(state: AppState, action: Action): AppState {
       };
 
     case "FLING": {
-      if (state.idx >= DATA.length) return state;
+      const index = action.index ?? state.idx;
+      if (index < 0 || index >= DATA.length) return state;
       const decisions = cloneDecisions(state.decisions);
-      decisions[state.idx] = action.dir > 0 ? "yes" : "no";
+      decisions[index] = action.dir > 0 ? "yes" : "no";
       return {
         ...state,
         decisions,
@@ -230,9 +231,10 @@ export function reducer(state: AppState, action: Action): AppState {
     }
 
     case "COMMIT_FLING": {
-      if (state.idx >= DATA.length) return state;
+      const index = action.index ?? state.idx;
+      if (index < 0 || index >= DATA.length) return state;
       const next = state.idx + 1;
-      const advised = state.decisions[state.idx] === "yes" ? advisory(state.decisions) : null;
+      const advised = state.decisions[index] === "yes" ? advisory(state.decisions) : null;
       let shownAdvice = state.shownAdvice;
       let advice: Advice | null = null;
       if (advised && next < DATA.length && !shownAdvice[advised.id]) {

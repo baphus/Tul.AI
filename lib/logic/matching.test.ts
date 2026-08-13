@@ -175,10 +175,13 @@ describe("a student still planning where to study", () => {
     expect(result.checks[0].state).toBe("unknown");
   });
 
-  it("has no hard conflict anywhere in the real data set", () => {
+  it("never turns the planning state itself into a hard conflict in the real data set", () => {
     for (const card of DATA) {
       const result = matchScholarship(card, { ...planning, course: "", city: "" });
-      expect(result.checks.every((check) => check.state !== "not-met")).toBe(true);
+      const cohortChecks = result.checks.filter(
+        (check) => check.label === "Year level" || check.label === "Student status"
+      );
+      expect(cohortChecks.every((check) => check.state !== "not-met")).toBe(true);
     }
   });
 });

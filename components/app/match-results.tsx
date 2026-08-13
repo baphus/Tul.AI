@@ -11,6 +11,7 @@ import { DotGrid } from "@/components/site/dot-grid";
 import { ButtonLink } from "@/components/ui/button";
 import { usePrefersReducedMotion } from "@/hooks/use-media-query";
 import { useTulAi } from "@/hooks/use-tul-ai";
+import { useLanguage } from "@/lib/logic/language";
 import { formatPeso } from "@/lib/logic/format";
 import { aiReRank } from "@/lib/logic/matching.ai";
 import { countsOf, rankScholarships, type MatchTone4, type RankedMatch } from "@/lib/logic/matching";
@@ -31,6 +32,7 @@ import { cn } from "@/lib/utils";
  */
 export function MatchResults() {
   const { state, cards, ready } = useTulAi();
+  const language = useLanguage();
   const reduced = usePrefersReducedMotion();
   const [aiExplanations, setAiExplanations] = useState<Record<string, string>>({});
 
@@ -51,7 +53,7 @@ export function MatchResults() {
   useEffect(() => {
     if (!profileReady) return;
     let cancelled = false;
-    aiReRank(ranked, state.profile).then((res) => {
+    aiReRank(ranked, state.profile, language).then((res) => {
       if (cancelled || !res.explanations) return;
       const map: Record<string, string> = {};
       res.explanations.forEach((e) => {
@@ -62,7 +64,7 @@ export function MatchResults() {
     return () => {
       cancelled = true;
     };
-  }, [profileReady, ranked, state.profile]);
+  }, [language, profileReady, ranked, state.profile]);
 
   if (ready && !profileReady) return <NeedsAnswers />;
 

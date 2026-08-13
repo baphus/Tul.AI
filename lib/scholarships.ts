@@ -25,6 +25,8 @@ export interface WhyMatch {
 
 export interface Source {
   name: string;
+  /** Canonical source URL; citations and redirects always point to the provider. */
+  url: string;
   date: string;
   short: string;
 }
@@ -112,6 +114,8 @@ export interface Scholarship {
   needs: string[];
   sources: Source[];
   host: string;
+  /** Exact provider-owned destination for the explicit application hand-off. */
+  applicationUrl: string | null;
   verify: string;
   kind: ScholarshipKind;
   /** Structured criteria the eligibility engine reads (PRD §16). */
@@ -192,10 +196,19 @@ function incomeMax(record: RawScholarship): number | undefined {
 }
 function verificationStatus(record: RawScholarship): VerificationStatus {
   const raw = (record.verification_status ?? "").toUpperCase();
-  if (record.status?.toUpperCase() === "CLOSED" || raw.includes("CLOSED")) return "Expired";
+  const status = record.status?.toUpperCase() ?? "";
+  if (status.includes("CLOSED") || raw.includes("CLOSED")) return "Expired";
   if (raw === "VERIFIED" || raw.startsWith("VERIFIED_")) return "Verified";
   if (raw.includes("UPDATED")) return "Updated";
   return "Needs Verification";
+}
+function sourceTier(record: RawScholarship): 1 | 2 | 3 | 4 {
+  const url = record.official_url ?? "";
+  try {
+    const host = new URL(url).hostname.toLowerCase();
+    if (host.endsWith(".gov.ph") || host.endsWith(".edu.ph") || host.includes("foundation") || host.includes("scholarship")) return 1;
+    return url ? 3 : 4;
+  } catch { return 4; }
 }
 function kindFor(record: RawScholarship): ScholarshipKind {
   const type = (record.provider_type ?? "").toLowerCase();
@@ -234,11 +247,11 @@ function adapt(record: RawScholarship): Scholarship {
     tone: "possible", met: 0, total: rows.length,
     why: rows.slice(0, 3).map((row) => ({ state: row.state, label: row.label + " published" })), rows,
     needs: strings(record.required_documents).length ? strings(record.required_documents) : ["Check the provider's official application instructions"],
-    sources: urls.length ? urls.map((url) => ({ name: sourceName(url, record.provider), date: "Checked " + lastVerified, short: lastVerified.slice(5) })) : [{ name: record.provider, date: "Checked " + lastVerified, short: lastVerified.slice(5) }],
-    host: sourceHost(record.application_url || record.official_url, record.provider),
+    sources: urls.length ? urls.map((url) => ({ name: sourceName(url, record.provider), url, date: "Checked " + lastVerified, short: lastVerified.slice(5) })) : [{ name: record.provider, url: record.official_url ?? record.application_url ?? "", date: "Checked " + lastVerified, short: lastVerified.slice(5) }],
+    host: sourceHost(record.application_url || record.official_url, record.provider), applicationUrl: record.application_url ?? record.official_url ?? null,
     verify: record.description ?? "Review the provider's official source for current details.", kind: kindFor(record), eligibility,
     back: { about: record.description ?? "No description published.", facts: [["Provider type", record.provider_type ?? "Not published"], ["Status", record.status ?? "Not published"], ["Source count", String(urls.length)]] },
-    verification, lastVerified, sourceTier: record.official_url ? 1 : 2,
+    verification, lastVerified, sourceTier: sourceTier(record),
   };
 }
 export const DATA: Scholarship[] = rawRecords.map(adapt);

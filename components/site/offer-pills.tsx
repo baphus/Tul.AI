@@ -62,16 +62,21 @@ export function OfferPills({
    * so a viewer cannot tell them apart. The key keeps the lead body and drops
    * the programme/partner qualifier after a dash or "in partnership with".
    */
-  const seen = new Set<string>();
-  const distinct = cards
-    .map((card, index) => ({ card, index }))
-    .filter(({ card }) => {
-      const key = card.provider
-        .toLowerCase()
-        .split(/\s+[–-]\s+|\s+in partnership with\s+/)[0]
-        .trim();
-      return !seen.has(key) && seen.add(key);
-    });
+  const institutions = new Map<string, { card: Scholarship; index: number }>();
+  cards.forEach((card, index) => {
+    const key = card.provider
+      .toLowerCase()
+      .split(/\s+[–-]\s+|\s+in partnership with\s+/)[0]
+      .trim();
+    const current = institutions.get(key);
+
+    /* Several records can represent one provider. Keep its published crest
+       when one exists; the first matching programme may not include a logo. */
+    if (!current || (!current.card.logo && card.logo)) {
+      institutions.set(key, { card, index });
+    }
+  });
+  const distinct = [...institutions.values()];
 
   /*
    * Institutions that published a crest go first.

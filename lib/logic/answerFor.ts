@@ -4,6 +4,7 @@ import { formatPeso } from "@/lib/logic/format";
 export interface Answer {
   text: string;
   src: string | null;
+  citations?: { title: string; url: string }[];
 }
 
 export const SUGGESTIONS = [

@@ -1,10 +1,4 @@
-import {
-  ArrowRightIcon,
-  BanknoteIcon,
-  ExternalLinkIcon,
-  PlusIcon,
-  ShieldCheckIcon,
-} from "lucide-react";
+import { ArrowRightIcon, PlusIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -18,10 +12,9 @@ import {
   InstitutionList,
   InstitutionMarquee,
 } from "@/components/site/institution-marquee";
-import { Container, Section, SectionHead } from "@/components/site/layout-primitives";
+import { Container, RuledRow, Section, SectionHead } from "@/components/site/layout-primitives";
 import { OfferPills } from "@/components/site/offer-pills";
 import { SiteHeader } from "@/components/site/site-header";
-import { SupportEstimator } from "@/components/site/support-estimator";
 import { ButtonLink } from "@/components/ui/button";
 import { formatIsoDate } from "@/lib/logic/deadlines";
 import { formatPeso } from "@/lib/logic/format";
@@ -140,6 +133,10 @@ export default async function LandingPage() {
      if a future data set has no parseable amounts at all. */
   const hero = priced[0] ?? cards[0];
   const featured = priced[1] ?? priced[0] ?? cards[0];
+  const record =
+    cards.find(
+      (card) => card.verification === "Verified" && card.amount > 0 && card.rows.length > 1
+    ) ?? hero;
 
   /* A range, not a total: these amounts are per year for some programmes and
      per semester for others, so summing them would overstate what a student
@@ -153,23 +150,17 @@ export default async function LandingPage() {
     .at(-1);
   const verified = cards.filter((card) => card.verification === "Verified").length;
 
-  /* Wise's third stat is round-the-clock support. Ours is the refusal, because
-     the thing a student most needs to know about this product is where it
-     stops. "Never" is the figure. */
-  const STATS: [
-    Icon: typeof BanknoteIcon,
+  const stats: [
     figure: string,
     label: string,
     body: string,
   ][] = [
     [
-      BanknoteIcon,
       `${formatPeso(lowest)}–${formatPeso(highest)}`,
       "Published per student",
       `The figures ${priced.length} of these ${cards.length} providers print in their own notices — some per academic year, some per semester, and each record says which. The rest describe their benefit in words we don't reduce to a number.`,
     ],
     [
-      ShieldCheckIcon,
       `${verified} of ${cards.length}`,
       "Confirmed against an official source",
       lastChecked
@@ -177,7 +168,6 @@ export default async function LandingPage() {
         : "The rest say “needs verification” and say why on their own page.",
     ],
     [
-      ExternalLinkIcon,
       "Never",
       "Applies on your behalf",
       "Tul.AI takes you to the provider's official page and stops. The application, and the decision, stay entirely with them.",
@@ -303,18 +293,13 @@ export default async function LandingPage() {
               Take the guesswork out of paying for school
             </h2>
 
-            <dl className="mt-14 grid gap-12 md:grid-cols-3 md:gap-8">
-              {STATS.map(([Icon, figure, label, body]) => (
-                <div key={label} className="flex flex-col items-center text-center">
-                  <span className="grid size-14 place-items-center rounded-full bg-brand text-ink">
-                    <Icon className="size-6" aria-hidden="true" />
-                  </span>
-                  <dt className="t-figure mt-6 text-ink">{figure}</dt>
+            <dl className="mt-12 grid divide-y divide-hairline border-y border-hairline md:grid-cols-3 md:divide-x md:divide-y-0">
+              {stats.map(([figure, label, body]) => (
+                <div key={label} className="px-0 py-7 md:px-7 md:py-2 first:md:pl-0 last:md:pr-0">
+                  <dt className="t-figure text-ink">{figure}</dt>
                   <dd>
-                    <p className="t-body-strong mt-3 text-ink">{label}</p>
-                    <p className="t-caption mx-auto mt-2 max-w-[38ch] text-ink-mute text-pretty">
-                      {body}
-                    </p>
+                    <p className="t-body-strong mt-2 text-ink">{label}</p>
+                    <p className="t-caption mt-2 max-w-[34ch] text-ink-mute text-pretty">{body}</p>
                   </dd>
                 </div>
               ))}
@@ -326,34 +311,78 @@ export default async function LandingPage() {
             Wise puts its calculator on a full-strength lime band, copy left and
             the white card right. Same here — and the card keeps its own lime
             CTA inside, because there it sits on white. */}
-        <Section tone="brand" labelledBy="estimator-heading">
+        <Section tone="soft" labelledBy="record-heading">
           <Container>
-            <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
-              <div className="lg:col-span-5">
-                <h2 id="estimator-heading" className="t-display-xl text-balance">
-                  See what&apos;s actually on the table.
+            <div className="grid gap-12 lg:grid-cols-12 lg:items-start lg:gap-16">
+              <div className="lg:col-span-4 lg:pt-4">
+                <h2 id="record-heading" className="t-display-xl text-balance">
+                  Read the record. Not a score.
                 </h2>
-                <p className="t-body-lg mt-6 max-w-[46ch] text-ink text-pretty">
-                  A description of what these providers publish — not an eligibility
-                  check, and not a projection of what you would receive.
+                <p className="t-body-lg mt-6 max-w-[38ch] text-ink-mute text-pretty">
+                  The benefit, the provider&apos;s requirements, and the source behind them
+                  belong together.
                 </p>
-                <ButtonLink
-                  variant="onBrand"
-                  className="t-body-strong mt-8 h-12 px-6 text-base"
-                  href={ROUTES.scholarships}
-                >
-                  Browse every record
-                </ButtonLink>
+                <p className="t-caption mt-8 max-w-[34ch] text-ink-mute text-pretty">
+                  Unknown is never counted against you. It means there is more to learn,
+                  not that the answer is no.
+                </p>
               </div>
-              <div className="lg:col-span-6 lg:col-start-7">
-                <SupportEstimator cards={cards} />
-              </div>
+
+              <article className="rounded-xl bg-canvas p-6 sm:p-8 lg:col-span-8" aria-label={`${record.title} scholarship record`}>
+                <div className="flex flex-col gap-6 border-b border-hairline pb-6 sm:flex-row sm:items-start sm:justify-between">
+                  <div>
+                    <p className="t-caption text-ink-mute">{record.provider}</p>
+                    <h3 className="t-display-md mt-2 max-w-[22ch] text-balance">{record.title}</h3>
+                  </div>
+                  <div className="sm:text-right">
+                    <p className="t-caption text-ink-mute">Published benefit</p>
+                    <p className="t-figure mt-1 text-ink">
+                      {record.amount > 0 ? formatPeso(record.amount) : record.amountNote}
+                    </p>
+                    {record.amount > 0 && <p className="t-caption mt-1 text-ink-mute">{record.amountNote}</p>}
+                  </div>
+                </div>
+
+                <div className="grid gap-8 py-7 md:grid-cols-[minmax(0,1fr)_13rem] md:gap-10">
+                  <div>
+                    <p className="t-body-strong">Published requirements</p>
+                    <ul className="mt-4">
+                      {record.rows.map((row, index) => (
+                        <li key={row.label} className={`flex gap-3 py-3 ${index === 0 ? "" : "border-t border-hairline"}`}>
+                          <RequirementMark state={row.state} className="mt-0.5" />
+                          <div>
+                            <p className="t-body-strong">{row.label}</p>
+                            <p className="t-caption mt-1 text-ink-mute text-pretty">{row.text}</p>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="border-t border-hairline pt-6 md:border-t-0 md:border-l md:pl-8 md:pt-0">
+                    <p className="t-caption text-ink-mute">Record status</p>
+                    <p className="t-body-strong mt-2">{record.verification}</p>
+                    <p className="t-caption mt-1 text-ink-mute">Checked <time dateTime={record.lastVerified}>{formatIsoDate(record.lastVerified)}</time></p>
+                    <p className="t-caption mt-6 text-ink-mute">Official source</p>
+                    <p className="t-body-strong mt-2">Tier {record.sourceTier}</p>
+                    <p className="t-caption mt-1 text-ink-mute text-pretty">{record.sources[0]?.name}</p>
+                  </div>
+                </div>
+
+                <div className="border-t border-hairline pt-6">
+                  <Link href={ROUTES.scholarship(record.id)} className="ring-brand t-body-strong inline-flex items-center gap-2 rounded-xs text-ink underline decoration-hairline underline-offset-4 hover:decoration-ink">
+                    Read the full record
+                    <ArrowRightIcon className="size-4" aria-hidden="true" />
+                  </Link>
+                </div>
+              </article>
             </div>
           </Container>
         </Section>
 
         {/* ── Two-up, a figure in each ─────────────────────────
             Wise's "22 currencies" / "231 countries" pair. */}
+        {false && <>
         <Section labelledBy="what-heading">
           <Container>
             <h2
@@ -695,6 +724,53 @@ export default async function LandingPage() {
                   </details>
                 ))}
               </div>
+            </div>
+          </Container>
+        </Section>
+
+        </>}
+
+        <Section labelledBy="providers-heading">
+          <Container>
+            <div className="grid gap-10 lg:grid-cols-12 lg:items-start lg:gap-16">
+              <div className="lg:col-span-4 lg:pt-3">
+                <h2 id="providers-heading" className="t-display-xl text-balance">
+                  A small index. Real sources.
+                </h2>
+                <p className="t-body-lg mt-6 max-w-[38ch] text-ink-mute text-pretty">
+                  {cards.length} opportunities across national agencies, LGUs,
+                  universities and foundations.
+                </p>
+                <Link
+                  href={ROUTES.scholarships}
+                  className="ring-brand t-body-strong mt-8 inline-flex items-center gap-2 rounded-xs text-ink underline decoration-hairline underline-offset-4 hover:decoration-ink"
+                >
+                  See all {cards.length} records
+                  <ArrowRightIcon className="size-4" aria-hidden="true" />
+                </Link>
+              </div>
+
+              <ul className="border-t border-hairline lg:col-span-8">
+                {cards.slice(0, 6).map((card, index, list) => (
+                  <li key={card.id}>
+                    <RuledRow
+                      last={index === list.length - 1}
+                      className="gap-2 py-5 md:grid-cols-[minmax(0,1fr)_11rem] md:gap-8"
+                    >
+                      <Link href={ROUTES.scholarship(card.id)} className="group ring-brand rounded-xs">
+                        <p className="t-body-strong text-ink group-hover:underline group-hover:decoration-hairline group-hover:underline-offset-4">
+                          {card.provider}
+                        </p>
+                        <p className="t-caption mt-1 text-ink-mute text-pretty">{card.title}</p>
+                      </Link>
+                      <p className="t-caption text-ink-mute md:text-right">
+                        Tier {card.sourceTier} source · checked{" "}
+                        <time dateTime={card.lastVerified}>{formatIsoDate(card.lastVerified)}</time>
+                      </p>
+                    </RuledRow>
+                  </li>
+                ))}
+              </ul>
             </div>
           </Container>
         </Section>

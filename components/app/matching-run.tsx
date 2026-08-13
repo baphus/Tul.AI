@@ -86,7 +86,7 @@ export function MatchingRun() {
       setTotals(totalsOf(pairs));
       /* `replace`, so Back returns to the questions rather than re-running the
          research the student has already seen. */
-      router.replace(ROUTES.matches);
+      router.replace(ROUTES.discover);
     };
 
     void run();
