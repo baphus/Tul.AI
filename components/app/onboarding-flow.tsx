@@ -674,8 +674,8 @@ export function OnboardingFlow({ step }: { step: number }) {
       </div>
 
       {/* ── Footer ── */}
-      <div className="sticky bottom-0 mt-12 border-t border-hairline bg-canvas/95 py-5 backdrop-blur-md">
-        <div className="flex items-center gap-3">
+      <div className="sticky bottom-0 mt-12 border-t border-hairline bg-canvas/95 py-4 pb-[max(1rem,env(safe-area-inset-bottom))] backdrop-blur-md sm:py-5">
+        <div className="flex flex-wrap items-center gap-3 sm:flex-nowrap">
           <Button
             variant="ghost"
             className="h-11 px-3 text-ink-mute"
@@ -685,7 +685,7 @@ export function OnboardingFlow({ step }: { step: number }) {
             Back
           </Button>
 
-          <div className="ml-auto flex items-center gap-4">
+          <div className="ml-auto flex items-center gap-3 sm:gap-4">
             {meta.optional && !isLast && (
               <button
                 type="button"
@@ -707,11 +707,15 @@ export function OnboardingFlow({ step }: { step: number }) {
             <span className="t-micro t-num text-ink-mute">
               {step} of {ONBOARDING_STEPS}
             </span>
-            <Button className="h-12 rounded-md px-6" disabled={!ready} onClick={advance}>
+          </div>
+          <Button
+            className="order-3 h-12 w-full rounded-md px-6 sm:order-none sm:ml-1 sm:w-auto"
+            disabled={!ready}
+            onClick={advance}
+          >
               {isLast ? "Find my matches" : "Continue"}
               {isLast ? <SparklesIcon /> : <ArrowRightIcon />}
-            </Button>
-          </div>
+          </Button>
         </div>
 
         {!ready && (

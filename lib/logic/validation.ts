@@ -61,6 +61,11 @@ export function firstIncompleteStep(profile: Profile): number {
   return ONBOARDING_STEPS;
 }
 
+/** The appropriate question to reopen when matching lacks required answers. */
+export function matchingRecoveryStep(profile: Profile): number {
+  return firstIncompleteStep(profile);
+}
+
 /** Enough of a profile to run matching at all. */
 export function isProfileReady(profile: Profile): boolean {
   // Matching requires the two answers that determine which programmes apply at

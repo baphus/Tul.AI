@@ -66,7 +66,7 @@ export function MatchResults() {
     };
   }, [language, profileReady, ranked, state.profile]);
 
-  if (ready && !profileReady) return <NeedsAnswers />;
+  if (ready && !profileReady) return <NeedsAnswers profile={state.profile} />;
 
   return (
     <div className="mx-auto max-w-[46rem] py-14">

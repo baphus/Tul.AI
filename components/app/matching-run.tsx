@@ -18,7 +18,8 @@ import {
   type RunTotals,
 } from "@/lib/logic/match-passes";
 import { ROUTES } from "@/lib/logic/routes";
-import { isProfileReady } from "@/lib/logic/validation";
+import { isProfileReady, matchingRecoveryStep } from "@/lib/logic/validation";
+import type { Profile } from "@/lib/logic/state";
 import { SOURCE_LABELS } from "@/lib/scholarships";
 import { cn } from "@/lib/utils";
 
@@ -47,8 +48,20 @@ export function MatchingRun() {
   const [passes, setPasses] = useState<PassResult[]>([]);
   const [totals, setTotals] = useState<RunTotals | null>(null);
   const startedRef = useRef(false);
+  /* Media-query subscriptions may update just after the first client paint.
+     Keep the running sequence independent of that update: cancelling the effect
+     and then declining to restart it leaves the student at 0% forever. */
+  const cardsRef = useRef(cards);
+  const profileRef = useRef(state.profile);
+  const reducedRef = useRef(reduced);
 
   const profileReady = isProfileReady(state.profile);
+
+  useEffect(() => {
+    cardsRef.current = cards;
+    profileRef.current = state.profile;
+    reducedRef.current = reduced;
+  }, [cards, reduced, state.profile]);
 
   useEffect(() => {
     if (!ready || !profileReady || startedRef.current) return;
@@ -56,12 +69,12 @@ export function MatchingRun() {
     dispatch({ type: "RESET_DECK" });
 
     let cancelled = false;
-    const floor = reduced ? 0 : MIN_PASS_MS;
+    const floor = reducedRef.current ? 0 : MIN_PASS_MS;
 
     const run = async () => {
       /* The real work: the deterministic engine over every record. Everything
          the sequence reports afterwards is a tally of what this produced. */
-      const pairs = matchAll(cards, state.profile);
+      const pairs = matchAll(cardsRef.current, profileRef.current);
       const collected: PassResult[] = [];
 
       for (let i = 0; i < PASS_COUNT; i++) {
@@ -93,12 +106,12 @@ export function MatchingRun() {
     return () => {
       cancelled = true;
     };
-  }, [cards, dispatch, profileReady, ready, reduced, router, state.profile]);
+  }, [dispatch, profileReady, ready, router]);
 
   /* Someone landed here without the two answers that make matching possible at
      all — say so instead of animating over nothing. */
   if (ready && !profileReady) {
-    return <NeedsAnswers />;
+    return <NeedsAnswers profile={state.profile} />;
   }
 
   const done = passes.length;
@@ -224,7 +237,7 @@ export function MatchingRun() {
 }
 
 /** The two-answers prompt, shared with `/matches`. */
-export function NeedsAnswers() {
+export function NeedsAnswers({ profile }: { profile: Profile }) {
   return (
     <div className="mx-auto max-w-[34rem] py-20 text-center">
       <h1 className="t-display-lg text-balance">
@@ -235,7 +248,10 @@ export function NeedsAnswers() {
         at all. Everything after that is optional.
       </p>
       <div className="mt-8 flex flex-wrap justify-center gap-3">
-        <ButtonLink className="h-12 rounded-md px-6" href={ROUTES.onboarding}>
+        <ButtonLink
+          className="h-12 rounded-md px-6"
+          href={ROUTES.onboardingStep(matchingRecoveryStep(profile))}
+        >
           Answer two questions
         </ButtonLink>
         <ButtonLink

@@ -8,6 +8,7 @@ import {
   gwaError,
   isPlanning,
   isProfileReady,
+  matchingRecoveryStep,
   profileCompleteness,
 } from "./validation";
 
@@ -106,6 +107,14 @@ describe("firstIncompleteStep", () => {
     expect(firstIncompleteStep(answered({ city: "" }))).toBe(2);
     expect(firstIncompleteStep(answered({ course: "" }))).toBe(3);
     expect(firstIncompleteStep(answered())).toBe(6);
+  });
+});
+
+describe("matchingRecoveryStep", () => {
+  it("returns to the first answer that prevents matching", () => {
+    expect(matchingRecoveryStep(emptyProfile())).toBe(1);
+    expect(matchingRecoveryStep(answered({ city: "" }))).toBe(2);
+    expect(matchingRecoveryStep(answered({ course: "" }))).toBe(3);
   });
 });
 

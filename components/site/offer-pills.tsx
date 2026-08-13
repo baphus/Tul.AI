@@ -25,10 +25,12 @@ import { cn } from "@/lib/utils";
  * reader would receive it (AGENTS.md §3).
  */
 
-/** Must match the slot percentages in `.flip-face`'s keyframes. */
+/** Must match the slot percentages in `.hero-pill-face`'s keyframes. */
 const SLOTS = 6;
 /** Seconds each face holds. SLOTS × this is the cycle length in globals.css. */
 const SLOT_SECONDS = 3;
+/** The three parts of a face arrive in reading order: crest, verb, amount. */
+const PART_STAGGER_SECONDS = { logo: 0, label: 0.14, amount: 0.28 } as const;
 
 /**
  * The verb, per slot — it turns over with the crest and the figure.
@@ -40,6 +42,36 @@ const SLOT_SECONDS = 3;
  * element on the page.
  */
 const LABELS = ["Offers", "Grants", "Awards", "Publishes", "Provides", "Funds"];
+
+function HeroPillLogo({
+  card,
+  index,
+}: {
+  card: Scholarship;
+  index: number;
+}) {
+  if (!card.logo) {
+    return (
+      <ProviderCrest
+        index={index}
+        provider={card.provider}
+        logo={null}
+        className="size-full rounded-lg"
+      />
+    );
+  }
+
+  return (
+    // The flip layer is a 3D-transformed decorative surface. A native image
+    // remains reliably paintable there, unlike Next Image's fill layout.
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={card.logo}
+      alt=""
+      className="size-full rounded-lg object-contain bg-canvas p-1"
+    />
+  );
+}
 
 export function OfferPills({
   cards,
@@ -125,27 +157,17 @@ export function OfferPills({
           {faces.map(({ card, index, slot }) => (
             <span
               key={`${slot}-${card.id}`}
-              className="flip-face absolute inset-0 motion-reduce:hidden"
-              style={{ animationDelay: `${slot * SLOT_SECONDS}s` }}
+              className="hero-pill-face absolute inset-0 motion-reduce:hidden"
+              style={{ animationDelay: `${slot * SLOT_SECONDS + PART_STAGGER_SECONDS.logo}s` }}
             >
-              <ProviderCrest
-                index={index}
-                provider={card.provider}
-                logo={card.logo}
-                className="size-full rounded-lg"
-              />
+              <HeroPillLogo card={card} index={index} />
             </span>
           ))}
           {/* Reduced motion: one crest, held. The global reduced-motion rule
               collapses every animation to its end state, which for these faces
               is "folded away" — so without this the pill would render empty. */}
           <span className="absolute inset-0 hidden motion-reduce:block">
-            <ProviderCrest
-              index={faces[0].index}
-              provider={faces[0].card.provider}
-              logo={faces[0].card.logo}
-              className="size-full rounded-lg"
-            />
+            <HeroPillLogo card={faces[0].card} index={faces[0].index} />
           </span>
         </span>
 
@@ -158,8 +180,8 @@ export function OfferPills({
           {faces.map(({ card, slot }) => (
             <span
               key={`${slot}-${card.id}`}
-              className="flip-face t-body-strong absolute inset-0 text-left text-ink motion-reduce:hidden"
-              style={{ animationDelay: `${slot * SLOT_SECONDS}s` }}
+              className="hero-pill-face t-body-strong absolute inset-0 text-left text-ink motion-reduce:hidden"
+              style={{ animationDelay: `${slot * SLOT_SECONDS + PART_STAGGER_SECONDS.label}s` }}
             >
               {LABELS[slot % LABELS.length]}
             </span>
@@ -178,8 +200,8 @@ export function OfferPills({
           {faces.map(({ card, slot }) => (
             <span
               key={`${slot}-${card.id}`}
-              className="flip-face t-body-strong t-num absolute inset-0 text-right text-ink motion-reduce:hidden"
-              style={{ animationDelay: `${slot * SLOT_SECONDS}s` }}
+              className="hero-pill-face t-body-strong t-num absolute inset-0 text-right text-ink motion-reduce:hidden"
+              style={{ animationDelay: `${slot * SLOT_SECONDS + PART_STAGGER_SECONDS.amount}s` }}
             >
               {formatPeso(card.amount)}
             </span>

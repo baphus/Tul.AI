@@ -1,4 +1,10 @@
-import { ArrowRightIcon, PlusIcon } from "lucide-react";
+import {
+  ArrowRightIcon,
+  ExternalLinkIcon,
+  HeartHandshakeIcon,
+  PlusIcon,
+  SearchCheckIcon,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -48,25 +54,37 @@ import { getScholarships } from "@/lib/scholarships";
  *           carries the full record list.
  */
 
-/** Wise's three-up expansion, as the three jobs and the one hard stop. */
-const PILLARS: { title: string; body: string; href: string; cta: string }[] = [
+/**
+ * The first reassurance after the hero. This is deliberately about the
+ * student's experience, rather than a list of product features or metrics.
+ */
+const STUDENT_SUPPORT: {
+  title: string;
+  body: string;
+  href: string;
+  cta: string;
+  Icon: typeof SearchCheckIcon;
+}[] = [
   {
-    title: "Discover",
-    body: "One deck drawn from national agencies, LGUs, universities and foundations — instead of six websites that each use different words for the same requirement.",
+    title: "Start where you are",
+    body: "You do not need to know every scholarship by name. Tell us a little about your path, and we will help you find a calm place to begin.",
     href: ROUTES.discover,
-    cta: "Open the deck",
+    cta: "Find your starting point",
+    Icon: SearchCheckIcon,
   },
   {
-    title: "Understand",
-    body: "Every match opens into the published requirement behind it, in plain language, with what is met, what needs attention, and what is simply unknown.",
+    title: "Make sense of the details",
+    body: "Requirements can be hard to read. We lay out what is clear, what may need attention, and what is still unknown without making assumptions about you.",
     href: ROUTES.howItWorks,
-    cta: "How matching works",
+    cta: "See how we explain matches",
+    Icon: HeartHandshakeIcon,
   },
   {
-    title: "Apply with the provider",
-    body: "Tul.AI takes you to the official application page and stops. It never applies on your behalf, and it never decides whether you get the scholarship.",
+    title: "Take the next step your way",
+    body: "When you are ready, we point you to the provider's official page. The application and decision stay with the people who run the scholarship.",
     href: ROUTES.howItWorks,
-    cta: "What we refuse to do",
+    cta: "How official applications work",
+    Icon: ExternalLinkIcon,
   },
 ];
 
@@ -133,10 +151,37 @@ export default async function LandingPage() {
      if a future data set has no parseable amounts at all. */
   const hero = priced[0] ?? cards[0];
   const featured = priced[1] ?? priced[0] ?? cards[0];
-  const record =
-    cards.find(
-      (card) => card.verification === "Verified" && card.amount > 0 && card.rows.length > 1
-    ) ?? hero;
+  const sourceType = (card: (typeof cards)[number]) =>
+    card.back.facts.find(([label]) => label === "Provider type")?.[1].toLowerCase() ?? "";
+  const scholarshipSources = [
+    {
+      label: "Government",
+      title: "Public support, published openly",
+      body: "Scholarships from national agencies and local governments, with the official notice kept close at hand.",
+      image: "/scholarship-sources/government.jpg",
+      imageAlt: "Historic public building in Manila",
+      imageClassName: "object-[center_38%]",
+      records: cards.filter((card) => /government|agency|local/.test(sourceType(card))),
+    },
+    {
+      label: "Schools",
+      title: "Opportunities through schools",
+      body: "Programs offered by schools and education partners for students taking the next step in their studies.",
+      image: "/scholarship-sources/schools.jpg",
+      imageAlt: "Three Filipino students studying together",
+      imageClassName: "object-center",
+      records: cards.filter((card) => /school|university/.test(sourceType(card))),
+    },
+    {
+      label: "Foundations",
+      title: "Backing from mission-led partners",
+      body: "Foundation, nonprofit, corporate, and international programs that invest in students and communities.",
+      image: "/scholarship-sources/foundations.jpg",
+      imageAlt: "Filipino children walking to school",
+      imageClassName: "object-[center_45%]",
+      records: cards.filter((card) => !/government|agency|local|school|university/.test(sourceType(card))),
+    },
+  ];
 
   /* A range, not a total: these amounts are per year for some programmes and
      per semester for others, so summing them would overstate what a student
@@ -308,74 +353,51 @@ export default async function LandingPage() {
         </Section>
 
         {/* ── The signature card ───────────────────────────────
-            Wise puts its calculator on a full-strength lime band, copy left and
-            the white card right. Same here — and the card keeps its own lime
-            CTA inside, because there it sits on white. */}
-        <Section tone="soft" labelledBy="record-heading">
+            Three source cards put the kinds of organisations students can browse
+            ahead of a single sample record, using provider crests as the visual. */}
+        <Section tone="soft" labelledBy="sources-heading">
           <Container>
-            <div className="grid gap-12 lg:grid-cols-12 lg:items-start lg:gap-16">
-              <div className="lg:col-span-4 lg:pt-4">
-                <h2 id="record-heading" className="t-display-xl text-balance">
-                  Read the record. Not a score.
-                </h2>
-                <p className="t-body-lg mt-6 max-w-[38ch] text-ink-mute text-pretty">
-                  The benefit, the provider&apos;s requirements, and the source behind them
-                  belong together.
-                </p>
-                <p className="t-caption mt-8 max-w-[34ch] text-ink-mute text-pretty">
-                  Unknown is never counted against you. It means there is more to learn,
-                  not that the answer is no.
-                </p>
-              </div>
+            <h2
+              id="sources-heading"
+              className="t-display-xl mx-auto max-w-[23ch] text-center text-balance uppercase"
+            >
+              Scholarships for Filipino students anywhere
+            </h2>
 
-              <article className="rounded-xl bg-canvas p-6 sm:p-8 lg:col-span-8" aria-label={`${record.title} scholarship record`}>
-                <div className="flex flex-col gap-6 border-b border-hairline pb-6 sm:flex-row sm:items-start sm:justify-between">
-                  <div>
-                    <p className="t-caption text-ink-mute">{record.provider}</p>
-                    <h3 className="t-display-md mt-2 max-w-[22ch] text-balance">{record.title}</h3>
-                  </div>
-                  <div className="sm:text-right">
-                    <p className="t-caption text-ink-mute">Published benefit</p>
-                    <p className="t-figure mt-1 text-ink">
-                      {record.amount > 0 ? formatPeso(record.amount) : record.amountNote}
-                    </p>
-                    {record.amount > 0 && <p className="t-caption mt-1 text-ink-mute">{record.amountNote}</p>}
-                  </div>
-                </div>
+            <div className="mt-12 grid gap-5 md:grid-cols-3">
+              {scholarshipSources.map((source) => {
+                return (
+                  <article key={source.label} className="flex min-h-[30rem] flex-col rounded-xl bg-canvas p-5 sm:p-6">
+                    <div className="relative min-h-52 overflow-hidden rounded-lg bg-canvas-soft">
+                      <Image
+                        src={source.image}
+                        alt={source.imageAlt}
+                        fill
+                        sizes="(min-width: 768px) 33vw, 100vw"
+                        className={`object-cover ${source.imageClassName}`}
+                      />
+                      <p className="t-caption-strong absolute top-4 left-4 inline-flex w-fit rounded-full bg-canvas px-3 py-1 text-ink">
+                        {source.label}
+                      </p>
+                    </div>
 
-                <div className="grid gap-8 py-7 md:grid-cols-[minmax(0,1fr)_13rem] md:gap-10">
-                  <div>
-                    <p className="t-body-strong">Published requirements</p>
-                    <ul className="mt-4">
-                      {record.rows.map((row, index) => (
-                        <li key={row.label} className={`flex gap-3 py-3 ${index === 0 ? "" : "border-t border-hairline"}`}>
-                          <RequirementMark state={row.state} className="mt-0.5" />
-                          <div>
-                            <p className="t-body-strong">{row.label}</p>
-                            <p className="t-caption mt-1 text-ink-mute text-pretty">{row.text}</p>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div className="border-t border-hairline pt-6 md:border-t-0 md:border-l md:pl-8 md:pt-0">
-                    <p className="t-caption text-ink-mute">Record status</p>
-                    <p className="t-body-strong mt-2">{record.verification}</p>
-                    <p className="t-caption mt-1 text-ink-mute">Checked <time dateTime={record.lastVerified}>{formatIsoDate(record.lastVerified)}</time></p>
-                    <p className="t-caption mt-6 text-ink-mute">Official source</p>
-                    <p className="t-body-strong mt-2">Tier {record.sourceTier}</p>
-                    <p className="t-caption mt-1 text-ink-mute text-pretty">{record.sources[0]?.name}</p>
-                  </div>
-                </div>
-
-                <div className="border-t border-hairline pt-6">
-                  <Link href={ROUTES.scholarship(record.id)} className="ring-brand t-body-strong inline-flex items-center gap-2 rounded-xs text-ink underline decoration-hairline underline-offset-4 hover:decoration-ink">
-                    Read the full record
-                    <ArrowRightIcon className="size-4" aria-hidden="true" />
-                  </Link>
-                </div>
-              </article>
+                    <div className="mt-6 flex flex-1 flex-col">
+                      <h3 className="t-display-md text-balance">{source.title}</h3>
+                      <p className="t-body mt-3 text-ink-mute text-pretty">{source.body}</p>
+                      <p className="t-caption mt-5 text-ink-mute">
+                        {source.records.length} {source.records.length === 1 ? "record" : "records"} in the directory
+                      </p>
+                      <Link
+                        href={ROUTES.scholarships}
+                        className="ring-brand t-caption-strong mt-6 inline-flex items-center gap-2 rounded-xs text-ink underline decoration-hairline underline-offset-4 hover:decoration-ink"
+                      >
+                        Explore {source.label.toLowerCase()} scholarships
+                        <ArrowRightIcon className="size-4" aria-hidden="true" />
+                      </Link>
+                    </div>
+                  </article>
+                );
+              })}
             </div>
           </Container>
         </Section>
@@ -517,28 +539,33 @@ export default async function LandingPage() {
             <SectionHead
               id="pillars-heading"
               align="center"
-              caps
-              title="Discover it. Understand it. Then go and apply."
-              lead="Three jobs, in the order a student actually does them — and a hard stop at the point where the provider takes over."
+              title="You do not have to figure it all out alone."
+              lead="A quieter way to move from uncertainty to an opportunity you can understand and act on."
             />
 
-            <div className="mt-12 grid gap-10 md:grid-cols-3 md:gap-8">
-              {PILLARS.map((pillar) => (
-                <div key={pillar.title} className="flex flex-col">
-                  <h3 className="t-display-lg text-ink">{pillar.title}</h3>
+            <ul className="mt-14 grid gap-10 md:grid-cols-3 md:gap-8">
+              {STUDENT_SUPPORT.map(({ title, body, href, cta, Icon }) => (
+                <li
+                  key={title}
+                  className="flex flex-col border-t border-hairline pt-6 md:pt-8"
+                >
+                  <div className="flex size-14 items-center justify-center rounded-full bg-brand-pale text-ink">
+                    <Icon className="size-6" strokeWidth={1.75} aria-hidden="true" />
+                  </div>
+                  <h3 className="t-display-lg mt-6 text-ink">{title}</h3>
                   <p className="t-body mt-4 flex-1 text-ink-mute text-pretty">
-                    {pillar.body}
+                    {body}
                   </p>
                   <Link
-                    href={pillar.href}
+                    href={href}
                     className="ring-brand t-caption-strong mt-6 inline-flex items-center gap-1.5 self-start rounded-xs text-ink underline decoration-hairline underline-offset-4 hover:decoration-ink"
                   >
-                    {pillar.cta}
+                    {cta}
                     <ArrowRightIcon className="size-3.5" aria-hidden="true" />
                   </Link>
-                </div>
+                </li>
               ))}
-            </div>
+            </ul>
           </Container>
         </Section>
 

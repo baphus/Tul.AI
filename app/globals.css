@@ -423,10 +423,10 @@
    * renders exactly six faces — cycling the data set if it holds fewer — so the
    * component and these percentages cannot drift apart.
    */
-  .flip-face {
-    animation: flip-face 18s ease-in-out infinite both;
-    transform-origin: top center;
-    backface-visibility: hidden;
+  .hero-pill-face {
+    animation: hero-pill-face 18s cubic-bezier(0.16, 1, 0.3, 1) infinite both;
+    transform-origin: center;
+    will-change: opacity, transform;
   }
 
   .enter-d1 { animation-delay: 70ms; }
@@ -449,12 +449,12 @@
    second copy exactly where the first started. Downward, per the brief. */
 /* One slot is 16.6%. A face folds in by 3.5%, holds to the end of its slot,
    then folds out by 19.6% — overlapping the next face's fold-in. */
-@keyframes flip-face {
-  0%, 0.5% { opacity: 0; transform: rotateX(-88deg); }
-  3.5% { opacity: 1; transform: rotateX(0deg); }
-  16.6% { opacity: 1; transform: rotateX(0deg); }
-  19.6% { opacity: 0; transform: rotateX(88deg); }
-  100% { opacity: 0; transform: rotateX(88deg); }
+@keyframes hero-pill-face {
+  0%, 0.4% { opacity: 0; transform: translateY(-10px) rotate(-3deg); }
+  1.6% { opacity: 1; transform: translateY(0) rotate(0deg); }
+  15.8% { opacity: 1; transform: translateY(0) rotate(0deg); }
+  17% { opacity: 0; transform: translateY(9px) rotate(2.5deg); }
+  100% { opacity: 0; transform: translateY(9px) rotate(2.5deg); }
 }
 @keyframes marquee-down {
   from { transform: translateY(-50%); }
