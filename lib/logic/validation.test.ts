@@ -95,9 +95,12 @@ describe("firstIncompleteStep", () => {
 });
 
 describe("isProfileReady", () => {
-  it("needs location, course and stage before matching can run", () => {
+  it("needs location and course before matching can run", () => {
     expect(isProfileReady(emptyProfile())).toBe(false);
-    expect(isProfileReady(answered({ stage: "" }))).toBe(false);
+    expect(isProfileReady(answered({ city: "" }))).toBe(false);
+    expect(isProfileReady(answered({ course: "" }))).toBe(false);
+    // a missing stage is unknown, never a blocker
+    expect(isProfileReady(answered({ stage: "" }))).toBe(true);
     expect(isProfileReady(answered())).toBe(true);
   });
 

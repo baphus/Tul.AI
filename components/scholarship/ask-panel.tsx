@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { usePrefersReducedMotion } from "@/hooks/use-media-query";
 import { answerFor, SUGGESTIONS, type Answer } from "@/lib/logic/answerFor";
+import { useTulAiOptional } from "@/hooks/use-tul-ai";
 import type { Scholarship } from "@/lib/scholarships";
 
 interface Entry {
@@ -27,6 +28,8 @@ export function AskPanel({ card }: { card: Scholarship }) {
   const [pending, setPending] = useState(false);
   const timers = useRef<number[]>([]);
   const reduced = usePrefersReducedMotion();
+  const ctx = useTulAiOptional();
+  const profile = ctx?.state.profile;
 
   useEffect(() => () => timers.current.forEach(window.clearTimeout), []);
 
@@ -37,21 +40,44 @@ export function AskPanel({ card }: { card: Scholarship }) {
       setThread((current) => [...current, { q, a: null }]);
       setInput("");
       setPending(true);
-      const t = window.setTimeout(
-        () => {
-          const answer = answerFor(q, card);
-          setThread((current) =>
-            current.map((entry, i) =>
-              i === current.length - 1 ? { ...entry, a: answer } : entry
-            )
-          );
-          setPending(false);
-        },
-        reduced ? 350 : 850
-      );
-      timers.current.push(t);
+      const useAi = process.env.NEXT_PUBLIC_AI_QA_ENABLED === "1";
+      if (useAi) {
+        fetch("/api/ai/answer", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question: q, cardId: card.id, profile }),
+        })
+          .then((r) => r.json())
+          .then((json) => {
+            const ans = (json?.answer as Answer | null) ?? answerFor(q, card);
+            setThread((current) =>
+              current.map((entry, i) => (i === current.length - 1 ? { ...entry, a: ans } : entry))
+            );
+          })
+          .catch(() => {
+            const ans = answerFor(q, card);
+            setThread((current) =>
+              current.map((entry, i) => (i === current.length - 1 ? { ...entry, a: ans } : entry))
+            );
+          })
+          .finally(() => setPending(false));
+      } else {
+        const t = window.setTimeout(
+          () => {
+            const answer = answerFor(q, card);
+            setThread((current) =>
+              current.map((entry, i) =>
+                i === current.length - 1 ? { ...entry, a: answer } : entry
+              )
+            );
+            setPending(false);
+          },
+          reduced ? 350 : 850
+        );
+        timers.current.push(t);
+      }
     },
-    [card, pending, reduced]
+    [card, pending, profile, reduced]
   );
 
   return (

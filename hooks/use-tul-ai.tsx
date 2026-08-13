@@ -31,6 +31,11 @@ export function useTulAi(): TulAiContextValue {
   return ctx;
 }
 
+/** Optional variant that returns `null` when the provider is not mounted. */
+export function useTulAiOptional(): TulAiContextValue | null {
+  return useContext(TulAiContext);
+}
+
 /** How long a piece of cross-scholarship advice stays on screen. */
 const ADVICE_MS = 9000;
 

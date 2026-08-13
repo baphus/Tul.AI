@@ -1,14 +1,12 @@
 "use client";
 
 import { SparklesIcon } from "lucide-react";
-import Link from "next/link";
 
 import { ScholarshipSummaryCard } from "@/components/scholarship/scholarship-summary-card";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { useTulAi } from "@/hooks/use-tul-ai";
 import { advisory, type Decision } from "@/lib/logic/advisory";
 import { ROUTES } from "@/lib/logic/routes";
-import { savedCount } from "@/lib/logic/state";
 import type { Scholarship } from "@/lib/scholarships";
 
 /**
@@ -100,18 +98,15 @@ export function ReviewList() {
       </div>
 
       <div className="mt-14 flex flex-wrap items-center gap-3 border-t border-hairline pt-8">
-        <Button
-          className="h-12 rounded-md px-6"
-          disabled={savedCount(state) === 0}
-          render={
-            saved.length > 0 ? (
-              <Link href={ROUTES.saved} />
-            ) : undefined
-          }
-        >
-          Prepare {saved.length > 0 ? saved.length : "your"} application
-          {saved.length === 1 ? "" : "s"}
-        </Button>
+        {saved.length > 0 ? (
+          <ButtonLink className="h-12 rounded-md px-6" href={ROUTES.saved}>
+            Prepare {saved.length} application{saved.length === 1 ? "" : "s"}
+          </ButtonLink>
+        ) : (
+          <Button className="h-12 rounded-md px-6" disabled>
+            Prepare your applications
+          </Button>
+        )}
         <ButtonLink
           variant="outline"
           className="h-12 rounded-md border-hairline-dark px-5"
