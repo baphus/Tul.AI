@@ -13,12 +13,55 @@ import {
   SectionHead,
 } from "@/components/site/layout-primitives";
 import { SiteHeader } from "@/components/site/site-header";
+import { SupportEstimator } from "@/components/site/support-estimator";
 import { VerificationLedger } from "@/components/site/verification-ledger";
 import { Button } from "@/components/ui/button";
 import { formatIsoDate } from "@/lib/logic/deadlines";
 import { formatPeso } from "@/lib/logic/format";
 import { ROUTES } from "@/lib/logic/routes";
 import { getScholarships } from "@/lib/scholarships";
+
+/**
+ * The four things the product does, as DESIGN.md's four card surfaces: sage,
+ * pale green, white, and the polarity-flipped dark card. The dark one carries
+ * the promise the brand is most serious about, which is the one it refuses.
+ */
+const PILLARS: {
+  title: string;
+  body: string;
+  href: string;
+  cta: string;
+  surface: "sage" | "green" | "white" | "dark";
+}[] = [
+  {
+    title: "Discover",
+    body: "One deck of opportunities drawn from national agencies, LGUs, universities and foundations — instead of six websites that each use different words.",
+    href: ROUTES.discover,
+    cta: "Open the deck",
+    surface: "sage",
+  },
+  {
+    title: "Understand",
+    body: "Every match opens into the published requirement behind it, in plain language, with what is met, what needs attention, and what is simply unknown.",
+    href: ROUTES.howItWorks,
+    cta: "How matching works",
+    surface: "green",
+  },
+  {
+    title: "Verify",
+    body: "Each record carries the official source and the date it was last checked. Ask Tul.AI to re-read that source while you are looking at it.",
+    href: ROUTES.scholarships,
+    cta: "See the records",
+    surface: "white",
+  },
+  {
+    title: "Apply with the provider",
+    body: "Tul.AI takes you to the official application page and stops. It never applies on your behalf, and it never decides whether you get the scholarship.",
+    href: ROUTES.howItWorks,
+    cta: "What we refuse to do",
+    surface: "dark",
+  },
+];
 
 const STEPS: [string, string][] = [
   [
@@ -88,6 +131,13 @@ const FAQ: [string, string][] = [
   ],
 ];
 
+const SURFACE: Record<string, string> = {
+  sage: "bg-canvas-soft text-ink",
+  green: "bg-brand-pale text-ink",
+  white: "bg-canvas text-ink border border-hairline",
+  dark: "bg-ink text-white",
+};
+
 export default async function LandingPage() {
   const cards = await getScholarships();
   const hero = cards[0];
@@ -103,119 +153,156 @@ export default async function LandingPage() {
     .map((card) => card.lastVerified)
     .sort()
     .at(-1);
+  const verified = cards.filter((card) => card.verification === "Verified").length;
 
   return (
     <>
       <SiteHeader tone="over" />
 
       <main id="main" className="flex-1">
-        {/* ── Hero ─────────────────────────────────────────── */}
-        <section className="canvas-indigo relative overflow-hidden pt-24 pb-14 sm:pt-28 md:pb-20 lg:pt-32">
-          <Container width="wide">
-            <div className="grid items-center gap-14 lg:grid-cols-12 lg:gap-10">
-              <div className="lg:col-span-7 xl:col-span-6">
-                <h1 className="t-display-xxl enter max-w-[18ch] text-balance text-white">
-                  Bridge to your next opportunity.
+        {/* ── Hero ─────────────────────────────────────────────
+            DESIGN.md `hero-band`: sage canvas, display-mega headline left, the
+            signature card right. Stacks on mobile. */}
+        <section className="canvas-sage pt-10 pb-16 md:pt-16 md:pb-24">
+          <Container>
+            <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
+              <div className="lg:col-span-6">
+                <h1 className="t-display-xxl enter max-w-[12ch] text-balance text-ink">
+                  Money for school, found.
                 </h1>
-                <p className="t-body-lg enter enter-d1 mt-7 max-w-[54ch] text-on-dark-mute text-pretty">
-                  {cards.length} verified scholarships worth{" "}
-                  <span className="t-num text-white">{formatPeso(lowest)}</span> to{" "}
-                  <span className="t-num text-white">{formatPeso(highest)}</span> each,
-                  matched to your situation and shown with the published requirement behind
-                  every single one.
+                {/* {verified} not {cards.length}: the trust strip below states
+                    how many are source-confirmed, and the two must agree. */}
+                <p className="t-body-lg enter enter-d1 mt-8 max-w-[46ch] text-ink-mute text-pretty">
+                  {cards.length} scholarships worth{" "}
+                  <span className="t-num text-ink">{formatPeso(lowest)}</span> to{" "}
+                  <span className="t-num text-ink">{formatPeso(highest)}</span> each,{" "}
+                  {verified} of them confirmed against an official source — each shown
+                  with the published requirement behind it.
                 </p>
 
-                <div className="enter enter-d2 mt-10 flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-7">
+                <div className="enter enter-d2 mt-9 flex flex-col gap-4 sm:flex-row sm:items-center">
                   <Button
-                    className="h-13 rounded-full bg-violet-soft px-7 text-indigo hover:bg-violet-soft/85"
+                    className="t-body-strong h-13 px-7 text-base"
                     render={<Link href={ROUTES.onboarding} />}
                   >
                     Find my scholarships
                   </Button>
-                  <Link
-                    href={ROUTES.scholarships}
-                    className="ring-brand t-caption inline-flex items-center gap-1.5 rounded-xs text-on-dark-mute underline decoration-white/25 underline-offset-4 hover:text-white"
+                  <Button
+                    variant="tertiary"
+                    className="t-body-strong h-13 px-7 text-base"
+                    render={<Link href={ROUTES.scholarships} />}
                   >
-                    Or read all {cards.length} records first
-                    <ArrowRightIcon className="size-3.5" aria-hidden="true" />
-                  </Link>
+                    Read all {cards.length} records
+                  </Button>
                 </div>
 
-                <p className="t-micro enter enter-d2 mt-6 text-on-dark-mute">
+                <p className="t-caption enter enter-d2 mt-6 text-ink-mute">
                   Five questions · no account · free for students
                 </p>
               </div>
 
-              <div className="lg:col-span-5 xl:col-span-6 xl:pl-10">
-                <DeckPreview card={hero} index={0} className="enter-card" />
-              </div>
-            </div>
-
-            {/* Proof, in the hero's own vicinity. */}
-            <div className="enter enter-d4 mt-16 border-t border-hairline-dark/60 pt-7 md:mt-20">
-              <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
-                <p className="t-caption max-w-[34ch] text-on-dark-mute">
-                  Matched against the providers&apos; own published notices — last checked{" "}
-                  {lastChecked && (
-                    <time dateTime={lastChecked} className="text-white">
-                      {formatIsoDate(lastChecked)}
-                    </time>
-                  )}
-                  .
-                </p>
-                <ul className="flex flex-wrap items-center gap-3">
-                  {cards.map((card, i) => (
-                    <li key={card.id} className="flex items-center gap-2">
-                      <ProviderCrest
-                        index={i}
-                        provider={card.provider}
-                        className="size-8"
-                      />
-                      <span className="t-micro hidden text-on-dark-mute lg:inline">
-                        {card.provider}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
+              <div className="lg:col-span-6 lg:pl-8">
+                <SupportEstimator cards={cards} className="enter-card" />
               </div>
             </div>
           </Container>
         </section>
 
-        {/* ── The ledger ───────────────────────────────────── */}
-        <Section labelledBy="ledger-heading">
+        {/* ── Trust strip ──────────────────────────────────── */}
+        <section className="border-b border-hairline bg-canvas py-8" aria-label="Sources">
           <Container>
-            <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between lg:gap-16">
-              <SectionHead
-                id="ledger-heading"
-                title="Every programme we've verified, and when."
-                lead="Small enough to print in full, so we print it in full. This is the entire data set — no search box hiding how much we actually cover."
-              />
-              <Link
-                href={ROUTES.scholarships}
-                className="ring-brand t-body-strong inline-flex flex-none items-center gap-2 rounded-xs text-indigo underline decoration-indigo/25 underline-offset-4"
-              >
-                Open the directory
-                <ArrowRightIcon className="size-4" aria-hidden="true" />
-              </Link>
+            <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+              <p className="t-caption max-w-[40ch] text-ink-mute text-pretty">
+                Matched against the providers&apos; own published notices —{" "}
+                <span className="text-ink">
+                  {verified} of {cards.length}
+                </span>{" "}
+                records confirmed against an official source, last checked{" "}
+                {lastChecked && (
+                  <time dateTime={lastChecked} className="text-ink">
+                    {formatIsoDate(lastChecked)}
+                  </time>
+                )}
+                .
+              </p>
+              <ul className="flex flex-wrap items-center gap-x-6 gap-y-3">
+                {cards.map((card, i) => (
+                  <li key={card.id} className="flex items-center gap-2">
+                    <ProviderCrest index={i} provider={card.provider} className="size-8" />
+                    <span className="t-micro hidden text-ink-mute lg:inline">
+                      {card.provider}
+                    </span>
+                  </li>
+                ))}
+              </ul>
             </div>
+          </Container>
+        </section>
 
-            <div className="mt-12">
-              <VerificationLedger cards={cards} />
+        {/* ── The four things it does ──────────────────────── */}
+        <Section labelledBy="pillars-heading">
+          <Container>
+            <SectionHead
+              id="pillars-heading"
+              title="Discover it. Understand it. Check it. Then go and apply."
+              lead="Four jobs, in the order a student actually does them — and a hard stop at the point where the provider takes over."
+            />
+
+            <div className="mt-12 grid gap-5 sm:grid-cols-2">
+              {PILLARS.map((pillar) => (
+                <div
+                  key={pillar.title}
+                  className={`flex flex-col rounded-xl p-6 sm:p-7 ${SURFACE[pillar.surface]}`}
+                >
+                  <h3
+                    className={`t-display-lg ${pillar.surface === "dark" ? "text-brand" : "text-ink"}`}
+                  >
+                    {pillar.title}
+                  </h3>
+                  <p
+                    className={`t-body mt-4 flex-1 text-pretty ${
+                      pillar.surface === "dark" ? "text-on-dark-mute" : "text-ink-mute"
+                    }`}
+                  >
+                    {pillar.body}
+                  </p>
+                  <Link
+                    href={pillar.href}
+                    className={`ring-brand t-caption-strong mt-6 inline-flex items-center gap-1.5 rounded-xs underline underline-offset-4 ${
+                      pillar.surface === "dark"
+                        ? "text-brand decoration-brand/40 hover:decoration-brand"
+                        : "text-ink decoration-hairline hover:decoration-ink"
+                    }`}
+                  >
+                    {pillar.cta}
+                    <ArrowRightIcon className="size-3.5" aria-hidden="true" />
+                  </Link>
+                </div>
+              ))}
             </div>
+          </Container>
+        </Section>
 
-            <p className="t-caption mt-8 max-w-[70ch] text-ink-mute text-pretty">
-              A record is only marked <span className="text-met">Verified</span> when an
-              official provider source confirms it. Anything we could not confirm says{" "}
-              <span className="text-attention-ink">Needs verification</span> and says why on
-              its own page — a social-media post can help us find a programme, never
-              establish its rules.
-            </p>
+        {/* ── The figure band ──────────────────────────────── */}
+        <Section tone="ink" size="tight" labelledBy="figure-heading">
+          <Container>
+            <div className="grid gap-8 lg:grid-cols-12 lg:items-center lg:gap-16">
+              <div className="lg:col-span-7">
+                <h2 id="figure-heading" className="t-display-xl text-balance text-brand">
+                  {formatPeso(lowest)} to {formatPeso(highest)}, published and checked.
+                </h2>
+              </div>
+              <p className="t-body-lg lg:col-span-5 text-on-dark-mute text-pretty">
+                Not an estimate and not a projection — the figures each provider prints in
+                its own notice, held next to the date we last confirmed them. Some are per
+                year, some per semester; the record says which.
+              </p>
+            </div>
           </Container>
         </Section>
 
         {/* ── The shift ────────────────────────────────────── */}
-        <Section tone="soft" labelledBy="shift-heading">
+        <Section labelledBy="shift-heading">
           <Container>
             <SectionHead
               id="shift-heading"
@@ -223,16 +310,16 @@ export default async function LandingPage() {
               lead="Opportunities sit across government agencies, universities, LGUs and foundations, each with its own site, wording, documents and deadline. The gap isn't awareness — it's that nobody is holding the whole picture for one student."
             />
 
-            <div className="mt-14 grid gap-10 md:grid-cols-2 md:gap-16">
-              <div className="md:border-r md:border-hairline md:pr-16">
+            <div className="mt-12 grid gap-5 md:grid-cols-2">
+              <div className="rounded-xl bg-canvas-soft p-6 sm:p-8">
                 <h3 className="t-display-md text-ink-mute">Searching on your own</h3>
-                <ol className="mt-6">
+                <ol className="mt-5">
                   {OLD_WAY.map((item, i) => (
                     <li
                       key={item}
-                      className="t-caption flex gap-4 border-b border-hairline py-3.5 text-ink-mute first:border-t"
+                      className="t-caption flex gap-4 border-t border-hairline py-3.5 text-ink-mute"
                     >
-                      <span className="t-num flex-none text-ink-mute">
+                      <span className="t-num flex-none">
                         {String(i + 1).padStart(2, "0")}
                       </span>
                       {item}
@@ -241,15 +328,15 @@ export default async function LandingPage() {
                 </ol>
               </div>
 
-              <div>
-                <h3 className="t-display-md">With Tul.AI</h3>
-                <ol className="mt-6">
+              <div className="rounded-xl bg-brand-pale p-6 sm:p-8">
+                <h3 className="t-display-md text-ink">With Tul.AI</h3>
+                <ol className="mt-5">
                   {NEW_WAY.map((item, i) => (
                     <li
                       key={item}
-                      className="t-caption flex gap-4 border-b border-hairline py-3.5 text-ink first:border-t"
+                      className="t-caption flex gap-4 border-t border-ink/10 py-3.5 text-ink"
                     >
-                      <span className="t-num flex-none text-indigo">
+                      <span className="t-num flex-none text-ink-deep">
                         {String(i + 1).padStart(2, "0")}
                       </span>
                       {item}
@@ -262,7 +349,7 @@ export default async function LandingPage() {
         </Section>
 
         {/* ── How it works ─────────────────────────────────── */}
-        <Section labelledBy="how-heading">
+        <Section tone="soft" labelledBy="how-heading">
           <Container>
             <SectionHead
               id="how-heading"
@@ -270,11 +357,11 @@ export default async function LandingPage() {
               lead="The order matters, so here it is in order. Nothing about your eligibility is decided by a language model."
             />
 
-            <ol className="mt-14">
+            <ol className="mt-12">
               {STEPS.map(([title, body], i) => (
                 <RuledRow key={title} last={i === STEPS.length - 1}>
                   <div className="flex items-baseline gap-4">
-                    <span className="t-num t-caption flex-none text-ink-mute">
+                    <span className="t-num t-caption-strong flex-none text-ink-mute">
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     <h3 className="t-display-md">{title}</h3>
@@ -286,7 +373,7 @@ export default async function LandingPage() {
 
             <Link
               href={ROUTES.howItWorks}
-              className="ring-brand t-body-strong mt-10 inline-flex items-center gap-2 rounded-xs text-indigo underline decoration-indigo/25 underline-offset-4"
+              className="ring-brand t-body-strong mt-10 inline-flex items-center gap-2 rounded-xs text-ink underline decoration-hairline underline-offset-4 hover:decoration-ink"
             >
               The longer version, including what we refuse to do
               <ArrowRightIcon className="size-4" aria-hidden="true" />
@@ -295,7 +382,7 @@ export default async function LandingPage() {
         </Section>
 
         {/* ── Explainability: the peak ─────────────────────── */}
-        <Section tone="soft" size="loose" labelledBy="explain-heading">
+        <Section size="loose" labelledBy="explain-heading">
           <Container>
             <div className="grid gap-14 lg:grid-cols-12 lg:gap-16">
               <div className="lg:col-span-6">
@@ -343,7 +430,7 @@ export default async function LandingPage() {
               </div>
 
               <div className="lg:col-span-6">
-                <figure className="rounded-xl border border-hairline bg-canvas p-6 sm:p-7">
+                <figure className="rounded-xl bg-canvas-soft p-6 sm:p-7">
                   <figcaption className="flex items-baseline justify-between gap-4 border-b border-hairline pb-5">
                     <span>
                       <span className="t-caption block text-ink-mute">{hero.provider}</span>
@@ -375,7 +462,7 @@ export default async function LandingPage() {
 
                   <Link
                     href={ROUTES.scholarship(hero.id)}
-                    className="ring-brand t-caption mt-6 inline-flex items-center gap-1.5 rounded-xs border-t border-hairline pt-6 text-indigo underline decoration-indigo/25 underline-offset-4"
+                    className="ring-brand t-caption-strong mt-6 inline-flex items-center gap-1.5 rounded-xs border-t border-hairline pt-6 text-ink underline decoration-hairline underline-offset-4 hover:decoration-ink"
                   >
                     Read the full record, sources and all
                     <ArrowRightIcon className="size-3.5" aria-hidden="true" />
@@ -387,7 +474,7 @@ export default async function LandingPage() {
         </Section>
 
         {/* ── Discovery ────────────────────────────────────── */}
-        <Section labelledBy="discover-heading">
+        <Section tone="soft" labelledBy="discover-heading">
           <Container>
             <div className="grid gap-14 lg:grid-cols-12 lg:items-center lg:gap-16">
               <div className="lg:col-span-6">
@@ -424,7 +511,7 @@ export default async function LandingPage() {
                 </dl>
 
                 <Button
-                  className="mt-10 h-12 rounded-md px-6"
+                  className="t-body-strong mt-10 h-12 px-6 text-base"
                   render={<Link href={ROUTES.discover} />}
                 >
                   Try the deck with demo data
@@ -438,12 +525,44 @@ export default async function LandingPage() {
           </Container>
         </Section>
 
+        {/* ── The ledger ───────────────────────────────────── */}
+        <Section labelledBy="ledger-heading">
+          <Container>
+            <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between lg:gap-16">
+              <SectionHead
+                id="ledger-heading"
+                title="Every programme we've verified, and when."
+                lead="Small enough to print in full, so we print it in full. This is the entire data set — no search box hiding how much we actually cover."
+              />
+              <Link
+                href={ROUTES.scholarships}
+                className="ring-brand t-body-strong inline-flex flex-none items-center gap-2 rounded-xs text-ink underline decoration-hairline underline-offset-4 hover:decoration-ink"
+              >
+                Open the directory
+                <ArrowRightIcon className="size-4" aria-hidden="true" />
+              </Link>
+            </div>
+
+            <div className="mt-12">
+              <VerificationLedger cards={cards} />
+            </div>
+
+            <p className="t-caption mt-8 max-w-[70ch] text-ink-mute text-pretty">
+              A record is only marked <span className="text-met">Verified</span> when an
+              official provider source confirms it. Anything we could not confirm says{" "}
+              <span className="text-attention-ink">Needs verification</span> and says why on
+              its own page — a social-media post can help us find a programme, never
+              establish its rules.
+            </p>
+          </Container>
+        </Section>
+
         {/* ── Institutions ─────────────────────────────────── */}
-        <Section tone="soft" size="tight" labelledBy="inst-heading">
+        <Section tone="pale" size="tight" labelledBy="inst-heading">
           <Container>
             <div className="grid gap-8 lg:grid-cols-12 lg:items-end lg:gap-16">
               <div className="lg:col-span-8">
-                <h2 id="inst-heading" className="t-display-lg max-w-[34ch] text-balance">
+                <h2 id="inst-heading" className="t-display-lg max-w-[30ch] text-balance">
                   A programme nobody eligible hears about is a budget line that quietly
                   under-delivers.
                 </h2>
@@ -454,13 +573,13 @@ export default async function LandingPage() {
                 </p>
               </div>
               <div className="lg:col-span-4 lg:text-right">
-                <Link
-                  href={ROUTES.institutions}
-                  className="ring-brand t-body-strong inline-flex items-center gap-2 rounded-xs text-indigo underline decoration-indigo/25 underline-offset-4"
+                <Button
+                  variant="tertiary"
+                  className="t-body-strong h-12 px-6 text-base"
+                  render={<Link href={ROUTES.institutions} />}
                 >
                   For institutions
-                  <ArrowRightIcon className="size-4" aria-hidden="true" />
-                </Link>
+                </Button>
               </div>
             </div>
           </Container>

@@ -175,7 +175,7 @@ function SavedCard({ card, index }: { card: Scholarship; index: number }) {
                     className="peer sr-only"
                   />
                   <span
-                    className="grid size-5 flex-none place-items-center rounded-xs border-[1.5px] border-hairline-dark/30 bg-canvas text-transparent transition-colors peer-checked:border-met peer-checked:bg-met peer-checked:text-white peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-indigo"
+                    className="grid size-5 flex-none place-items-center rounded-xs border-[1.5px] border-hairline-dark/30 bg-canvas text-transparent transition-colors peer-checked:border-met peer-checked:bg-met peer-checked:text-white peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ink"
                     aria-hidden="true"
                   >
                     <CheckIcon className="size-3" strokeWidth={3} />

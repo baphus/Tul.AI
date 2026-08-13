@@ -3,13 +3,18 @@
 @import "shadcn/tailwind.css";
 
 /*
- * Tul.AI design system — implements DESIGN.md (Superhumon-inspired editorial).
+ * Tul.AI design system — implements DESIGN.md (Wise-inspired).
  *
- * Three-canvas rhythm: indigo navy hero → white body → deep-teal closing band.
- * Light-only by design; there is no dark variant and no theme toggle.
- * Type is Inter Variable at the brand's sub-default weights (460/540/600) —
- * always via the .t-* classes below, never via Tailwind font-weight utilities
- * (font-variation-settings would win over font-weight and they would disagree).
+ * Surface rhythm: sage hero band (--canvas-soft) → white content bands holding
+ * white/sage/pale-green cards → a near-black closing band and footer carrying a
+ * lime headline. Surface contrast IS the elevation; almost nothing casts a
+ * shadow. Light-only by design; there is no dark variant and no theme toggle.
+ *
+ * Two faces ladder the type system, per DESIGN.md §Typography:
+ *   Manrope 800  — the sanctioned Wise Sans substitute. Displays only.
+ *   Inter        — sub-displays (600), all body, labels, buttons.
+ * Weight is applied through the .t-* classes via font-variation-settings —
+ * never with Tailwind font-weight utilities, which would disagree with it.
  */
 
 @theme inline {
@@ -17,6 +22,11 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
+  --font-display: var(--font-display);
+  /* Utility chrome (CardTitle, SheetTitle) reads --font-heading. DESIGN.md
+     §Typography keeps the roles strictly separate — the display face is the
+     brand voice, Inter is utility — so this stays on Inter. Opt into the
+     display face explicitly with `font-display` where it is wanted. */
   --font-heading: var(--font-sans);
   --color-ring: var(--ring);
   --color-input: var(--input);
@@ -35,20 +45,33 @@
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
 
-  /* Brand surfaces (DESIGN.md §Colors) */
-  --color-indigo: var(--indigo);
-  --color-indigo-deep: var(--indigo-deep);
-  --color-violet-soft: var(--violet-soft);
-  --color-teal-deep: var(--teal-deep);
-  --color-teal-mid: var(--teal-mid);
+  /* Brand (DESIGN.md §Colors — Brand & Accent). One accent, and only one. */
+  --color-brand: var(--brand);
+  --color-brand-active: var(--brand-active);
+  --color-brand-neutral: var(--brand-neutral);
+  --color-brand-pale: var(--brand-pale);
+
+  /* Surface + ink */
   --color-canvas: var(--canvas);
   --color-canvas-soft: var(--canvas-soft);
-  --color-hairline: var(--hairline);
-  --color-hairline-dark: var(--hairline-dark);
   --color-ink: var(--ink);
+  --color-ink-deep: var(--ink-deep);
   --color-ink-mute: var(--ink-mute);
   --color-ink-faint: var(--ink-faint);
   --color-on-dark-mute: var(--on-dark-mute);
+  --color-hairline: var(--hairline);
+  --color-hairline-dark: var(--hairline-dark);
+
+  /* Semantic — in-product status only. Never repurpose brand lime for these. */
+  --color-positive: var(--positive);
+  --color-positive-deep: var(--positive-deep);
+  --color-warning: var(--warning);
+  --color-warning-deep: var(--warning-deep);
+  --color-warning-content: var(--warning-content);
+  --color-negative: var(--negative);
+  --color-negative-deep: var(--negative-deep);
+  --color-accent-orange: var(--accent-orange);
+  --color-accent-cyan: var(--accent-cyan);
 
   /* Functional requirement states — status, not brand accent. */
   --color-met: var(--met);
@@ -56,58 +79,76 @@
   --color-attention-ink: var(--attention-ink);
   --color-unknown: var(--unknown);
 
+  /* DESIGN.md §Shapes. 24px is the canonical card + button radius; the brand
+     never uses sharp corners on UI elements. */
   --radius-xs: 4px;
-  --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
-  --radius-2xl: 20px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-2xl: 24px;
   --radius-3xl: 24px;
 }
 
 :root {
   /* DESIGN.md palette, verbatim */
-  --indigo: #1b1938;
-  --indigo-deep: #0e0c1f;
-  --violet-soft: #c9b4fa;
-  --teal-deep: #0e3030;
-  --teal-mid: #155555;
+  --brand: #9fe870;
+  --brand-active: #cdffad;
+  --brand-neutral: #c5edab;
+  --brand-pale: #e2f6d5;
+
   --canvas: #ffffff;
-  --canvas-soft: #fafaf8;
-  --hairline: #e8e4dd;
-  --hairline-dark: #3f3a52;
-  --ink: #292827;
-  --ink-mute: #73706d;
-  --ink-faint: #9a9794;
-  --on-dark-mute: #bcbac9;
+  --canvas-soft: #e8ebe6;
+
+  --ink: #0e0f0c;
+  --ink-deep: #163300;
+  --ink-mute: #454745; /* DESIGN.md `body` */
+  --ink-faint: #868685; /* DESIGN.md `mute` */
+
+  /* Derived, not in DESIGN.md's token list: a hairline that reads on both the
+     sage band and white cards, and its counterpart inside the ink bands. */
+  --hairline: #d3d8cf;
+  --hairline-dark: #2b2d29;
+  --on-dark-mute: #c3c7c0;
+
+  --positive: #2ead4b;
+  --positive-deep: #054d28;
+  --warning: #ffd11a;
+  --warning-deep: #b86700;
+  --warning-content: #4a3b1c;
+  --negative: #d03238;
+  --negative-deep: #a72027;
+  --accent-orange: #ffc091;
+  --accent-cyan: #38c8ff;
 
   /* Requirement states. Colour is never the only signal — every mark also
-     carries a glyph and a screen-reader label. */
-  --met: #155555;
-  --attention: #9a6412;
-  --attention-ink: #7a4f0e;
-  --unknown: #73706d;
+     carries a glyph and a screen-reader label. Deliberately NOT brand lime:
+     DESIGN.md forbids reusing the CTA colour as a success indicator. */
+  --met: #054d28;
+  --attention: #b86700;
+  --attention-ink: #8f5100;
+  --unknown: #868685;
 
-  /* shadcn token mapping */
+  /* shadcn token mapping. Primary is the lime CTA pill with an ink label. */
   --background: var(--canvas);
   --foreground: var(--ink);
   --card: var(--canvas);
   --card-foreground: var(--ink);
   --popover: var(--canvas);
   --popover-foreground: var(--ink);
-  --primary: var(--indigo);
-  --primary-foreground: #ffffff;
+  --primary: var(--brand);
+  --primary-foreground: var(--ink);
   --secondary: var(--canvas-soft);
   --secondary-foreground: var(--ink);
   --muted: var(--canvas-soft);
   --muted-foreground: var(--ink-mute);
-  --accent: var(--canvas-soft);
-  --accent-foreground: var(--indigo);
-  --destructive: #a3352b;
+  --accent: var(--brand-pale);
+  --accent-foreground: var(--ink);
+  --destructive: var(--negative);
   --border: var(--hairline);
   --input: var(--hairline);
-  --ring: var(--indigo);
-  --radius: 8px;
+  --ring: var(--ink);
+  --radius: 12px;
 }
 
 @layer base {
@@ -120,7 +161,8 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-variation-settings: "wght" 460;
+    font-variation-settings: "wght" 400;
+    font-feature-settings: "calt";
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
@@ -131,48 +173,67 @@
 }
 
 /* ── Type scale (DESIGN.md §Typography) ─────────────────────
-   Display sizes stair-step 64 → 48 → 36 → 28 → 22px across breakpoints. */
+   Displays are Manrope at weight 800 — the brand's heavy geometric voice, set
+   tight. Everything from .t-display-md down is Inter at 600 or 400. */
 @layer components {
+  .t-display-xxl,
+  .t-display-xl,
+  .t-display-lg,
+  .t-figure {
+    font-family: var(--font-display), var(--font-sans), system-ui, sans-serif;
+    font-variation-settings: "wght" 800;
+    font-weight: 800;
+  }
+
+  /*
+   * Hero stencil. DESIGN.md's ceiling is 126px on a full-bleed statement; the
+   * hero here is a split layout, so it tops out at the 96px sub-hero scale and
+   * scales down to something that still fills a phone.
+   *
+   * Leading runs a little looser than DESIGN.md's literal ratios (0.85 at
+   * display-xxl). Those are Wise Sans metrics; Manrope — the substitute
+   * DESIGN.md itself sanctions — has taller ascenders and deeper descenders,
+   * and at 0.85 a descender lands on the next line's ascenders in any two-line
+   * headline. These values are the tightest that clear.
+   */
   .t-display-xxl {
-    font-size: 2.25rem;
-    line-height: 1;
-    letter-spacing: -0.025em;
-    font-variation-settings: "wght" 540;
+    font-size: clamp(2.25rem, 6.4vw, 6rem);
+    line-height: 0.92;
+    letter-spacing: -0.018em;
   }
   .t-display-xl {
-    font-size: 1.875rem;
-    line-height: 1.02;
-    letter-spacing: -0.025em;
-    font-variation-settings: "wght" 460;
+    font-size: clamp(2rem, 4.4vw, 4rem);
+    line-height: 0.95;
+    letter-spacing: -0.015em;
   }
   .t-display-lg {
-    font-size: 1.5rem;
-    line-height: 1.14;
-    letter-spacing: -0.022em;
-    font-variation-settings: "wght" 540;
+    font-size: clamp(1.625rem, 2.9vw, 2.5rem);
+    line-height: 1;
+    letter-spacing: -0.012em;
   }
+
+  /* Inter-rendered sub-displays and below. */
   .t-display-md {
-    font-size: 1.25rem;
-    line-height: 1.15;
-    letter-spacing: -0.014em;
-    font-variation-settings: "wght" 460;
+    font-size: 1.5rem;
+    line-height: 1.3;
+    letter-spacing: -0.03em;
+    font-variation-settings: "wght" 600;
   }
   .t-heading {
-    font-size: 1.125rem;
-    line-height: 1.25;
+    font-size: 1.25rem;
+    line-height: 1.3;
     letter-spacing: -0.02em;
-    font-variation-settings: "wght" 540;
+    font-variation-settings: "wght" 600;
   }
   .t-body-lg {
-    font-size: 1.0625rem;
+    font-size: 1.125rem;
     line-height: 1.5;
-    letter-spacing: -0.008em;
-    font-variation-settings: "wght" 460;
+    font-variation-settings: "wght" 400;
   }
   .t-body {
     font-size: 1rem;
     line-height: 1.5;
-    font-variation-settings: "wght" 460;
+    font-variation-settings: "wght" 400;
   }
   .t-body-strong {
     font-size: 1rem;
@@ -181,70 +242,43 @@
   }
   .t-caption {
     font-size: 0.875rem;
-    line-height: 1.4;
-    font-variation-settings: "wght" 460;
+    line-height: 1.43;
+    font-variation-settings: "wght" 400;
+  }
+  .t-caption-strong {
+    font-size: 0.875rem;
+    line-height: 1.43;
+    font-variation-settings: "wght" 600;
   }
   .t-micro {
     font-size: 0.75rem;
-    line-height: 1.4;
-    font-variation-settings: "wght" 540;
+    line-height: 1.33;
+    font-variation-settings: "wght" 600;
   }
   .t-eyebrow {
     font-size: 0.75rem;
-    line-height: 1.4;
-    letter-spacing: 0.09em;
+    line-height: 1.33;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     font-variation-settings: "wght" 600;
   }
   .t-num {
     font-variant-numeric: tabular-nums;
   }
-  /* A figure that is content: peso amounts, dates, counts. Same display token,
-     lined up so a column of them reads as a column. */
+  /* A figure that is content: peso amounts, dates, counts. */
   .t-figure {
-    font-size: 1.5rem;
-    line-height: 1.1;
-    letter-spacing: -0.022em;
-    font-variation-settings: "wght" 540;
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    line-height: 1;
+    letter-spacing: -0.015em;
     font-variant-numeric: tabular-nums;
   }
 
   @media (min-width: 768px) {
-    .t-display-xxl {
-      font-size: 3.25rem;
-      line-height: 0.96;
-    }
-    .t-display-xl {
-      font-size: 2.5rem;
-      line-height: 0.98;
-    }
-    .t-display-lg {
-      font-size: 1.75rem;
-    }
     .t-display-md {
-      font-size: 1.375rem;
-      line-height: 1.1;
-    }
-    .t-heading {
-      font-size: 1.25rem;
-      line-height: 1.2;
+      font-size: 1.75rem;
     }
     .t-body-lg {
-      font-size: 1.125rem;
-    }
-    .t-figure {
-      font-size: 1.75rem;
-    }
-  }
-
-  @media (min-width: 1280px) {
-    .t-display-xxl {
-      font-size: 4rem;
-    }
-    .t-display-xl {
-      font-size: 3rem;
-      line-height: 0.96;
-      letter-spacing: -0.0275em;
+      font-size: 1.25rem;
     }
   }
 }
@@ -259,22 +293,17 @@
     display: none;
   }
 
-  /* The hero's violet-sky atmospheric wash over indigo (DESIGN.md §Elevation). */
-  .canvas-indigo {
-    background-color: var(--indigo);
-    background-image:
-      radial-gradient(90% 70% at 78% 8%, rgb(201 180 250 / 0.34) 0%, transparent 62%),
-      radial-gradient(70% 60% at 12% 4%, rgb(126 155 255 / 0.2) 0%, transparent 58%),
-      linear-gradient(180deg, transparent 45%, var(--indigo-deep) 100%);
-    color: #ffffff;
+  /* `hero-band` — the sage canvas the hero and every soft band sits on. Flat
+     colour: DESIGN.md's elevation model is surface contrast, not gradient. */
+  .canvas-sage {
+    background-color: var(--canvas-soft);
+    color: var(--ink);
   }
-  .canvas-teal {
-    background-color: var(--teal-deep);
-    background-image: radial-gradient(
-      80% 70% at 82% 0%,
-      rgb(21 85 85 / 0.85) 0%,
-      transparent 60%
-    );
+
+  /* `hero-band-dark` — near-black carrying a lime headline. The polarity flip
+     the brand uses for promotional moments and the closing band. */
+  .canvas-ink {
+    background-color: var(--ink);
     color: #ffffff;
   }
 
@@ -305,12 +334,17 @@
     outline: none;
   }
   .ring-brand:focus-visible {
-    outline: 2px solid var(--indigo);
+    outline: 2px solid var(--ink);
     outline-offset: 2px;
   }
-  .canvas-indigo .ring-brand:focus-visible,
-  .canvas-teal .ring-brand:focus-visible {
-    outline-color: var(--violet-soft);
+  .canvas-ink .ring-brand:focus-visible {
+    outline-color: var(--brand);
+  }
+
+  /* DESIGN.md's Level 1 — the 1px ink hairline on inputs, tertiary buttons and
+     the signature hero card. */
+  .edge-ink {
+    border: 1px solid var(--ink);
   }
 }
 
@@ -330,21 +364,6 @@
   .enter-d2 { animation-delay: 150ms; }
   .enter-d3 { animation-delay: 240ms; }
   .enter-d4 { animation-delay: 340ms; }
-
-  /* The nav resolves from transparent-over-hero to a solid bar as the hero
-     leaves. Where scroll-driven animation is unsupported the @supports fallback
-     below keeps it solid from the start — never white-on-white. */
-  .nav-resolve {
-    animation: nav-resolve linear both;
-    animation-timeline: scroll(root block);
-    animation-range: 64px 180px;
-  }
-  @supports not (animation-timeline: scroll(root block)) {
-    .nav-resolve {
-      animation: none;
-      background-color: var(--indigo);
-    }
-  }
 }
 
 @keyframes enter {
@@ -354,13 +373,6 @@
 @keyframes enter-card {
   from { opacity: 0; transform: translateY(24px) scale(0.985); filter: blur(7px); }
   to { opacity: 1; transform: none; filter: none; }
-}
-@keyframes nav-resolve {
-  from { background-color: transparent; box-shadow: none; }
-  to {
-    background-color: color-mix(in oklab, var(--indigo) 92%, transparent);
-    box-shadow: 0 1px 0 var(--hairline-dark);
-  }
 }
 
 /* ── Motion ─────────────────────────────────────────────── */
@@ -402,11 +414,5 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
-  }
-  /* The nav's resolve is legibility, not decoration: with animation off it has
-     to be solid from the first pixel or white text would land on white. */
-  .nav-resolve {
-    animation: none !important;
-    background-color: var(--indigo);
   }
 }

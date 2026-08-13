@@ -269,7 +269,7 @@ export function Deck({ detailOpen }: { detailOpen: boolean }) {
           </div>
         ) : (
           <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center [animation:rise_320ms_cubic-bezier(.2,.8,.3,1)_both]">
-            <span className="grid size-12 place-items-center rounded-full border border-indigo/25 text-indigo">
+            <span className="grid size-12 place-items-center rounded-full border border-ink/25 text-ink">
               <CheckIcon className="size-5" />
             </span>
             <h2 className="t-display-lg mt-5 text-balance">That&apos;s everything for now.</h2>
@@ -341,7 +341,7 @@ export function Deck({ detailOpen }: { detailOpen: boolean }) {
           hint="Open the full scholarship record"
           onClick={openDetail}
           disabled={!card}
-          className="size-12 border border-hairline bg-canvas text-indigo hover:border-indigo/40"
+          className="size-12 border border-hairline bg-canvas text-ink hover:border-ink/40"
         >
           <ArrowUpIcon className="size-4" />
         </DeckAction>
@@ -350,7 +350,7 @@ export function Deck({ detailOpen }: { detailOpen: boolean }) {
           hint="Interested — keep this scholarship at the top of your list"
           onClick={() => fling(1)}
           disabled={!card || exiting}
-          className="size-14 bg-indigo text-white shadow-[0_8px_24px_rgba(27,25,56,0.28)] hover:bg-indigo-deep"
+          className="size-14 bg-ink text-white shadow-[0_8px_24px_rgba(14,15,12,0.28)] hover:bg-ink-deep"
         >
           <CheckIcon className="size-5" />
         </DeckAction>
@@ -360,10 +360,10 @@ export function Deck({ detailOpen }: { detailOpen: boolean }) {
       {state.advice && (
         <div
           role="status"
-          className="absolute inset-x-5 bottom-28 z-20 flex gap-3 rounded-lg bg-indigo p-4 text-white shadow-[0_16px_40px_rgba(14,12,31,0.35)] [animation:rise_320ms_cubic-bezier(.2,.8,.3,1)_both]"
+          className="absolute inset-x-5 bottom-28 z-20 flex gap-3 rounded-lg bg-ink p-4 text-white shadow-[0_16px_40px_rgba(14,15,12,0.35)] [animation:rise_320ms_cubic-bezier(.2,.8,.3,1)_both]"
         >
           <span
-            className="grid size-6 flex-none place-items-center rounded-md bg-violet-soft text-indigo"
+            className="grid size-6 flex-none place-items-center rounded-md bg-brand text-ink"
             aria-hidden="true"
           >
             <SparklesIcon className="size-3" />
@@ -375,7 +375,7 @@ export function Deck({ detailOpen }: { detailOpen: boolean }) {
             </p>
             <button
               type="button"
-              className="ring-brand t-caption mt-3 rounded-xs text-violet-soft underline underline-offset-4"
+              className="ring-brand t-caption mt-3 rounded-xs text-brand underline underline-offset-4"
               onClick={() => dispatch({ type: "DISMISS_ADVICE" })}
             >
               Got it

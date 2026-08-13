@@ -53,7 +53,7 @@ export function VerifyDialog({ card }: { card: Scholarship }) {
         className="ring-brand flex w-full items-center gap-3 rounded-lg border border-hairline bg-canvas-soft p-4 text-left transition-colors hover:border-hairline-dark/30"
       >
         <span
-          className="grid size-8 flex-none place-items-center rounded-md bg-indigo text-white"
+          className="grid size-8 flex-none place-items-center rounded-md bg-ink text-white"
           aria-hidden="true"
         >
           <SparklesIcon className="size-4" />
@@ -82,7 +82,7 @@ export function VerifyDialog({ card }: { card: Scholarship }) {
 
           <div className="flex items-center gap-2.5">
             <span
-              className="grid size-7 flex-none place-items-center rounded-md bg-indigo text-white"
+              className="grid size-7 flex-none place-items-center rounded-md bg-ink text-white"
               aria-hidden="true"
             >
               <SparklesIcon className="size-3.5" />

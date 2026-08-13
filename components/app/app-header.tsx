@@ -40,7 +40,7 @@ export function AppHeader() {
                 className={cn(
                   "ring-brand t-caption rounded-full px-3.5 py-2 whitespace-nowrap transition-colors",
                   active
-                    ? "bg-indigo/6 text-indigo"
+                    ? "bg-ink/6 text-ink"
                     : "text-ink-mute hover:bg-canvas-soft hover:text-ink"
                 )}
               >

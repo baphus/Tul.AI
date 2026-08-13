@@ -69,12 +69,12 @@ export default function PrivacyPage() {
       <SiteHeader tone="over" />
 
       <main id="main" className="flex-1">
-        <section className="canvas-indigo pt-28 pb-16 sm:pt-32 md:pb-24">
+        <section className="canvas-sage pt-10 pb-16 md:pt-16 md:pb-24">
           <Container>
-            <h1 className="t-display-xxl max-w-[24ch] text-balance text-white">
+            <h1 className="t-display-xxl max-w-[24ch] text-balance text-ink">
               We ask for the least that makes matching work.
             </h1>
-            <p className="t-body-lg mt-7 max-w-[62ch] text-on-dark-mute text-pretty">
+            <p className="t-body-lg mt-7 max-w-[52ch] text-ink-mute text-pretty">
               Scholarship matching touches genuinely sensitive things — money, family
               circumstances, disability, indigenous identity. Every field below has to pass
               one test: does knowing this change which opportunities you can see? If not,
@@ -85,7 +85,7 @@ export default function PrivacyPage() {
 
         <Section size="tight">
           <Container>
-            <p className="t-body max-w-[70ch] border-l border-indigo pl-5 text-ink text-pretty">
+            <p className="t-body max-w-[70ch] border-l border-ink pl-5 text-ink text-pretty">
               <span className="text-ink-mute">Prototype note.</span> This build has no
               accounts and no server-side database. Everything you enter stays in your own
               browser&apos;s local storage on this device, and clearing it removes the lot.
@@ -111,7 +111,7 @@ export default function PrivacyPage() {
                     <span
                       className={
                         item.required
-                          ? "t-micro mt-2 inline-block rounded-full border border-indigo/25 bg-indigo/6 px-2.5 py-0.5 text-indigo"
+                          ? "t-micro mt-2 inline-block rounded-full border border-ink/25 bg-ink/6 px-2.5 py-0.5 text-ink"
                           : "t-micro mt-2 inline-block text-ink-mute"
                       }
                     >
@@ -147,7 +147,7 @@ export default function PrivacyPage() {
               Manage everything from your{" "}
               <Link
                 href={ROUTES.profile}
-                className="ring-brand rounded-xs text-indigo underline decoration-indigo/25 underline-offset-4"
+                className="ring-brand rounded-xs text-ink underline decoration-ink/25 underline-offset-4"
               >
                 profile page
               </Link>
@@ -180,7 +180,7 @@ export default function PrivacyPage() {
               More detail in{" "}
               <Link
                 href={`${ROUTES.howItWorks}#verification`}
-                className="ring-brand rounded-xs text-indigo underline decoration-indigo/25 underline-offset-4"
+                className="ring-brand rounded-xs text-ink underline decoration-ink/25 underline-offset-4"
               >
                 how we verify
               </Link>

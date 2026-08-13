@@ -89,7 +89,7 @@ export function ScholarshipDirectory({ cards }: { cards: Scholarship[] }) {
                   className={cn(
                     "ring-brand t-micro rounded-full border px-3.5 py-2 transition-colors",
                     active
-                      ? "border-indigo bg-indigo text-white"
+                      ? "border-ink bg-ink text-white"
                       : "border-hairline bg-canvas text-ink-mute hover:text-ink"
                   )}
                 >

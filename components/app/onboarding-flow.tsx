@@ -150,7 +150,7 @@ export function OnboardingFlow({ step }: { step: number }) {
             key={i}
             className={cn(
               "h-[3px] flex-1 rounded-full transition-colors",
-              i < step ? "bg-indigo" : "bg-hairline"
+              i < step ? "bg-ink" : "bg-hairline"
             )}
           />
         ))}
@@ -408,7 +408,7 @@ export function OnboardingFlow({ step }: { step: number }) {
 
               <div className="flex gap-3.5 rounded-lg border border-hairline bg-canvas-soft p-4">
                 <span
-                  className="grid size-7 flex-none place-items-center rounded-md bg-indigo text-white"
+                  className="grid size-7 flex-none place-items-center rounded-md bg-ink text-white"
                   aria-hidden="true"
                 >
                   <SparklesIcon className="size-3.5" />

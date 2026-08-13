@@ -42,7 +42,7 @@ function AmountCounter({ value, reduced }: { value: number; reduced: boolean }) 
 }
 
 const faceClass =
-  "absolute inset-0 flex flex-col overflow-hidden rounded-xl border border-[color:var(--tint-border)] p-5 shadow-[0_8px_24px_rgba(27,25,56,0.1)] [backface-visibility:hidden]";
+  "absolute inset-0 flex flex-col overflow-hidden rounded-xl border border-[color:var(--tint-border)] p-5 shadow-[0_8px_24px_rgba(14,15,12,0.1)] [backface-visibility:hidden]";
 
 export function ScholarshipCard({
   card,

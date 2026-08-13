@@ -34,8 +34,8 @@ export function ChoiceCard({
       className={cn(
         "group relative flex cursor-pointer items-start gap-3.5 rounded-lg border bg-canvas p-4 transition-colors",
         "border-hairline hover:border-hairline-dark/40",
-        "has-checked:border-indigo has-checked:bg-indigo/4",
-        "has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-indigo",
+        "has-checked:border-ink has-checked:bg-ink/4",
+        "has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-ink",
         className
       )}
     >
@@ -50,7 +50,7 @@ export function ChoiceCard({
 
       {shortcut !== undefined && (
         <span
-          className="t-micro t-num mt-0.5 grid size-6 flex-none place-items-center rounded-sm border border-hairline text-ink-mute transition-colors group-has-checked:border-indigo group-has-checked:bg-indigo group-has-checked:text-white"
+          className="t-micro t-num mt-0.5 grid size-6 flex-none place-items-center rounded-sm border border-hairline text-ink-mute transition-colors group-has-checked:border-ink group-has-checked:bg-ink group-has-checked:text-white"
           aria-hidden="true"
         >
           {shortcut}
@@ -83,7 +83,7 @@ export function ChoiceChip({
       className={cn(
         "ring-brand t-caption rounded-full border px-4 py-2.5 transition-colors",
         pressed
-          ? "border-indigo bg-indigo text-white"
+          ? "border-ink bg-ink text-white"
           : "border-hairline bg-canvas text-ink-mute hover:border-hairline-dark/40 hover:text-ink"
       )}
     >

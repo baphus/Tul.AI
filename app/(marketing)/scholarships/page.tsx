@@ -32,7 +32,7 @@ export default async function ScholarshipsPage() {
               requirements you personally meet,{" "}
               <Link
                 href={ROUTES.onboarding}
-                className="ring-brand rounded-xs text-indigo underline decoration-indigo/25 underline-offset-4"
+                className="ring-brand rounded-xs text-ink underline decoration-ink/25 underline-offset-4"
               >
                 answer five questions
               </Link>{" "}

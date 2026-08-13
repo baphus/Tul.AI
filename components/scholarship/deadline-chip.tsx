@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 const TONE = {
   closed: "border-hairline bg-canvas-soft text-ink-mute",
   urgent: "border-attention/30 bg-attention/8 text-attention-ink",
-  soon: "border-indigo/20 bg-indigo/6 text-indigo",
+  soon: "border-ink/20 bg-ink/6 text-ink",
   open: "border-hairline bg-canvas-soft text-ink-mute",
 } as const;
 

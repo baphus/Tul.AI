@@ -16,7 +16,7 @@ const STYLE: Record<VerificationStatus, { class: string; Icon: typeof ShieldChec
     help: "The programme exists, but something material could not be confirmed.",
   },
   Updated: {
-    class: "border-indigo/20 bg-indigo/6 text-indigo",
+    class: "border-ink/20 bg-ink/6 text-ink",
     Icon: RefreshCwIcon,
     help: "The published information changed since we last checked.",
   },

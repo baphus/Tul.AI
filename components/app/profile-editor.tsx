@@ -76,7 +76,7 @@ export function ProfileEditor() {
               key={i}
               className={cn(
                 "h-1.5 flex-1 rounded-full",
-                i < filled ? "bg-indigo" : "bg-hairline"
+                i < filled ? "bg-ink" : "bg-hairline"
               )}
             />
           ))}
@@ -342,7 +342,7 @@ export function ProfileEditor() {
             Read what each field is used for on the{" "}
             <Link
               href={ROUTES.privacy}
-              className="ring-brand rounded-xs text-indigo underline decoration-indigo/25 underline-offset-4"
+              className="ring-brand rounded-xs text-ink underline decoration-ink/25 underline-offset-4"
             >
               privacy page
             </Link>

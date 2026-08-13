@@ -72,12 +72,12 @@ export default async function HowItWorksPage() {
       <SiteHeader tone="over" />
 
       <main id="main" className="flex-1">
-        <section className="canvas-indigo pt-28 pb-16 sm:pt-32 md:pb-24">
+        <section className="canvas-sage pt-10 pb-16 md:pt-16 md:pb-24">
           <Container>
-            <h1 className="t-display-xxl max-w-[22ch] text-balance text-white">
+            <h1 className="t-display-xxl max-w-[22ch] text-balance text-ink">
               AI assists. Verified information decides.
             </h1>
-            <p className="t-body-lg mt-7 max-w-[62ch] text-on-dark-mute text-pretty">
+            <p className="t-body-lg mt-7 max-w-[52ch] text-ink-mute text-pretty">
               Ask a language model which scholarships you can apply for and it will answer
               confidently, fluently, and sometimes with a programme that does not exist.
               Tul.AI is built the other way round: structured data and deterministic rules
@@ -137,7 +137,7 @@ export default async function HowItWorksPage() {
                   ],
                 ] as const
               ).map(([state, term, description]) => (
-                <div key={term} className="border-t border-hairline-dark/25 pt-6">
+                <div key={term} className="border-t border-hairline pt-6">
                   <dt className="flex items-center gap-3">
                     <RequirementMark state={state} />
                     <span className="t-display-md">{term}</span>
@@ -218,7 +218,7 @@ export default async function HowItWorksPage() {
               What we collect and why is set out on the{" "}
               <Link
                 href={ROUTES.privacy}
-                className="ring-brand rounded-xs text-indigo underline decoration-indigo/25 underline-offset-4"
+                className="ring-brand rounded-xs text-ink underline decoration-ink/25 underline-offset-4"
               >
                 privacy page
               </Link>

@@ -91,7 +91,7 @@ export function MatchingRun() {
     <div className="mx-auto max-w-[34rem] py-16">
       <div className="flex items-center gap-2.5">
         <span
-          className="grid size-7 flex-none place-items-center rounded-md bg-indigo text-white"
+          className="grid size-7 flex-none place-items-center rounded-md bg-ink text-white"
           aria-hidden="true"
         >
           <SparklesIcon className="size-3.5" />
@@ -162,7 +162,7 @@ export function MatchingRun() {
                 <p
                   className={cn(
                     "t-display-md t-num transition-colors",
-                    shown ? (i === 2 ? "text-indigo" : "text-ink") : "text-ink-mute"
+                    shown ? "text-ink" : "text-ink-mute"
                   )}
                 >
                   {shown ? value : "—"}

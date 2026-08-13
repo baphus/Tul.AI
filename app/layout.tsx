@@ -1,15 +1,27 @@
 import type { Metadata } from "next";
-import { Inter, Geist_Mono } from "next/font/google";
+import { Inter, Manrope, Geist_Mono } from "next/font/google";
 
 import "./globals.css";
 
 /**
- * Inter Variable is DESIGN.md's sanctioned substitute for Super Sans VF — the
- * variable weight axis is what lets the brand sit at 460/540/600 instead of the
- * default 400/500/700. Weights are applied through the .t-* classes.
+ * Two faces, per DESIGN.md §Typography — and DESIGN.md §Note on Font
+ * Substitutes names both of these as the open-source stand-ins:
+ *
+ *   Manrope 800 — the display voice, in place of the proprietary Wise Sans.
+ *                 Every hero and section headline, never body.
+ *   Inter       — sub-displays at 600, all body, labels and buttons.
+ *
+ * Both are loaded variable so the .t-* classes can drive weight through
+ * font-variation-settings rather than swapping static files.
  */
 const inter = Inter({
   variable: "--font-sans",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const manrope = Manrope({
+  variable: "--font-display",
   subsets: ["latin"],
   display: "swap",
 });
@@ -48,7 +60,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${inter.variable} ${mono.variable} h-full`}>
+    <html
+      lang="en"
+      className={`${inter.variable} ${manrope.variable} ${mono.variable} h-full`}
+    >
       <body className="t-body min-h-full">{children}</body>
     </html>
   );

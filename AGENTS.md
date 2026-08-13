@@ -164,19 +164,35 @@ Eligibility compatibility → deadline → student preferences → financial rel
 
 ### Design language
 `DESIGN.md` is the authority for anything visual — palette, type scale, radii, spacing,
-section rhythm, the three-canvas rule (indigo hero → white body → deep-teal closing band).
-Implementation notes:
+section rhythm. The current system is **Wise-inspired**: a single lime accent
+(`--brand` `#9fe870`) on a sage canvas (`--canvas-soft` `#e8ebe6`) with near-black ink,
+and a surface rhythm of sage band → white body with cards → near-black closing band and
+footer carrying a lime headline. Implementation notes:
 - The system is **light-only** by decision; there is no dark variant and no theme toggle.
-- Type is Inter Variable at the brand's sub-default weights, applied through the `.t-*`
+- **One accent.** Lime is the CTA colour and nothing else. Don't introduce a second brand
+  accent, and don't reuse lime as a success indicator — the semantic palette exists for
+  that (DESIGN.md §Do's and Don'ts).
+- **Two faces.** Manrope 800 (`--font-display`) carries displays; Inter carries
+  sub-displays at 600, body, labels and buttons. Both are applied through the `.t-*`
   classes in `globals.css`. Don't set Tailwind font-weight utilities on those elements —
   `font-variation-settings` wins and the two would disagree.
+- **24px is the shape.** `rounded-xl` is the canonical card and button radius; icon
+  buttons are the one exception and are fully circular. No sharp-cornered CTAs.
+- Elevation is **surface contrast**, not shadow — a white card on the sage band is the
+  brand's Level 2. The 1px ink hairline (`.edge-ink`) is Level 1: inputs, tertiary
+  buttons, and the hero card.
 - Requirement states (`met` / `attention` / `unknown`) are **functional status colours**,
   not brand accents; that is the one sanctioned addition to DESIGN.md's palette. Colour is
   never the only signal — every mark carries a glyph and a screen-reader label.
+- Most CTAs are links wearing button chrome (`<Button render={<Link/>}>`), which makes
+  Base UI log a dev-only "expected a native &lt;button&gt;" warning. **Don't silence it with
+  `nativeButton={false}`** — Base UI answers that by putting `role="button"` on the
+  element, which strips link semantics from a real `<a href>`. The warning is the cheaper
+  of the two; the real fix is to put `buttonVariants()` on a plain `<Link>`.
 
 ### Where the current code lives
 - `lib/scholarships.ts` — domain types + the verified demo data set, behind `getScholarships()` (the swap seam for an API/Supabase read). Every record carries `verification`, `lastVerified` and `sourceTier`.
-- `lib/logic/` — all pure, tested logic: `state.ts` (reducer + selectors), `storage.ts` (localStorage), `routes.ts` (route builders and param parsing), `validation.ts`, `advisory.ts`, `deadlines.ts`, `answerFor.ts`, `format.ts`.
+- `lib/logic/` — all pure, tested logic: `state.ts` (reducer + selectors), `storage.ts` (localStorage), `routes.ts` (route builders and param parsing), `validation.ts`, `advisory.ts`, `deadlines.ts`, `answerFor.ts`, `format.ts`, `estimate.ts` (data-set summaries behind the hero card — a description of what providers publish, never an eligibility check).
 - `hooks/use-tul-ai.tsx` — the client store: reducer context, hydration, persistence. It does **not** own navigation; the URL does.
 - `components/site/` — chrome and marketing primitives. `components/scholarship/` — the record in all its forms, including the ask/verify/apply client islands. `components/app/` — the student flow (deck, onboarding, review, saved, profile).
 - Mobile-first, with desktop (`lg:`) surfaces layered on. The scholarship record renders from one `ScholarshipDetail` used by the page, the desktop pane and the phone sheet, so those three can never drift apart.
@@ -221,3 +237,4 @@ name), so a renamed copy would silently stop being read.
 | v1.0.0 | 2026-08-12 | Initial AGENTS.md. |
 | v1.1.0 | 2026-08-13 | §10 replaced placeholder commands with the real `package.json` scripts; added a "Where the current code lives" map for the Tul.AI front-end implementation. |
 | v1.2.0 | 2026-08-13 | §10: added the design-language section pointing at `DESIGN.md` (light-only, `.t-*` type scale, status-colour exception), rewrote the code map for the `site`/`scholarship`/`app` component split, and added routing rules now that the URL owns navigation. |
+| v1.3.0 | 2026-08-13 | §10: design language rewritten for the Wise-inspired `DESIGN.md` — lime/sage/ink palette with a single accent, Manrope 800 + Inter two-face type, 24px radius, surface-contrast elevation. Code map notes `lib/logic/estimate.ts`. |

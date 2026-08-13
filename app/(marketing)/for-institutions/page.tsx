@@ -75,22 +75,22 @@ export default function ForInstitutionsPage() {
       <SiteHeader tone="over" />
 
       <main id="main" className="flex-1">
-        <section className="canvas-indigo pt-28 pb-16 sm:pt-32 md:pb-24">
+        <section className="canvas-sage pt-10 pb-16 md:pt-16 md:pb-24">
           <Container>
-            <h1 className="t-display-xxl max-w-[22ch] text-balance text-white">
+            <h1 className="t-display-xxl max-w-[22ch] text-balance text-ink">
               Your programme, in front of the students who qualify.
             </h1>
-            <p className="t-body-lg mt-7 max-w-[62ch] text-on-dark-mute text-pretty">
+            <p className="t-body-lg mt-7 max-w-[52ch] text-ink-mute text-pretty">
               Tul.AI is a discovery layer, not a competing portal. Applications stay on your
               site and decisions stay yours — we make sure the right students find the
               programme in time, and understand what it asks of them.
             </p>
 
-            <dl className="mt-16 grid gap-8 border-t border-hairline-dark/60 pt-8 md:grid-cols-3 md:gap-12">
+            <dl className="mt-16 grid gap-8 border-t border-hairline pt-8 md:grid-cols-3 md:gap-12">
               {FRICTION.map(([term, description]) => (
                 <div key={term}>
-                  <dt className="t-display-md text-white">{term} friction</dt>
-                  <dd className="t-caption mt-2 text-on-dark-mute text-pretty">
+                  <dt className="t-display-md text-ink">{term} friction</dt>
+                  <dd className="t-caption mt-2 text-ink-mute text-pretty">
                     {description}
                   </dd>
                 </div>
@@ -125,7 +125,7 @@ export default function ForInstitutionsPage() {
                   {audience.points.map((point, j) => (
                     <li
                       key={point}
-                      className={`t-caption py-4 text-ink ${j === 0 ? "border-t border-hairline-dark/25" : ""} border-b border-hairline`}
+                      className={`t-caption py-4 text-ink ${j === 0 ? "border-t border-hairline" : ""} border-b border-hairline`}
                     >
                       {point}
                     </li>
@@ -159,7 +159,7 @@ export default function ForInstitutionsPage() {
             </p>
             <Link
               href={ROUTES.onboarding}
-              className="ring-brand t-body-strong mt-6 inline-flex items-center gap-2 rounded-xs text-indigo underline decoration-indigo/25 underline-offset-4"
+              className="ring-brand t-body-strong mt-6 inline-flex items-center gap-2 rounded-xs text-ink underline decoration-ink/25 underline-offset-4"
             >
               Walk the student flow yourself
               <ArrowRightIcon className="size-4" aria-hidden="true" />

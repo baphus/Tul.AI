@@ -23,18 +23,20 @@ export function BrandGlyph({
     >
       <path
         d="M2 15c4.8 0 7.2-8 10-8s5.2 8 10 8"
-        stroke={tone === "ink" ? "var(--indigo)" : "var(--violet-soft)"}
+        stroke={tone === "ink" ? "var(--ink)" : "var(--brand)"}
         strokeWidth="2"
         strokeLinecap="round"
       />
       <path
         d="M5 15v5M19 15v5"
-        stroke={tone === "ink" ? "var(--indigo)" : "var(--violet-soft)"}
+        stroke={tone === "ink" ? "var(--ink)" : "var(--brand)"}
         strokeWidth="2"
         strokeLinecap="round"
         opacity="0.45"
       />
-      <circle cx="12" cy="7" r="2.4" fill={tone === "ink" ? "var(--indigo)" : "var(--violet-soft)"} />
+      {/* The span's keystone carries the brand accent on both polarities —
+          decorative, and never the only way a state is communicated. */}
+      <circle cx="12" cy="7" r="2.4" fill="var(--brand)" />
     </svg>
   );
 }
@@ -53,12 +55,12 @@ export function BrandMark({
       <BrandGlyph tone={tone} className="size-6 shrink-0" />
       <span
         className={cn(
-          "t-display-md",
+          "t-display-md font-display",
           tone === "ink" ? "text-ink" : "text-white"
         )}
       >
         Tul
-        <span className={tone === "ink" ? "text-indigo" : "text-violet-soft"}>.AI</span>
+        <span className={tone === "ink" ? "text-ink-deep" : "text-brand"}>.AI</span>
       </span>
     </>
   );

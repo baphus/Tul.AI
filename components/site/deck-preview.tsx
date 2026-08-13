@@ -32,7 +32,7 @@ export function DeckPreview({
         <div className="absolute inset-x-3.5 top-3.5 h-full rounded-xl border border-hairline bg-canvas/75" />
 
         <div
-          className="tinted relative flex flex-col overflow-hidden rounded-xl border border-[color:var(--tint-border)] p-5 shadow-[0_20px_50px_-12px_rgba(14,12,31,0.4)]"
+          className="tinted relative flex flex-col overflow-hidden rounded-xl border border-[color:var(--tint-border)] p-5 shadow-[0_20px_50px_-12px_rgba(14,15,12,0.4)]"
           style={{ ...providerTint(index), background: "var(--tint-face)" }}
         >
           <div className="flex items-start justify-between gap-3">
@@ -99,7 +99,7 @@ export function DeckPreview({
                     "grid place-items-center rounded-full",
                     small ? "size-12" : "size-14",
                     solid
-                      ? "bg-indigo text-white shadow-[0_8px_24px_-6px_rgba(27,25,56,0.5)]"
+                      ? "bg-ink text-white shadow-[0_8px_24px_-6px_rgba(14,15,12,0.5)]"
                       : "border border-hairline bg-canvas text-ink-mute"
                   )}
                 >

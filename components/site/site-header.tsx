@@ -24,26 +24,29 @@ const NAV = [
 ];
 
 /**
- * `tone="over"` starts transparent over an indigo hero and resolves to a solid
- * bar as the hero leaves (see `.nav-resolve`); `tone="light"` is the sticky
- * white bar on body pages. Three links, one action — DESIGN.md §Navigation.
+ * DESIGN.md `nav-bar`: a sticky bar in ink on a light surface, links set in
+ * body-sm-strong, and exactly one lime pill.
+ *
+ * `tone="over"` sits on the sage hero band and matches it, so the bar and the
+ * hero read as one surface until you scroll; `tone="light"` is the white bar on
+ * body pages. Both are light — the brand has no dark navigation.
  */
 export function SiteHeader({ tone = "light" }: { tone?: "over" | "light" }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const onDark = tone === "over";
+  const onSage = tone === "over";
 
   return (
     <header
       className={cn(
         "sticky top-0 z-50 w-full",
-        onDark
-          ? "nav-resolve text-white"
-          : "border-b border-hairline bg-canvas/90 backdrop-blur-md"
+        onSage
+          ? "bg-canvas-soft/95 backdrop-blur-md"
+          : "border-b border-hairline bg-canvas/95 backdrop-blur-md"
       )}
     >
-      <div className="mx-auto flex h-16 w-full max-w-[80rem] items-center gap-6 px-5 sm:h-20 sm:px-8">
-        <BrandMark tone={onDark ? "on-dark" : "ink"} />
+      <div className="mx-auto flex h-16 w-full max-w-[75rem] items-center gap-6 px-5 sm:h-20 sm:px-8">
+        <BrandMark />
 
         <nav className="ml-auto hidden items-center gap-8 md:flex" aria-label="Main">
           {NAV.map((item) => {
@@ -54,14 +57,13 @@ export function SiteHeader({ tone = "light" }: { tone?: "over" | "light" }) {
                 href={item.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "ring-brand t-caption rounded-xs transition-colors",
-                  onDark
-                    ? active
-                      ? "text-white"
-                      : "text-on-dark-mute hover:text-white"
-                    : active
-                      ? "text-ink underline decoration-hairline-dark decoration-1 underline-offset-[6px]"
-                      : "text-ink-mute hover:text-ink"
+                  "ring-brand t-caption-strong rounded-xs transition-colors",
+                  // The active mark is ink, not lime: lime on this bar is
+                  // 1.2:1 and would fail WCAG 1.4.11 as a state indicator —
+                  // and DESIGN.md reserves lime for CTAs anyway.
+                  active
+                    ? "text-ink underline decoration-ink decoration-2 underline-offset-[6px]"
+                    : "text-ink hover:underline hover:decoration-hairline hover:underline-offset-[6px]"
                 )}
               >
                 {item.label}
@@ -70,14 +72,15 @@ export function SiteHeader({ tone = "light" }: { tone?: "over" | "light" }) {
           })}
         </nav>
 
-        <div className="ml-auto flex items-center gap-2 md:ml-0">
+        <div className="ml-auto flex items-center gap-2 md:ml-8">
+          <Link
+            href={ROUTES.scholarships}
+            className="ring-brand t-caption-strong hidden rounded-xs text-ink lg:inline-flex"
+          >
+            Browse all
+          </Link>
           <Button
-            className={cn(
-              "hidden h-10 px-5 md:inline-flex",
-              onDark
-                ? "rounded-full bg-violet-soft text-indigo hover:bg-violet-soft/85"
-                : "rounded-md"
-            )}
+            className="t-body-strong hidden h-12 px-6 text-base md:inline-flex"
             render={<Link href={ROUTES.onboarding} />}
           >
             Find my scholarships
@@ -90,10 +93,7 @@ export function SiteHeader({ tone = "light" }: { tone?: "over" | "light" }) {
                   variant="ghost"
                   size="icon-lg"
                   aria-label="Open menu"
-                  className={cn(
-                    "md:hidden",
-                    onDark && "text-white hover:bg-white/10 hover:text-white"
-                  )}
+                  className="md:hidden"
                 />
               }
             >
@@ -118,7 +118,7 @@ export function SiteHeader({ tone = "light" }: { tone?: "over" | "light" }) {
                 ))}
               </nav>
               <Button
-                className="mt-8 h-12 rounded-md"
+                className="t-body-strong mt-8 h-12 text-base"
                 render={<Link href={ROUTES.onboarding} onClick={() => setOpen(false)} />}
               >
                 Find my scholarships

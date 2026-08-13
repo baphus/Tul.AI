@@ -68,7 +68,7 @@ export function AskPanel({ card }: { card: Scholarship }) {
         <div className="mt-6 flex flex-col gap-4" aria-live="polite">
           {thread.map((entry, i) => (
             <div key={`${i}-${entry.q}`} className="flex flex-col gap-2.5">
-              <p className="t-caption max-w-[85%] self-end rounded-lg rounded-br-xs bg-indigo px-4 py-3 text-white">
+              <p className="t-caption max-w-[85%] self-end rounded-lg rounded-br-xs bg-ink px-4 py-3 text-white">
                 {entry.q}
               </p>
               {entry.a && (

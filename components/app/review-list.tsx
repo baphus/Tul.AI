@@ -54,7 +54,7 @@ export function ReviewList() {
       {advice && (
         <div className="mt-8 flex gap-3.5 rounded-lg border border-hairline bg-canvas-soft p-5">
           <span
-            className="grid size-7 flex-none place-items-center rounded-md bg-indigo text-white"
+            className="grid size-7 flex-none place-items-center rounded-md bg-ink text-white"
             aria-hidden="true"
           >
             <SparklesIcon className="size-3.5" />
