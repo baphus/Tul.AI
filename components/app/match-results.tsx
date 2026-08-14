@@ -223,7 +223,7 @@ function TopMatch({
           <RequirementScore result={result} className="mt-3" />
 
           <div className="mt-3 flex flex-wrap items-center gap-2">
-            <ToneBadge tone={result.tone} />
+            {result.tone !== "possible" && <ToneBadge tone={result.tone} />}
             <DeadlineChip deadline={card.deadline} deadlineIso={card.deadlineIso} />
           </div>
         </div>

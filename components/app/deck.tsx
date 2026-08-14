@@ -4,9 +4,8 @@ import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { TulAiChat } from "@/components/app/tul-ai-chat";
 import { ScholarshipCard } from "@/components/scholarship/scholarship-card";
-import { Button } from "@/components/ui/button";
+import { Button, ButtonLink } from "@/components/ui/button";
 import { usePrefersReducedMotion } from "@/hooks/use-media-query";
 import { useToday } from "@/hooks/use-today";
 import { useTulAi } from "@/hooks/use-tul-ai";
@@ -161,8 +160,8 @@ export function Deck({ detailOpen, onCardChange }: { detailOpen: boolean; onCard
   }, [canGoBack, canGoForward, detailOpen, dispatch]);
 
   return (
-    <section className="relative mx-auto flex w-full max-w-[31rem] flex-1 flex-col px-5 pt-7 pb-[max(2rem,env(safe-area-inset-bottom))] sm:px-6 lg:[zoom:.64]" aria-labelledby="deck-heading">
-      <div className="mb-6 flex flex-none items-end justify-between gap-4">
+    <section className="relative mx-auto flex min-h-0 w-full max-w-[31rem] flex-1 flex-col px-5 pt-7 pb-[max(2rem,env(safe-area-inset-bottom))] sm:px-6 lg:max-w-[25rem] lg:pt-6 lg:pb-5" aria-labelledby="deck-heading">
+      <div className="mb-6 flex flex-none items-end justify-between gap-4 lg:mb-4">
         <div>
           <h1 id="deck-heading" className="t-display-lg">{t("yourScholarships")}</h1>
           <p className="t-caption mt-1 text-ink-mute">Explore each published scholarship and its requirements.</p>
@@ -170,10 +169,10 @@ export function Deck({ detailOpen, onCardChange }: { detailOpen: boolean; onCard
         {deck.length > 0 && <p className="t-caption t-num whitespace-nowrap text-ink-mute">{position + 1} of {deck.length}</p>}
       </div>
 
-      <div className="relative min-h-[31rem] flex-1 lg:min-h-[48rem]">
+      <div className="relative min-h-[31rem] flex-1 lg:min-h-0">
         {card && current ? (
           <div onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp} className={cn("absolute inset-0 touch-pan-y origin-top will-change-transform [animation:rise_220ms_cubic-bezier(.2,.8,.3,1)_both]", dragging ? "transition-none" : "transition-[transform,opacity] duration-[320ms] ease-[cubic-bezier(.22,.85,.28,1)]")} style={{ transform: `translate3d(${dragX}px, ${exiting ? 28 : 0}px, 0) rotate(${reduced ? 0 : dragX / 28}deg)`, opacity: exiting ? 0 : 1 }} key={card.id}>
-            <ScholarshipCard card={card} index={current.rawIndex} flipped={state.flipped} reduced={reduced} onFlip={() => dispatch({ type: "TAP_CARD" })} result={current.result} />
+            <ScholarshipCard card={card} index={current.rawIndex} flipped={state.flipped} reduced={reduced} result={current.result} />
           </div>
         ) : (
           <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center">
@@ -185,9 +184,16 @@ export function Deck({ detailOpen, onCardChange }: { detailOpen: boolean; onCard
       </div>
 
       {card && (
-        <div className="mt-6 grid flex-none grid-cols-2 items-center gap-3 lg:grid-cols-2">
-          <Button variant="tertiary" className="h-12 w-full justify-center gap-2 px-4" onClick={() => move(-1)} disabled={!canGoBack || Boolean(exiting)}><ArrowLeftIcon />Previous</Button>
-          <Button className="h-12 w-full justify-center gap-2 px-4" onClick={() => move(1)} disabled={!canGoForward || Boolean(exiting)}>Next<ArrowRightIcon /></Button>
+        <div className={cn("mt-6 grid flex-none items-center gap-3 lg:mt-4", canGoForward ? "grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]" : "grid-cols-[minmax(0,1fr)_minmax(0,1fr)]")}>
+          <Button variant="tertiary" className="h-12 w-full justify-center gap-2 px-3" onClick={() => move(-1)} disabled={!canGoBack || Boolean(exiting)}><ArrowLeftIcon />Previous</Button>
+          <ButtonLink
+            variant={canGoForward ? "tertiary" : "default"}
+            className={cn("h-12 justify-center px-4", !canGoForward && "w-full")}
+            href={ROUTES.review}
+          >
+            Browse all
+          </ButtonLink>
+          {canGoForward && <Button className="h-12 w-full justify-center gap-2 px-3" onClick={() => move(1)} disabled={Boolean(exiting)}>Next<ArrowRightIcon /></Button>}
           <button
             type="button"
             aria-label="Open scholarship details"
@@ -202,7 +208,7 @@ export function Deck({ detailOpen, onCardChange }: { detailOpen: boolean; onCard
               }
               openDetail();
             }}
-            className={cn("ring-brand col-span-2 flex touch-none flex-col items-center justify-center gap-1 overflow-hidden rounded-xl border border-hairline bg-canvas text-ink-mute transition-[height,background-color] duration-200 ease-out active:bg-canvas-soft lg:hidden", detailLift > 0 && "transition-none")}
+            className={cn("ring-brand col-span-full flex touch-none flex-col items-center justify-center gap-1 overflow-hidden rounded-xl border border-hairline bg-canvas text-ink-mute transition-[height,background-color] duration-200 ease-out active:bg-canvas-soft lg:hidden", detailLift > 0 && "transition-none")}
             style={{ height: `${52 + detailLift}px` }}
           >
             <span className="h-1 w-10 rounded-full bg-ink/35" aria-hidden="true" />
@@ -210,8 +216,6 @@ export function Deck({ detailOpen, onCardChange }: { detailOpen: boolean; onCard
           </button>
         </div>
       )}
-
-      <TulAiChat complete={deck.length > 0 && position === deck.length - 1} matches={deck.map(({ result }) => result)} matchedCards={deck.map(({ card: matchedCard }) => matchedCard)} />
     </section>
   );
 }

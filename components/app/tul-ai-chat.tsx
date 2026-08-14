@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUpIcon, MessageCircleIcon, XIcon } from "lucide-react";
+import { ArrowRightIcon, ArrowUpIcon, MessageCircleIcon, XIcon } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -30,10 +30,13 @@ export function TulAiChat({
   complete,
   matches,
   matchedCards,
+  placement = "floating",
 }: {
   complete: boolean;
   matches: RankedMatch[];
   matchedCards: Scholarship[];
+  /** The dashboard gives cross-list questions a home; discovery keeps focus on one record. */
+  placement?: "floating" | "dashboard";
 }) {
   const { state } = useTulAi();
   const language = useLanguage();
@@ -49,6 +52,7 @@ export function TulAiChat({
 
   const profile = state.profile;
   const matchGreeting = completionGreeting(matches);
+  const floating = placement === "floating";
 
   /* Keep the latest exchange in view. */
   useEffect(() => {
@@ -112,7 +116,7 @@ export function TulAiChat({
 
   return (
     <>
-      {/* Launcher */}
+      {floating ? (
       <div className="fixed right-5 bottom-5 z-50 flex items-center gap-2 sm:right-8 sm:bottom-8">
         {!seenMatchGreeting && !open && (
           <span className="t-caption-strong max-w-48 rounded-xl border border-hairline bg-canvas px-3 py-2 text-ink shadow-[0_10px_30px_-8px_rgba(14,15,12,0.22)]">
@@ -127,16 +131,33 @@ export function TulAiChat({
           onClick={toggle}
           className="size-13 rounded-full shadow-[0_10px_30px_-8px_rgba(14,15,12,0.35)]"
         >
-          {open ? <XIcon /> : <MessageCircleIcon />}
+          {open ? <XIcon /> : <MessageCircleIcon className="size-6" />}
         </Button>
       </div>
+      ) : (
+        <section className="mt-8 rounded-xl border border-hairline bg-canvas-soft p-5" aria-labelledby="list-assistant-heading">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex min-w-0 gap-3.5">
+              <span className="grid size-12 flex-none place-items-center rounded-full bg-ink text-white" aria-hidden="true">
+                <MessageCircleIcon className="size-6" />
+              </span>
+              <div>
+                <h2 id="list-assistant-heading" className="t-body-strong">Your Tul.AI overview</h2>
+                <p className="t-caption mt-1 max-w-[58ch] text-ink-mute text-pretty">{matchGreeting}</p>
+              </div>
+            </div>
+            <Button type="button" className="h-12 gap-2 px-5" aria-expanded={open} onClick={toggle}>
+              Ask about your list <ArrowRightIcon />
+            </Button>
+          </div>
+        </section>
+      )}
 
-      {/* Panel */}
       {open && (
         <div
           role="dialog"
           aria-label="Ask Tul.AI"
-          className="fixed right-5 bottom-22 z-50 flex max-h-[70vh] w-[calc(100vw-2.5rem)] max-w-sm flex-col overflow-hidden rounded-2xl border border-ink bg-canvas shadow-[0_20px_60px_-15px_rgba(14,15,12,0.4)] [animation:rise_260ms_cubic-bezier(.2,.8,.3,1)_both] sm:right-8 sm:bottom-24"
+          className={floating ? "fixed right-5 bottom-22 z-50 flex max-h-[70vh] w-[calc(100vw-2.5rem)] max-w-sm flex-col overflow-hidden rounded-2xl border border-ink bg-canvas shadow-[0_20px_60px_-15px_rgba(14,15,12,0.4)] [animation:rise_260ms_cubic-bezier(.2,.8,.3,1)_both] sm:right-8 sm:bottom-24" : "mt-3 flex max-h-[36rem] flex-col overflow-hidden rounded-xl border border-ink bg-canvas [animation:rise_260ms_cubic-bezier(.2,.8,.3,1)_both]"}
         >
           <header className="flex items-center gap-3 border-b border-hairline bg-canvas-soft px-4 py-3.5">
             <span className="grid size-8 flex-none place-items-center rounded-full bg-ink text-white">

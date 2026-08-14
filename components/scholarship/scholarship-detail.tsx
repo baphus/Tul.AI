@@ -5,7 +5,7 @@ import { ApplyDialog } from "@/components/scholarship/apply-dialog";
 import { AskPanel } from "@/components/scholarship/ask-panel";
 import { DeadlineChip } from "@/components/scholarship/deadline-chip";
 import { MatchBadge, MatchMetric } from "@/components/scholarship/match-metric";
-import { ProviderCrest, providerTint } from "@/components/scholarship/provider-logo";
+import { ProviderCrest, ProviderWatermark, providerTint } from "@/components/scholarship/provider-logo";
 import { RequirementMark } from "@/components/scholarship/requirement-mark";
 import { formatPeso } from "@/lib/logic/format";
 import { detailRequirements } from "@/lib/logic/detail-match";
@@ -46,18 +46,21 @@ export function ScholarshipDetail({
     <article className={cn("min-w-0 pb-[max(4rem,env(safe-area-inset-bottom))]", className)}>
       {/* ── Header ── */}
       <header
-        className="tinted border-b border-hairline px-6 pt-6 pb-8 sm:px-8"
+        className="tinted relative isolate overflow-hidden border-b border-hairline px-6 pt-6 pb-8 sm:px-8"
         style={{ ...providerTint(index), background: "var(--tint-wash)" }}
       >
-        {topSlot}
-        <div className="mt-4 flex items-center gap-3">
-          <ProviderCrest index={index} provider={card.provider} logo={card.logo} />
-          <p className="t-eyebrow text-[color:var(--tint-ink)]">{card.provider}</p>
-        </div>
-        <h1 className="t-display-xl mt-4 text-balance">{card.title}</h1>
-        <div className="mt-5 flex flex-wrap items-center gap-2">
-          {personalized && <MatchBadge card={match} />}
-          <DeadlineChip deadline={card.deadline} deadlineIso={card.deadlineIso} />
+        <ProviderWatermark logo={card.logo} className="-right-10 -top-12 size-64 sm:-right-4 sm:-top-16 sm:size-76" />
+        <div className="relative">
+          {topSlot}
+          <div className="mt-4 flex items-center gap-3">
+            <ProviderCrest index={index} provider={card.provider} logo={card.logo} />
+            <p className="t-eyebrow text-[color:var(--tint-ink)]">{card.provider}</p>
+          </div>
+          <h1 className="t-display-xl mt-4 max-w-[16ch] text-balance">{card.title}</h1>
+          <div className="mt-5 flex flex-wrap items-center gap-2">
+            {personalized && match.tone !== "possible" && <MatchBadge card={match} />}
+            <DeadlineChip deadline={card.deadline} deadlineIso={card.deadlineIso} />
+          </div>
         </div>
       </header>
 

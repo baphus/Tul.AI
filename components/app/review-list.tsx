@@ -2,10 +2,12 @@
 
 import { SparklesIcon } from "lucide-react";
 
+import { TulAiChat } from "@/components/app/tul-ai-chat";
 import { ScholarshipSummaryCard } from "@/components/scholarship/scholarship-summary-card";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { useTulAi } from "@/hooks/use-tul-ai";
 import { advisory, type Decision } from "@/lib/logic/advisory";
+import { rankScholarships } from "@/lib/logic/matching";
 import { ROUTES } from "@/lib/logic/routes";
 import type { Scholarship } from "@/lib/scholarships";
 
@@ -25,8 +27,12 @@ export function ReviewList() {
   const passed = group("no");
   const unsorted = group(undefined);
   const advice = advisory(state.decisions);
+  const recommendedMatches = rankScholarships(cards, state.profile).filter((match) => match.tone !== "none");
+  const recommendedCards = recommendedMatches
+    .map((match) => cards.find((card) => card.id === match.id))
+    .filter((card): card is Scholarship => Boolean(card));
 
-  if (ready && saved.length === 0 && passed.length === 0) {
+  if (ready && cards.length === 0) {
     return (
       <div className="mx-auto max-w-[34rem] py-16 text-center">
         <h1 className="t-display-lg text-balance">You haven&apos;t sorted anything yet.</h1>
@@ -43,10 +49,15 @@ export function ReviewList() {
 
   return (
     <div className="py-10">
-      <h1 className="t-display-xl text-balance">Before you apply.</h1>
-      <p className="t-body-lg mt-4 max-w-[36rem] text-ink-mute text-pretty">
+      <h1 className="t-display-xl text-balance">Your scholarship dashboard.</h1>
+      <p className="hidden">
         You put {saved.length} of {cards.length} near the top. Nothing was discarded — the
         rest sit below and can move up at any time.
+      </p>
+      <p className="t-body-lg mt-4 max-w-[36rem] text-ink-mute text-pretty">
+        {saved.length + passed.length > 0
+          ? `You put ${saved.length} of ${cards.length} near the top. Nothing was discarded — the rest can move up at any time.`
+          : "You’ve explored your matched scholarships. Review their published details, keep the ones that matter most, and return whenever your profile changes."}
       </p>
 
       {advice && (
@@ -63,6 +74,13 @@ export function ReviewList() {
           </div>
         </div>
       )}
+
+      <TulAiChat
+        complete
+        placement="dashboard"
+        matches={recommendedMatches}
+        matchedCards={recommendedCards}
+      />
 
       <div className="mt-12 flex flex-col gap-12">
         <Group
