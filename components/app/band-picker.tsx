@@ -65,7 +65,7 @@ export function BandPicker({
     <div className="flex flex-col gap-5">
       <fieldset>
         <legend className="sr-only">{name}</legend>
-        <div className="grid gap-2.5 sm:grid-cols-2">
+        <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
           {bands.map((option, i) => (
             <ChoiceCard
               key={option.value}
