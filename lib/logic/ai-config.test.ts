@@ -13,13 +13,13 @@ describe("OpenAI configuration", () => {
     ).toBe("openai");
   });
 
-  it("uses the documented cost-sensitive OpenAI model by default", () => {
-    expect(resolveOpenAiModel({})).toBe("gpt-5.6-luna");
+  it("uses the documented OpenAI model by default", () => {
+    expect(resolveOpenAiModel({})).toBe("gpt-5.5");
   });
 
-  it("enables live research only for a configured Gemini provider", () => {
+  it("enables live research for a configured provider", () => {
     expect(canUseLiveResearch({ AI_PROVIDER: "gemini", GEMINI_API_KEY: "gemini-key" })).toBe(true);
-    expect(canUseLiveResearch({ AI_PROVIDER: "openai", OPENAI_API_KEY: "openai-key" })).toBe(false);
+    expect(canUseLiveResearch({ AI_PROVIDER: "openai", OPENAI_API_KEY: "openai-key" })).toBe(true);
   });
 
   it("uses JSON-object output for structured OpenAI requests", async () => {

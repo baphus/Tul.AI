@@ -38,7 +38,7 @@ export function resolveOpenAiApiKey(env: AiEnvironment): string {
 }
 
 export function resolveOpenAiModel(env: AiEnvironment): string {
-  return env.OPENAI_MODEL ?? "gpt-5.6-luna";
+  return env.OPENAI_MODEL ?? "gpt-5.5";
 }
 
 export function resolveAiProvider(env: AiEnvironment): "gemini" | "openai" | "none" {
@@ -128,9 +128,11 @@ function isOfficialCitation(citation: AiCitation, officialDomains: string[]): bo
   }
 }
 
-/** Web research is currently available only through Gemini's Google Search tool. */
+/** Live research is available when the configured provider has its search tool enabled. */
 export function canUseLiveResearch(env: AiEnvironment = process.env): boolean {
-  return resolveAiProvider(env) === "gemini" && Boolean(resolveGeminiApiKey(env));
+  const provider = resolveAiProvider(env);
+  return (provider === "gemini" && Boolean(resolveGeminiApiKey(env))) ||
+    (provider === "openai" && Boolean(resolveOpenAiApiKey(env)));
 }
 
 export async function generateTulAIResponse(
@@ -219,29 +221,62 @@ export async function generateTulAIResponse(
     const systemInstruction = `${options.systemInstruction ?? TUL_AI_SYSTEM_INSTRUCTION}\n\n${responseLanguageInstruction(options.language ?? "ENG")}`;
 
     try {
-      const response = await fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
-        body: JSON.stringify({
-          model,
-          messages: [
-            { role: "system", content: systemInstruction },
-            { role: "user", content: bounded(prompt) },
-          ],
-          max_tokens: options.maxTokens ?? 500,
-          temperature: 0.2,
-          ...(options.jsonObject ? { response_format: { type: "json_object" } } : {}),
-        }),
-        signal: AbortSignal.timeout(20_000),
-      });
+      const response = await fetch(
+        options.jsonObject ? "https://api.openai.com/v1/chat/completions" : "https://api.openai.com/v1/responses",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
+          body: JSON.stringify(
+            options.jsonObject
+              ? {
+                  model,
+                  messages: [
+                    { role: "system", content: systemInstruction },
+                    { role: "user", content: bounded(prompt) },
+                  ],
+                  max_tokens: options.maxTokens ?? 500,
+                  temperature: 0.2,
+                  response_format: { type: "json_object" },
+                }
+              : {
+                  model,
+                  instructions: systemInstruction,
+                  input: bounded(prompt),
+                  max_output_tokens: options.maxTokens ?? 500,
+                  // Scholarship questions can contain student information. This
+                  // one-shot interaction never needs OpenAI-hosted conversation state.
+                  store: false,
+                  ...(liveResearch && officialDomains.length
+                    ? {
+                        tools: [
+                          {
+                            type: "web_search",
+                            filters: { allowed_domains: officialDomains },
+                          },
+                        ],
+                      }
+                    : {}),
+                }
+          ),
+          signal: AbortSignal.timeout(20_000),
+        }
+      );
 
       if (!response.ok) {
+        const requestId = response.headers.get("x-request-id");
+        console.error(`[ai-config] OpenAI request failed (${response.status})${requestId ? `; request ${requestId}` : ""}.`);
         return { success: false, citations: [], searched: liveResearch, error: "OpenAI request failed." };
       }
 
-      const data = (await response.json()) as { choices?: { message?: { content?: string } }[] };
-      const text = data.choices?.[0]?.message?.content?.trim() ?? "";
-      return { success: Boolean(text), text, citations: citationsFrom(data), searched: false };
+      const data = (await response.json()) as {
+        output_text?: string;
+        choices?: { message?: { content?: string } }[];
+      };
+      const text = (options.jsonObject
+        ? data.choices?.[0]?.message?.content
+        : data.output_text
+      )?.trim() ?? "";
+      return trustedResearchResult({ success: Boolean(text), text, citations: citationsFrom(data), searched: liveResearch });
     } catch {
       return { success: false, citations: [], searched: liveResearch, error: "OpenAI request failed." };
     }

@@ -65,7 +65,6 @@ export function DiscoverScreen({ cardId }: { cardId: string | null }) {
       index={index}
       result={result}
       matchExplanation={<AiMatchSummary result={result} />}
-      topSlot={<div className="flex justify-end"><Button variant="outline" size="icon-lg" className="border-hairline bg-canvas lg:hidden" aria-label="Close details" onClick={close}><XIcon /></Button></div>}
     />
   );
 
@@ -90,7 +89,7 @@ export function DiscoverScreen({ cardId }: { cardId: string | null }) {
           <SheetContent
             side="bottom"
             showCloseButton={false}
-            className="h-[min(88dvh,52rem)] gap-0 overflow-y-auto rounded-t-2xl bg-canvas p-0 text-ink lg:inset-y-0 lg:right-0 lg:left-auto lg:h-full lg:w-[min(42rem,46vw)] lg:rounded-none lg:border-l lg:[animation:discover-detail-in_360ms_cubic-bezier(.16,1,.3,1)_both]"
+            className="h-[100dvh] max-h-[100dvh] gap-0 overflow-y-auto overscroll-contain bg-canvas p-0 pb-[env(safe-area-inset-bottom)] text-ink lg:inset-y-0 lg:right-0 lg:left-auto lg:h-full lg:w-[min(42rem,46vw)] lg:rounded-none lg:border-l lg:[animation:discover-detail-in_360ms_cubic-bezier(.16,1,.3,1)_both]"
           >
             <SheetTitle className="sr-only">
               {card.title} — {card.provider}
@@ -98,6 +97,11 @@ export function DiscoverScreen({ cardId }: { cardId: string | null }) {
             <SheetDescription className="sr-only">
               Published requirements, documents and official sources.
             </SheetDescription>
+            <div className="sticky top-0 z-10 flex h-14 flex-none items-center justify-end border-b border-hairline bg-canvas/95 px-5 backdrop-blur-sm sm:px-8 lg:hidden">
+              <Button variant="outline" size="icon-lg" className="border-hairline bg-canvas" aria-label="Close details" onClick={close}>
+                <XIcon />
+              </Button>
+            </div>
             {detail}
           </SheetContent>
         )}

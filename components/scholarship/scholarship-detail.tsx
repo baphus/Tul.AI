@@ -49,7 +49,7 @@ export function ScholarshipDetail({
   const attention = rows.filter((r) => r.state === "warn").length;
 
   return (
-    <article className={cn("pb-16", className)}>
+    <article className={cn("min-w-0 pb-[max(4rem,env(safe-area-inset-bottom))]", className)}>
       {/* ── Header ── */}
       <header
         className="tinted border-b border-hairline px-6 pt-6 pb-8 sm:px-8"
@@ -68,7 +68,7 @@ export function ScholarshipDetail({
         </div>
       </header>
 
-      <div className="px-6 sm:px-8">
+      <div className="min-w-0 px-5 sm:px-8">
         {/* ── Key facts ── */}
         <dl className="mt-8 grid gap-3 sm:grid-cols-2">
           <div className="rounded-lg border border-hairline bg-canvas p-5">

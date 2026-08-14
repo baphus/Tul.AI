@@ -40,7 +40,7 @@ function CountUp({
   return <span className="t-figure text-ink-deep">{format(Math.round(value * (reduced ? 1 : progress)))}</span>;
 }
 
-const faceClass = "absolute inset-0 flex flex-col overflow-hidden rounded-xl border border-[color:var(--tint-border)] p-5 shadow-[0_8px_24px_rgba(14,15,12,0.1)] [backface-visibility:hidden] lg:p-6";
+const faceClass = "absolute inset-0 flex flex-col overflow-x-hidden overflow-y-auto overscroll-contain rounded-xl border border-[color:var(--tint-border)] p-5 shadow-[0_8px_24px_rgba(14,15,12,0.1)] [backface-visibility:hidden] lg:p-6";
 
 export function ScholarshipCard({ card, index, flipped, reduced, onFlip, result, showAiSummary = true }: { card: Scholarship; index: number; flipped: boolean; reduced: boolean; onFlip: () => void; result: RankedMatch; showAiSummary?: boolean }) {
   return (

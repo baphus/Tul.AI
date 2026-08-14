@@ -103,7 +103,11 @@ ${liveResearch ? "- You may search the web for current provider updates; cite of
       // AI unavailable — fall back to the deterministic rule engine.
       if (result.error) console.error("[/api/ai/answer] AI unavailable:", result.error);
       const fallback = answerFor(question, card);
-      return NextResponse.json({ answer: fallback, liveResearch: "unavailable" });
+      return NextResponse.json({
+        answer: fallback,
+        answerOrigin: "published-record",
+        liveResearch: "unavailable",
+      });
     }
 
     return NextResponse.json({
@@ -112,6 +116,7 @@ ${liveResearch ? "- You may search the web for current provider updates; cite of
         src: card.sources[0]?.name || card.provider,
         citations: result.citations,
       },
+      answerOrigin: "ai",
       liveResearch: result.searched ? "used" : "not-needed",
     });
   } catch (err) {

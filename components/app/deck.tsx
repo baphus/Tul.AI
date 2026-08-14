@@ -125,7 +125,7 @@ export function Deck({ detailOpen, onCardChange }: { detailOpen: boolean; onCard
   }, [canGoBack, canGoForward, detailOpen, dispatch]);
 
   return (
-    <section className="relative mx-auto flex w-full max-w-[31rem] flex-1 flex-col px-5 pt-7 pb-8 sm:px-6 lg:[zoom:.64]" aria-labelledby="deck-heading">
+    <section className="relative mx-auto flex w-full max-w-[31rem] flex-1 flex-col px-5 pt-7 pb-[max(2rem,env(safe-area-inset-bottom))] sm:px-6 lg:[zoom:.64]" aria-labelledby="deck-heading">
       <div className="mb-6 flex flex-none items-end justify-between gap-4">
         <div>
           <h1 id="deck-heading" className="t-display-lg">{t("yourScholarships")}</h1>
@@ -136,7 +136,7 @@ export function Deck({ detailOpen, onCardChange }: { detailOpen: boolean; onCard
 
       <div className="relative min-h-[31rem] flex-1 lg:min-h-[48rem]">
         {card && current ? (
-          <div onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp} className={cn("absolute inset-0 touch-none origin-top will-change-transform [animation:rise_220ms_cubic-bezier(.2,.8,.3,1)_both]", dragging ? "transition-none" : "transition-[transform,opacity] duration-[320ms] ease-[cubic-bezier(.22,.85,.28,1)]")} style={{ transform: `translate3d(${dragX}px, ${exiting ? 28 : 0}px, 0) rotate(${reduced ? 0 : dragX / 28}deg)`, opacity: exiting ? 0 : 1 }} key={card.id}>
+          <div onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp} className={cn("absolute inset-0 touch-pan-y origin-top will-change-transform [animation:rise_220ms_cubic-bezier(.2,.8,.3,1)_both]", dragging ? "transition-none" : "transition-[transform,opacity] duration-[320ms] ease-[cubic-bezier(.22,.85,.28,1)]")} style={{ transform: `translate3d(${dragX}px, ${exiting ? 28 : 0}px, 0) rotate(${reduced ? 0 : dragX / 28}deg)`, opacity: exiting ? 0 : 1 }} key={card.id}>
             <ScholarshipCard card={card} index={current.rawIndex} flipped={state.flipped} reduced={reduced} onFlip={() => dispatch({ type: "TAP_CARD" })} result={current.result} />
           </div>
         ) : (
@@ -149,10 +149,10 @@ export function Deck({ detailOpen, onCardChange }: { detailOpen: boolean; onCard
       </div>
 
       {card && (
-        <div className="mt-6 grid flex-none grid-cols-[1fr_auto_1fr] items-center gap-3 lg:grid-cols-2">
-          <Button variant="tertiary" className="h-12 w-full justify-center gap-2 px-4" onClick={() => move(-1)} disabled={!canGoBack || Boolean(exiting)}><ArrowLeftIcon />Previous</Button>
-          <Button variant="outline" className="h-12 gap-2 px-4 lg:hidden" onClick={openDetail}><SparklesIcon />{t("details")}</Button>
-          <Button className="h-12 w-full justify-center gap-2 px-4" onClick={() => move(1)} disabled={!canGoForward || Boolean(exiting)}>Next<ArrowRightIcon /></Button>
+        <div className="mt-6 grid flex-none grid-cols-2 items-center gap-3 lg:grid-cols-2">
+          <Button variant="tertiary" className="order-2 h-12 w-full justify-center gap-2 px-4 lg:order-none" onClick={() => move(-1)} disabled={!canGoBack || Boolean(exiting)}><ArrowLeftIcon />Previous</Button>
+          <Button variant="outline" className="order-1 col-span-2 h-12 w-full gap-2 px-4 lg:hidden" onClick={openDetail}><SparklesIcon />{t("details")}</Button>
+          <Button className="order-3 h-12 w-full justify-center gap-2 px-4 lg:order-none" onClick={() => move(1)} disabled={!canGoForward || Boolean(exiting)}>Next<ArrowRightIcon /></Button>
         </div>
       )}
 

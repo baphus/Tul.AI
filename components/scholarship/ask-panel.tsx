@@ -13,6 +13,7 @@ import type { Scholarship } from "@/lib/scholarships";
 interface Entry {
   q: string;
   a: Answer | null;
+  origin?: "ai" | "published-record";
 }
 
 /**
@@ -45,17 +46,29 @@ export function AskPanel({ card }: { card: Scholarship }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question: q, cardId: card.id, language }),
       })
-        .then((r) => r.json())
-        .then((json) => {
+        .then(async (r) => ({ ok: r.ok, json: await r.json() }))
+        .then(({ json }) => {
           const ans = (json?.answer as Answer | null) ?? answerFor(q, card);
           setThread((current) =>
-            current.map((entry, i) => (i === current.length - 1 ? { ...entry, a: ans } : entry))
+            current.map((entry, i) =>
+              i === current.length - 1
+                ? {
+                    ...entry,
+                    a: ans,
+                    origin: json?.answerOrigin === "ai" ? "ai" : "published-record",
+                  }
+                : entry
+            )
           );
         })
         .catch(() => {
           const ans = answerFor(q, card);
           setThread((current) =>
-            current.map((entry, i) => (i === current.length - 1 ? { ...entry, a: ans } : entry))
+            current.map((entry, i) =>
+              i === current.length - 1
+                ? { ...entry, a: ans, origin: "published-record" }
+                : entry
+            )
           );
         })
         .finally(() => setPending(false));
@@ -83,13 +96,18 @@ export function AskPanel({ card }: { card: Scholarship }) {
               {entry.a && (
                 <div className="max-w-[90%] self-start rounded-lg rounded-bl-xs border border-hairline bg-canvas px-4 py-3.5 [animation:rise_260ms_cubic-bezier(.2,.8,.3,1)_both]">
                   <p className="t-caption text-ink">{entry.a.text}</p>
+                  <p className="t-micro mt-3 border-t border-hairline pt-2.5 text-ink-mute">
+                    {entry.origin === "ai"
+                      ? "AI response grounded in the published record"
+                      : "Published-record answer — AI is unavailable right now"}
+                  </p>
                   {entry.a.src ? (
-                    <p className="t-micro mt-3 flex items-center gap-2 border-t border-hairline pt-2.5 text-ink-mute">
+                    <p className="t-micro mt-2 flex items-center gap-2 text-ink-mute">
                       <span className="size-1.5 rounded-full bg-met" aria-hidden="true" />
                       {t("source")}: {entry.a.src}
                     </p>
                   ) : (
-                    <p className="t-micro mt-3 border-t border-hairline pt-2.5 text-ink-mute">
+                    <p className="t-micro mt-2 text-ink-mute">
                       {t("notStated")}
                     </p>
                   )}
