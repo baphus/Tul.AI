@@ -143,7 +143,7 @@ describe("isPlanning", () => {
 
 describe("profileCompleteness", () => {
   it("counts filled fields out of the full set", () => {
-    expect(profileCompleteness(emptyProfile())).toEqual({ filled: 0, total: 10 });
+    expect(profileCompleteness(emptyProfile())).toEqual({ filled: 0, total: 11 });
     expect(profileCompleteness(answered()).filled).toBe(3);
     expect(
       profileCompleteness(answered({ chips: ["OFW parent"], income: "Below ₱10,000" })).filled

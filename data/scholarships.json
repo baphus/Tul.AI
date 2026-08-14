@@ -1,2252 +1,2217 @@
 [
-    {
-        "id": 30,
-        "name": "Inquirer Foundation Scholarship Program (2026-2028)",
-        "status": "CLOSED",
-        "benefits": {
-            "items": [
-                "₱20,000 scholarship grant per school year, paid directly to the school",
-                "Academic support to help students stay in school and complete their education"
-            ]
-        },
-        "deadline": "2026-07-31",
-        "logo_url": null,
-        "provider": "Inquirer Foundation",
-        "created_at": "2026-08-13T09:28:42.634534+00:00",
-        "updated_at": "2026-08-13T09:28:42.634534+00:00",
-        "description": "A scholarship program offering financial support to deserving Filipino students for academic years 2026-2028.",
-        "minimum_gwa": null,
-        "source_urls": [
-            "https://newsinfo.inquirer.net/2248402/inquirer-foundation-opens-applications-for-2026-28-scholarships",
-            "https://foundation.inquirer.net"
-        ],
-        "official_url": "https://newsinfo.inquirer.net/2248402/inquirer-foundation-opens-applications-for-2026-28-scholarships",
-        "provider_type": "Private / Corporate Foundation (Media)",
-        "application_url": "https://foundation.inquirer.net",
-        "eligible_courses": null,
-        "last_verified_at": "2026-08-12T16:00:00+00:00",
-        "required_documents": null,
-        "special_categories": null,
-        "income_requirements": null,
-        "verification_status": "PARTIALLY_VERIFIED_LIMITED_DETAILS",
-        "eligible_year_levels": null,
-        "geographic_requirements": null
+  {
+    "id": "inquirer-foundation-scholarship-program-2026-2028-30",
+    "name": "Inquirer Foundation Scholarship Program (2026-2028)",
+    "provider": {
+      "name": "Inquirer Foundation",
+      "type": "foundation",
+      "website": "https://newsinfo.inquirer.net/2248402/inquirer-foundation-opens-applications-for-2026-28-scholarships"
     },
-    {
-        "id": 31,
-        "name": "Megaworld Foundation Scholarship Program",
-        "status": "ACTIVE",
-        "benefits": {
-            "items": [
-                "Full tuition fee",
-                "Allowance via Megaworld Foundation-issued ATM cards",
-                "Volunteerism activities and seminars",
-                "Career opportunities in Megaworld, subsidiaries, and affiliates"
-            ]
-        },
-        "deadline": null,
-        "logo_url": null,
-        "provider": "Megaworld Foundation, Inc.",
-        "created_at": "2026-08-13T09:28:42.634534+00:00",
-        "updated_at": "2026-08-13T09:28:42.634534+00:00",
-        "description": "A scholarship program supporting Filipino college students through full financial support, volunteerism and development activities, and career opportunities. The source states that the program supports scholars across 76 partner schools.",
-        "minimum_gwa": 85,
-        "source_urls": [
-            "https://www.megaworldfoundation.com/scholarship_program",
-            "https://www.megaworldfoundation.com/"
-        ],
-        "official_url": "https://www.megaworldfoundation.com/scholarship_program",
-        "provider_type": "Private / Corporate Foundation",
-        "application_url": null,
-        "eligible_courses": null,
-        "last_verified_at": "2026-08-12T16:00:00+00:00",
-        "required_documents": [
-            "One-month payslip if parent/s are employed",
-            "Barangay Certificate of Indigency if parent/s are unemployed",
-            "Utility bills",
-            "Complete copy of grades",
-            "Certificate of Enrollment / Registration Form",
-            "Photo of applicant with family/guardian",
-            "For freshmen: admission/entrance result or equivalent",
-            "For sophomores/juniors: full-load registration and updated curriculum"
-        ],
-        "special_categories": [
-            "Partner-school enrollment required",
-            "Volunteerism activities and seminars",
-            "Career assistance after graduation"
-        ],
-        "income_requirements": {
-            "proof_examples": [
-                "One-month payslip",
-                "Barangay Certificate of Indigency",
-                "Utility bills"
-            ],
-            "financial_need_considered": true
-        },
-        "verification_status": "VERIFIED",
-        "eligible_year_levels": [
-            "Incoming Freshman",
-            "Incoming Sophomore",
-            "Incoming Junior"
-        ],
-        "geographic_requirements": {
-            "notes": "Source states 76 partner schools in Metro Manila and various provinces.",
-            "institution": "Must be enrolled or planning to enroll in a Megaworld Foundation partner school"
-        }
+    "description": "A scholarship program offering financial support to deserving Filipino students for academic years 2026-2028.",
+    "benefits": [
+      "₱20,000 scholarship grant per school year, paid directly to the school",
+      "Academic support to help students stay in school and complete their education"
+    ],
+    "deadline": "2026-07-31",
+    "applicationUrl": "https://foundation.inquirer.net",
+    "eligibility": {},
+    "requirements": [],
+    "requiredDocuments": [],
+    "tags": [
+      "foundation"
+    ],
+    "lastVerified": "2026-08-12",
+    "verificationSource": "secondary",
+    "verificationStatus": "Expired"
+  },
+  {
+    "id": "megaworld-foundation-scholarship-program-31",
+    "name": "Megaworld Foundation Scholarship Program",
+    "provider": {
+      "name": "Megaworld Foundation, Inc.",
+      "type": "foundation",
+      "website": "https://www.megaworldfoundation.com/scholarship_program"
     },
-    {
-        "id": 1,
-        "name": "GBF Iskolar ni Juan (Tech-Voc Certification Scholarship Program)",
-        "status": "PERIODIC",
-        "benefits": {
-            "items": [
-                "Full tuition and training fees",
-                "Stay-in accommodation for 7 months",
-                "Food allowance",
-                "Transportation allowance",
-                "School supplies and uniforms",
-                "TESDA NC II assessment fees",
-                "Job opportunity at URC plants"
-            ]
-        },
-        "deadline": "2026-02-28",
-        "logo_url": "https://res.cloudinary.com/mewk52ex/image/upload/v1786548904/GBF_Iskolar_ni_Juan_Tech-Voc_Certification_Scholarship_Program.png",
-        "provider": "Gokongwei Brothers Foundation (GBF) in partnership with Universal Robina Corporation (URC)",
-        "created_at": "2026-08-12T14:58:56.119832+00:00",
-        "updated_at": "2026-08-12T14:58:56.119832+00:00",
-        "description": "Fully subsidized 1-year technical-vocational scholarship with 7 months of stay-in academic and hands-on training at the GBF Technical Training Center in Calamba, Laguna, followed by 5 months of OJT at URC plants. Graduates obtain a TESDA NC II and transition into employment opportunities at URC.",
-        "minimum_gwa": null,
-        "source_urls": [
-            "https://www.gokongweibrothersfoundation.org/programs/gbf-iskolar-ni-juan-tech-voc-program",
-            "https://philscholar.com/iskolar-ni-juan-tech-voc-scholarship/",
-            "https://afonline.org/iskolar-ni-juan-application/",
-            "https://www.depeddasma.edu.ph/advisory-call-for-scholarship-applications-iskolar-ni-juan-tech-voc-certification-scholarship/"
-        ],
-        "official_url": "https://www.gokongweibrothersfoundation.org/programs/gbf-iskolar-ni-juan-tech-voc-program",
-        "provider_type": "Non-Profit Foundation",
-        "application_url": "https://philscholar.com/iskolar-ni-juan-tech-voc-scholarship/",
-        "eligible_courses": [
-            "TESDA Mechatronics Servicing NC II",
-            "TESDA Instrumentation and Control Servicing NC II"
-        ],
-        "last_verified_at": "2026-08-11T16:00:00+00:00",
-        "required_documents": [
-            "PSA/NSO Birth Certificate",
-            "Certified True Copy of Grades / TOR",
-            "Certificate of Good Moral Character",
-            "Barangay Certificate of Indigency",
-            "Barangay Clearance",
-            "2x2 ID Photo"
-        ],
-        "special_categories": [
-            "Underprivileged youth",
-            "Age 18-28",
-            "Single"
-        ],
-        "income_requirements": {
-            "max_annual_gross_family_income_php": 200000
-        },
-        "verification_status": "VERIFIED",
-        "eligible_year_levels": [
-            "Senior High School Graduate",
-            "College Undergraduate"
-        ],
-        "geographic_requirements": {
-            "scope": "Nationwide",
-            "priority_areas": [
-                "Region IV-A",
-                "Region III",
-                "NCR",
-                "Cebu and neighboring Visayas provinces"
-            ]
-        }
+    "description": "A scholarship program supporting Filipino college students through full financial support, volunteerism and development activities, and career opportunities. The source states that the program supports scholars across 76 partner schools.",
+    "benefits": [
+      "Full tuition fee",
+      "Allowance via Megaworld Foundation-issued ATM cards",
+      "Volunteerism activities and seminars",
+      "Career opportunities in Megaworld, subsidiaries, and affiliates"
+    ],
+    "deadline": null,
+    "applicationUrl": null,
+    "eligibility": {
+      "educationLevel": [
+        "Incoming Freshman",
+        "Incoming Sophomore",
+        "Incoming Junior"
+      ],
+      "gwa": {
+        "minimum": 85
+      }
     },
-    {
-        "id": 3,
-        "name": "SM Foundation College Scholarship Program",
-        "status": "ANNUAL",
-        "benefits": {
-            "items": [
-                "Full tuition and miscellaneous school fees",
-                "Monthly living allowance/stipend",
-                "Part-time job opportunities within SM Group",
-                "Personal development and mentoring",
-                "Priority job offers within SM Group"
-            ]
-        },
-        "deadline": "2026-07-31",
-        "logo_url": "https://res.cloudinary.com/mewk52ex/image/upload/v1786548905/SM_Foundation_College_Scholarship_Program.png",
-        "provider": "SM Foundation, Inc. (SMFI)",
-        "created_at": "2026-08-12T14:58:56.119832+00:00",
-        "updated_at": "2026-08-12T14:58:56.119832+00:00",
-        "description": "College scholarship for high-achieving, underprivileged Senior High School graduates, including academic support, paid seasonal work opportunities within SM Group companies, and priority job offers upon graduation.",
-        "minimum_gwa": 92,
-        "source_urls": [
-            "https://www.sm-foundation.org/what_we_do/college-scholarship-program/",
-            "https://philscholar.com/sm-foundation-college-scholarship/"
-        ],
-        "official_url": "https://www.sm-foundation.org/what_we_do/college-scholarship-program/",
-        "provider_type": "Corporate Foundation",
-        "application_url": "https://philscholar.com/ched-coconut-scholarship-coscho/",
-        "eligible_courses": [
-            "BS Computer Science",
-            "BS Information Technology",
-            "BS Computer Engineering",
-            "BS Civil Engineering",
-            "BS Electrical Engineering",
-            "BS Electronics & Communications Engineering",
-            "BS Mechanical Engineering",
-            "BS Accountancy",
-            "BS Accounting Information Systems",
-            "BS Internal Auditing",
-            "BSBA Financial Management",
-            "BSBA Management Accounting",
-            "BS Elementary Education",
-            "BS Secondary Education - Science",
-            "BS Secondary Education - Mathematics",
-            "BS Secondary Education - English"
-        ],
-        "last_verified_at": "2026-08-11T16:00:00+00:00",
-        "required_documents": [
-            "Online Application Form",
-            "Grade 12 Report Card",
-            "Parent/Guardian ITR or proof of no income/indigency",
-            "Parent/Guardian Community Tax Certificate",
-            "PSA/NSO Birth Certificate",
-            "2x2 ID Photo",
-            "Sketch of residence relative to nearest SM Mall"
-        ],
-        "special_categories": [
-            "Underprivileged SHS graduates",
-            "High academic performance"
-        ],
-        "income_requirements": {
-            "max_annual_gross_household_income_php": 250000
-        },
-        "verification_status": "VERIFIED_WITH_SECONDARY_LINK_ISSUE",
-        "eligible_year_levels": [
-            "Incoming College Freshman",
-            "ALS Completer"
-        ],
-        "geographic_requirements": {
-            "notes": "Areas with SM Mall presence, including Cebu and other listed regions",
-            "scope": "Covered areas nationwide"
-        }
+    "requirements": [
+      "Partner-school enrollment required",
+      "Volunteerism activities and seminars",
+      "Career assistance after graduation"
+    ],
+    "requiredDocuments": [
+      "One-month payslip if parent/s are employed",
+      "Barangay Certificate of Indigency if parent/s are unemployed",
+      "Utility bills",
+      "Complete copy of grades",
+      "Certificate of Enrollment / Registration Form",
+      "Photo of applicant with family/guardian",
+      "For freshmen: admission/entrance result or equivalent",
+      "For sophomores/juniors: full-load registration and updated curriculum"
+    ],
+    "tags": [
+      "foundation"
+    ],
+    "lastVerified": "2026-08-12",
+    "verificationSource": "official",
+    "verificationStatus": "Verified"
+  },
+  {
+    "id": "gbf-iskolar-ni-juan-tech-voc-certification-scholarship-program-1",
+    "name": "GBF Iskolar ni Juan (Tech-Voc Certification Scholarship Program)",
+    "provider": {
+      "name": "Gokongwei Brothers Foundation (GBF) in partnership with Universal Robina Corporation (URC)",
+      "type": "foundation",
+      "website": "https://www.gokongweibrothersfoundation.org/programs/gbf-iskolar-ni-juan-tech-voc-program"
     },
-    {
-        "id": 32,
-        "name": "AmCham Foundation Scholarship Program",
-        "status": "ACTIVE",
-        "benefits": {
-            "items": [
-                "Educational assistance / financial support for schooling",
-                "Life-planning seminars, summer outings, and developmental activities",
-                "Mentorship and career support"
-            ]
-        },
-        "deadline": null,
-        "logo_url": null,
-        "provider": "American Chamber Foundation (AmCham Foundation)",
-        "created_at": "2026-08-13T09:28:42.634534+00:00",
-        "updated_at": "2026-08-13T09:28:42.634534+00:00",
-        "description": "The AmCham Foundation's education program provides educational assistance to poor but deserving Filipino youth, with alumni accounts describing support through high school and college as well as developmental activities.",
-        "minimum_gwa": null,
-        "source_urls": [
-            "https://amchamfoundation.com"
-        ],
-        "official_url": "https://amchamfoundation.com",
-        "provider_type": "Private / Corporate Foundation",
-        "application_url": null,
-        "eligible_courses": null,
-        "last_verified_at": "2026-08-12T16:00:00+00:00",
-        "required_documents": null,
-        "special_categories": [
-            "Poor but deserving Filipino youth",
-            "Corporate-sponsored scholarship model",
-            "Holistic development activities"
-        ],
-        "income_requirements": {
-            "notes": "Program targets poor but deserving Filipino youth; no numeric limit was provided.",
-            "specific_limit": null
-        },
-        "verification_status": "PARTIALLY_VERIFIED",
-        "eligible_year_levels": null,
-        "geographic_requirements": null
+    "description": "Fully subsidized 1-year technical-vocational scholarship with 7 months of stay-in academic and hands-on training at the GBF Technical Training Center in Calamba, Laguna, followed by 5 months of OJT at URC plants. Graduates obtain a TESDA NC II and transition into employment opportunities at URC.",
+    "benefits": [
+      "Full tuition and training fees",
+      "Stay-in accommodation for 7 months",
+      "Food allowance",
+      "Transportation allowance",
+      "School supplies and uniforms",
+      "TESDA NC II assessment fees",
+      "Job opportunity at URC plants"
+    ],
+    "deadline": "2026-02-28",
+    "applicationUrl": "https://philscholar.com/iskolar-ni-juan-tech-voc-scholarship/",
+    "eligibility": {
+      "educationLevel": [
+        "Senior High School Graduate",
+        "College Undergraduate"
+      ],
+      "courses": [
+        "TESDA Mechatronics Servicing NC II",
+        "TESDA Instrumentation and Control Servicing NC II"
+      ],
+      "locations": [
+        "Philippines"
+      ],
+      "incomeMaxMonthly": 16667
     },
-    {
-        "id": 6,
-        "name": "BFAR Fisheries Scholarship Program – Fisherfolk Children Educational Grant (BFAR-FSP-FCEG)",
-        "status": "ANNUAL",
-        "benefits": {
-            "items": [
-                "Full tuition and school fees",
-                "₱5,000 monthly stipend",
-                "₱2,000 book allowance per semester",
-                "₱3,000 OJT support",
-                "₱7,000 thesis support",
-                "₱1,500 graduation/clothing allowance"
-            ]
-        },
-        "deadline": "2026-07-31",
-        "logo_url": "https://res.cloudinary.com/mewk52ex/image/upload/v1786549202/BFAR_Fisheries_Scholarship_Program_Fisherfolk_Children_Educational_Grant_BFAR-FSP-FCEG.png",
-        "provider": "Bureau of Fisheries and Aquatic Resources (BFAR) – Department of Agriculture (DA)",
-        "created_at": "2026-08-12T14:58:56.119832+00:00",
-        "updated_at": "2026-08-12T14:58:56.119832+00:00",
-        "description": "Financial assistance grant for children of registered municipal fisherfolk pursuing a BS Fisheries degree.",
-        "minimum_gwa": 80,
-        "source_urls": [
-            "https://www.bfar.da.gov.ph/opportunities/scholarship/",
-            "https://r7.bfar.da.gov.ph/",
-            "https://caraga.bfar.da.gov.ph/extension-support-education-and-training-services/fisheries-scholarship-program/"
-        ],
-        "official_url": "https://www.bfar.da.gov.ph/opportunities/scholarship/",
-        "provider_type": "Government Agency",
-        "application_url": "https://philscholar.com/bfar-scholarship-program/",
-        "eligible_courses": [
-            "Bachelor of Science in Fisheries"
-        ],
-        "last_verified_at": "2026-08-11T16:00:00+00:00",
-        "required_documents": [
-            "FSP-FCEG Application Form",
-            "PSA Birth Certificate",
-            "SHS Report Card / Form 138",
-            "FishR / Mangingisdang Juan Certification",
-            "Certificate of Good Moral Character",
-            "Barangay Certificate of Residence",
-            "Two 2x2 Photos",
-            "Affidavit of Guardianship if applicable"
-        ],
-        "special_categories": [
-            "Child of registered municipal fisherfolk",
-            "Natural-born Filipino",
-            "Age 25 or below"
-        ],
-        "income_requirements": {
-            "requirement": "Parent/guardian must be a registered municipal fisherfolk in FishR",
-            "income_limit": null
-        },
-        "verification_status": "VERIFIED",
-        "eligible_year_levels": [
-            "Graduating Grade 12",
-            "SHS Graduate",
-            "Old curriculum High School Graduate with no college units"
-        ],
-        "geographic_requirements": {
-            "scope": "Nationwide",
-            "residency": "Parent/guardian must have resided in the municipality for at least 6 months"
-        }
+    "requirements": [
+      "Underprivileged youth",
+      "Age 18-28",
+      "Single"
+    ],
+    "requiredDocuments": [
+      "PSA/NSO Birth Certificate",
+      "Certified True Copy of Grades / TOR",
+      "Certificate of Good Moral Character",
+      "Barangay Certificate of Indigency",
+      "Barangay Clearance",
+      "2x2 ID Photo"
+    ],
+    "tags": [
+      "foundation",
+      "national"
+    ],
+    "lastVerified": "2026-08-11",
+    "verificationSource": "official",
+    "verificationStatus": "Verified",
+    "logoUrl": "https://res.cloudinary.com/mewk52ex/image/upload/v1786548904/GBF_Iskolar_ni_Juan_Tech-Voc_Certification_Scholarship_Program.png"
+  },
+  {
+    "id": "sm-foundation-college-scholarship-program-3",
+    "name": "SM Foundation College Scholarship Program",
+    "provider": {
+      "name": "SM Foundation, Inc. (SMFI)",
+      "type": "foundation",
+      "website": "https://www.sm-foundation.org/what_we_do/college-scholarship-program/"
     },
-    {
-        "id": 8,
-        "name": "BFAR Fisheries Scholarship Program – Indigenous Cultural Communities / Indigenous Peoples (BFAR-FSP-ICCs/IPs)",
-        "status": "ANNUAL",
-        "benefits": {
-            "items": [
-                "Full tuition and matriculation fees",
-                "₱5,000 monthly stipend",
-                "₱2,000 book allowance per semester",
-                "₱3,000 OJT support",
-                "₱7,000 thesis support",
-                "₱1,500 graduation/clothing allowance"
-            ]
-        },
-        "deadline": "2026-07-31",
-        "logo_url": "https://res.cloudinary.com/mewk52ex/image/upload/v1786549202/BFAR_Fisheries_Scholarship_Program_Fisherfolk_Children_Educational_Grant_BFAR-FSP-FCEG.png",
-        "provider": "Bureau of Fisheries and Aquatic Resources (BFAR) – Department of Agriculture (DA) in partnership with NCIP",
-        "created_at": "2026-08-12T14:58:56.119832+00:00",
-        "updated_at": "2026-08-12T14:58:56.119832+00:00",
-        "description": "Dedicated BFAR scholarship track for recognized Indigenous Cultural Communities / Indigenous Peoples pursuing BS Fisheries.",
-        "minimum_gwa": 75,
-        "source_urls": [
-            "https://www.bfar.da.gov.ph/opportunities/scholarship/",
-            "https://r7.bfar.da.gov.ph/wp-content/uploads/2023/09/Application-Form-Fisheries-Scholarship-Program-FSP-ICCsIPs.pdf",
-            "https://ncip.gov.ph/news/indigenous-peoples-in-negros-oriental-availed-bfar-scholarship/"
-        ],
-        "official_url": "https://www.bfar.da.gov.ph/opportunities/scholarship/",
-        "provider_type": "Government Agency",
-        "application_url": "https://r7.bfar.da.gov.ph/wp-content/uploads/2023/09/Application-Form-Fisheries-Scholarship-Program-FSP-ICCsIPs.pdf",
-        "eligible_courses": [
-            "Bachelor of Science in Fisheries"
-        ],
-        "last_verified_at": "2026-08-11T16:00:00+00:00",
-        "required_documents": [
-            "FSP-ICCs/IPs Application Form",
-            "NCIP Certificate of Tribal Membership / Confirmation",
-            "PSA Birth Certificate",
-            "SHS Report Card / Form 138 / ALS Certificate",
-            "Certificate of Good Moral Character",
-            "Barangay Certificate of Residency",
-            "Two 2x2 Photos"
-        ],
-        "special_categories": [
-            "Indigenous Cultural Community",
-            "Indigenous Peoples",
-            "NCIP-certified",
-            "Age 25 or below"
-        ],
-        "income_requirements": {
-            "requirement": "Recognized ICC/IP membership certified by NCIP",
-            "income_limit": null
-        },
-        "verification_status": "VERIFIED",
-        "eligible_year_levels": [
-            "Graduating Grade 12",
-            "SHS Graduate",
-            "ALS Graduate",
-            "Old curriculum High School Graduate"
-        ],
-        "geographic_requirements": {
-            "scope": "Nationwide",
-            "residency": "At least 6 months in municipality/region"
-        }
+    "description": "College scholarship for high-achieving, underprivileged Senior High School graduates, including academic support, paid seasonal work opportunities within SM Group companies, and priority job offers upon graduation.",
+    "benefits": [
+      "Full tuition and miscellaneous school fees",
+      "Monthly living allowance/stipend",
+      "Part-time job opportunities within SM Group",
+      "Personal development and mentoring",
+      "Priority job offers within SM Group"
+    ],
+    "deadline": "2026-07-31",
+    "applicationUrl": "https://philscholar.com/ched-coconut-scholarship-coscho/",
+    "eligibility": {
+      "educationLevel": [
+        "Incoming College Freshman",
+        "ALS Completer"
+      ],
+      "gwa": {
+        "minimum": 92
+      },
+      "courses": [
+        "BS Computer Science",
+        "BS Information Technology",
+        "BS Computer Engineering",
+        "BS Civil Engineering",
+        "BS Electrical Engineering",
+        "BS Electronics & Communications Engineering",
+        "BS Mechanical Engineering",
+        "BS Accountancy",
+        "BS Accounting Information Systems",
+        "BS Internal Auditing",
+        "BSBA Financial Management",
+        "BSBA Management Accounting",
+        "BS Elementary Education",
+        "BS Secondary Education - Science",
+        "BS Secondary Education - Mathematics",
+        "BS Secondary Education - English"
+      ],
+      "locations": [
+        "Philippines"
+      ],
+      "incomeMaxMonthly": 20833
     },
-    {
-        "id": 7,
-        "name": "BFAR Fisheries Scholarship Program – Fisheries Industry Leaders Grant (BFAR-FSP-FILG)",
-        "status": "ANNUAL",
-        "benefits": {
-            "items": [
-                "Full tuition and matriculation fees",
-                "₱5,000 monthly stipend",
-                "₱2,000 book allowance per semester",
-                "₱3,000 OJT support",
-                "₱7,000 thesis support",
-                "₱1,500 graduation/clothing allowance",
-                "Academic honor incentives"
-            ]
-        },
-        "deadline": "2026-07-31",
-        "logo_url": "https://res.cloudinary.com/mewk52ex/image/upload/v1786549202/BFAR_Fisheries_Scholarship_Program_Fisherfolk_Children_Educational_Grant_BFAR-FSP-FCEG.png",
-        "provider": "Bureau of Fisheries and Aquatic Resources (BFAR) – Department of Agriculture (DA)",
-        "created_at": "2026-08-12T14:58:56.119832+00:00",
-        "updated_at": "2026-08-12T14:58:56.119832+00:00",
-        "description": "Merit-based BFAR scholarship for high-performing Senior High School graduates pursuing BS Fisheries.",
-        "minimum_gwa": 80,
-        "source_urls": [
-            "https://www.bfar.da.gov.ph/opportunities/scholarship/",
-            "https://r7.bfar.da.gov.ph/wp-content/uploads/2023/09/Application-Form-Fisheries-Scholarship-Program-FILG.pdf",
-            "https://philscholar.com/bfar-scholarship-program/"
-        ],
-        "official_url": "https://www.bfar.da.gov.ph/opportunities/scholarship/",
-        "provider_type": "Government Agency",
-        "application_url": "https://r7.bfar.da.gov.ph/wp-content/uploads/2023/09/Application-Form-Fisheries-Scholarship-Program-FILG.pdf",
-        "eligible_courses": [
-            "Bachelor of Science in Fisheries"
-        ],
-        "last_verified_at": "2026-08-11T16:00:00+00:00",
-        "required_documents": [
-            "FSP-FILG Application Form",
-            "PSA Birth Certificate",
-            "Report Card / Form 138/137",
-            "Certification of Top 10 / Honors status",
-            "Certificate of Good Moral Character",
-            "Barangay Certificate of Residency",
-            "Two 2x2 Photos"
-        ],
-        "special_categories": [
-            "Top 10 / Honor Student",
-            "Natural-born Filipino",
-            "Age 25 or below"
-        ],
-        "income_requirements": {
-            "notes": "Merit-based",
-            "income_limit": null
-        },
-        "verification_status": "VERIFIED",
-        "eligible_year_levels": [
-            "Graduating Grade 12",
-            "SHS Graduate",
-            "Old curriculum High School Graduate with no college units"
-        ],
-        "geographic_requirements": {
-            "scope": "Nationwide",
-            "residency": "Applicant or parent/guardian must have resided in municipality for at least 6 months"
-        }
+    "requirements": [
+      "Underprivileged SHS graduates",
+      "High academic performance"
+    ],
+    "requiredDocuments": [
+      "Online Application Form",
+      "Grade 12 Report Card",
+      "Parent/Guardian ITR or proof of no income/indigency",
+      "Parent/Guardian Community Tax Certificate",
+      "PSA/NSO Birth Certificate",
+      "2x2 ID Photo",
+      "Sketch of residence relative to nearest SM Mall"
+    ],
+    "tags": [
+      "foundation",
+      "national"
+    ],
+    "lastVerified": "2026-08-11",
+    "verificationSource": "official",
+    "verificationStatus": "Verified",
+    "logoUrl": "https://res.cloudinary.com/mewk52ex/image/upload/v1786548905/SM_Foundation_College_Scholarship_Program.png"
+  },
+  {
+    "id": "amcham-foundation-scholarship-program-32",
+    "name": "AmCham Foundation Scholarship Program",
+    "provider": {
+      "name": "American Chamber Foundation (AmCham Foundation)",
+      "type": "foundation",
+      "website": "https://amchamfoundation.com"
     },
-    {
-        "id": 18,
-        "name": "Tulong Dunong Program (TDP) Scholarship",
-        "status": "ANNUAL",
-        "benefits": {
-            "items": [
-                "₱7,500 per semester",
-                "₱15,000 per academic year",
-                "Continuation subject to qualification, validation, and funding"
-            ]
-        },
-        "deadline": "2026-08-31",
-        "logo_url": "https://res.cloudinary.com/mewk52ex/image/upload/v1786548905/CHED_Scholarship_Program_for_Coconut_Farmers_and_Their_Families_CoScho.png",
-        "provider": "Commission on Higher Education (CHED) - Unified Student Financial Assistance System for Tertiary Education (UniFAST)",
-        "created_at": "2026-08-12T14:58:56.119832+00:00",
-        "updated_at": "2026-08-12T14:58:56.119832+00:00",
-        "description": "Tertiary education subsidy under RA 10931 providing partial financial support to qualified students in their first undergraduate degree.",
-        "minimum_gwa": null,
-        "source_urls": [
-            "https://unifast.gov.ph/",
-            "https://unifast.gov.ph/assets/pdf/guidelines/revised-tdp-pr.pdf",
-            "https://philscholar.com/ched-tulong-dunong-scholarship/"
-        ],
-        "official_url": "https://unifast.gov.ph/",
-        "provider_type": "Government",
-        "application_url": "https://philscholar.com/ched-tulong-dunong-scholarship/",
-        "eligible_courses": [
-            "Any first undergraduate degree in a CHED-recognized institution"
-        ],
-        "last_verified_at": "2026-08-11T16:00:00+00:00",
-        "required_documents": [
-            "TDP Application Form",
-            "Certificate of Registration/Enrollment",
-            "Certificate of Indigency",
-            "Certificate of Tax Exemption or Social Case Study if indigency certificate unavailable",
-            "Additional continuing/returning/transferee documents as applicable"
-        ],
-        "special_categories": [
-            "First undergraduate degree",
-            "Continuing grantee",
-            "Returning grantee",
-            "Transferee grantee"
-        ],
-        "income_requirements": {
-            "note": "₱400,000 ceiling is on official UniFAST information page but not expressly restated in the 2026 memorandum",
-            "max_annual_gross_income_php": 400000
-        },
-        "verification_status": "VERIFIED",
-        "eligible_year_levels": [
-            "New Undergraduate Applicant",
-            "Continuing Grantee"
-        ],
-        "geographic_requirements": {
-            "scope": "Nationwide"
-        }
+    "description": "The AmCham Foundation's education program provides educational assistance to poor but deserving Filipino youth, with alumni accounts describing support through high school and college as well as developmental activities.",
+    "benefits": [
+      "Educational assistance / financial support for schooling",
+      "Life-planning seminars, summer outings, and developmental activities",
+      "Mentorship and career support"
+    ],
+    "deadline": null,
+    "applicationUrl": null,
+    "eligibility": {},
+    "requirements": [
+      "Poor but deserving Filipino youth",
+      "Corporate-sponsored scholarship model",
+      "Holistic development activities"
+    ],
+    "requiredDocuments": [],
+    "tags": [
+      "foundation"
+    ],
+    "lastVerified": "2026-08-12",
+    "verificationSource": "official",
+    "verificationStatus": "Verified"
+  },
+  {
+    "id": "bfar-fisheries-scholarship-program-fisherfolk-children-educational-grant-6",
+    "name": "BFAR Fisheries Scholarship Program – Fisherfolk Children Educational Grant (BFAR-FSP-FCEG)",
+    "provider": {
+      "name": "Bureau of Fisheries and Aquatic Resources (BFAR) – Department of Agriculture (DA)",
+      "type": "government",
+      "website": "https://www.bfar.da.gov.ph/opportunities/scholarship/"
     },
-    {
-        "id": 19,
-        "name": "Security Bank Foundation Scholarships (Internal, External, and Regalo Mo Kinabukasan Ko)",
-        "status": "PERIODIC",
-        "benefits": {
-            "items": [
-                "Financial assistance for higher education",
-                "Support for underprivileged students",
-                "Employee and family educational support"
-            ]
-        },
-        "deadline": "2026-08-31",
-        "logo_url": "https://res.cloudinary.com/mewk52ex/image/upload/v1786586744/SBFI.png",
-        "provider": "Security Bank Foundation Inc. (SBFI)",
-        "created_at": "2026-08-12T14:58:56.119832+00:00",
-        "updated_at": "2026-08-12T14:58:56.119832+00:00",
-        "description": "Umbrella entry covering Security Bank Foundation scholarship tracks for employees/dependents and external students in partner schools.",
-        "minimum_gwa": null,
-        "source_urls": [
-            "https://www.securitybank.com/foundation/",
-            "https://philscholar.com/list-of-security-bank-foundation-scholarships/"
-        ],
-        "official_url": "https://www.securitybank.com/foundation/",
-        "provider_type": "Private / Corporate Foundation",
-        "application_url": "https://philscholar.com/list-of-security-bank-foundation-scholarships/",
-        "eligible_courses": [
-            "College degree programs; specific courses vary by track"
-        ],
-        "last_verified_at": "2026-08-11T16:00:00+00:00",
-        "required_documents": [
-        ],
-        "special_categories": [
-            "Security Bank employees/dependents",
-            "External students in partner schools"
-        ],
-        "income_requirements": {
-            "specific_limit": null,
-            "financial_need_component": true
-        },
-        "verification_status": "PARTIALLY_VERIFIED",
-        "eligible_year_levels": [
-            "Varies by scholarship track"
-        ],
-        "geographic_requirements": {
-            "notes": "External track requires enrollment in partner schools",
-            "scope": "Nationwide"
-        }
+    "description": "Financial assistance grant for children of registered municipal fisherfolk pursuing a BS Fisheries degree.",
+    "benefits": [
+      "Full tuition and school fees",
+      "₱5,000 monthly stipend",
+      "₱2,000 book allowance per semester",
+      "₱3,000 OJT support",
+      "₱7,000 thesis support",
+      "₱1,500 graduation/clothing allowance"
+    ],
+    "deadline": "2026-07-31",
+    "applicationUrl": "https://philscholar.com/bfar-scholarship-program/",
+    "eligibility": {
+      "educationLevel": [
+        "Graduating Grade 12",
+        "SHS Graduate",
+        "Old curriculum High School Graduate with no college units"
+      ],
+      "gwa": {
+        "minimum": 80
+      },
+      "courses": [
+        "Bachelor of Science in Fisheries"
+      ],
+      "locations": [
+        "Philippines"
+      ]
     },
-    {
-        "id": 14,
-        "name": "Ayala Foundation – U-Go Scholar Grant Program",
-        "status": "ANNUAL",
-        "benefits": {
-            "items": [
-                "Approximately ₱40,000 per academic year",
-                "Support for food, transportation, lodging, and academic materials",
-                "Leadership and skills training",
-                "Mentorship and career networking"
-            ]
-        },
-        "deadline": "2026-06-13",
-        "logo_url": "https://res.cloudinary.com/mewk52ex/image/upload/v1786586374/ayala.png",
-        "provider": "Ayala Foundation, Inc. (AFI) in partnership with U-Go",
-        "created_at": "2026-08-12T14:58:56.119832+00:00",
-        "updated_at": "2026-08-12T14:58:56.119832+00:00",
-        "description": "Nationwide scholarship grant for promising young women from low-income families enrolled in public/state universities and colleges.",
-        "minimum_gwa": 85,
-        "source_urls": [
-            "https://ayalafoundation.org/programs/scholarships/",
-            "https://governmentph.com/ayala-scholarship/",
-            "https://philscholar.com/ayala-foundation-scholarship/"
-        ],
-        "official_url": "https://ayalafoundation.org/programs/scholarships/",
-        "provider_type": "Private / Non-Profit Foundation",
-        "application_url": "https://philscholar.com/ayala-foundation-scholarship/",
-        "eligible_courses": [
-            "All undergraduate degree programs at accredited public universities/SUCs"
-        ],
-        "last_verified_at": "2026-08-11T16:00:00+00:00",
-        "required_documents": [
-            "Certificate of Registration/Enrollment",
-            "Latest Official Copy of Grades/TOR",
-            "Proof of Household Income",
-            "Recent electric/water bill if available",
-            "Recommendation Letter for shortlisted applicants"
-        ],
-        "special_categories": [
-            "Female applicants",
-            "Low-income household",
-            "No concurrent major scholarship"
-        ],
-        "income_requirements": {
-            "financial_need_required": true
-        },
-        "verification_status": "VERIFIED",
-        "eligible_year_levels": [
-            "Incoming 1st Year College",
-            "Incoming 2nd Year College",
-            "Incoming 3rd Year College",
-            "Incoming 4th Year in a 5-year program"
-        ],
-        "geographic_requirements": {
-            "scope": "Nationwide",
-            "institution": "Public/State University or College"
-        }
+    "requirements": [
+      "Child of registered municipal fisherfolk",
+      "Natural-born Filipino",
+      "Age 25 or below"
+    ],
+    "requiredDocuments": [
+      "FSP-FCEG Application Form",
+      "PSA Birth Certificate",
+      "SHS Report Card / Form 138",
+      "FishR / Mangingisdang Juan Certification",
+      "Certificate of Good Moral Character",
+      "Barangay Certificate of Residence",
+      "Two 2x2 Photos",
+      "Affidavit of Guardianship if applicable"
+    ],
+    "tags": [
+      "government",
+      "national"
+    ],
+    "lastVerified": "2026-08-11",
+    "verificationSource": "official",
+    "verificationStatus": "Verified",
+    "logoUrl": "https://res.cloudinary.com/mewk52ex/image/upload/v1786549202/BFAR_Fisheries_Scholarship_Program_Fisherfolk_Children_Educational_Grant_BFAR-FSP-FCEG.png"
+  },
+  {
+    "id": "bfar-fisheries-scholarship-program-indigenous-cultural-communities-indig-8",
+    "name": "BFAR Fisheries Scholarship Program – Indigenous Cultural Communities / Indigenous Peoples (BFAR-FSP-ICCs/IPs)",
+    "provider": {
+      "name": "Bureau of Fisheries and Aquatic Resources (BFAR) – Department of Agriculture (DA) in partnership with NCIP",
+      "type": "government",
+      "website": "https://www.bfar.da.gov.ph/opportunities/scholarship/"
     },
-    {
-        "id": 22,
-        "name": "PSHS Grade 7 Scholarship (National Competitive Examination - NCE)",
-        "status": "CLOSED_CYCLE",
-        "benefits": {
-            "items": [
-                "Free tuition",
-                "Free textbook loan",
-                "₱500 monthly stipend for all scholars",
-                "Living allowances based on socio-economic status up to ₱3,500/month for full scholars",
-                "Uniform/transport/living allowances for low-income groups",
-                "Dormitory accommodation if applicable"
-            ]
-        },
-        "deadline": "2025-11-07",
-        "logo_url": "https://res.cloudinary.com/mewk52ex/image/upload/v1786587071/PSHS_System_Logo.png",
-        "provider": "Philippine Science High School (PSHS) System",
-        "created_at": "2026-08-12T14:58:56.119832+00:00",
-        "updated_at": "2026-08-12T14:58:56.119832+00:00",
-        "description": "Scholarship and admission program for incoming Grade 7 students through the PSHS National Competitive Examination.",
-        "minimum_gwa": null,
-        "source_urls": [
-            "https://pshs.edu.ph/application-for-incoming-grade-7-students/",
-            "https://pshs.edu.ph/nce-faqs/",
-            "https://nce.pshs.edu.ph/",
-            "https://philscholar.com/pshs-grade-7-scholarship/"
-        ],
-        "official_url": "https://pshs.edu.ph/application-for-incoming-grade-7-students/",
-        "provider_type": "Government / Public Science High School",
-        "application_url": "https://nce.pshs.edu.ph/",
-        "eligible_courses": [
-            "PSHS Grade 7 STEM curriculum"
-        ],
-        "last_verified_at": "2026-08-11T16:00:00+00:00",
-        "required_documents": [
-            "Application Form",
-            "1x1 ID Photos",
-            "Processing fee proof if applicable",
-            "Certified True Copy of Report Card",
-            "Upper 10% certification if Science/Math below 85%",
-            "Private school scholarship certification if applicable"
-        ],
-        "special_categories": [
-            "Filipino citizen",
-            "Under 15 by June 30, 2026",
-            "National Competitive Examination required"
-        ],
-        "income_requirements": {
-            "notes": "Socio-economic status affects allowance tier",
-            "admission_requirement": false
-        },
-        "verification_status": "VERIFIED",
-        "eligible_year_levels": [
-            "Current Grade 6 pupil"
-        ],
-        "geographic_requirements": {
-            "scope": "Nationwide",
-            "campuses": 16
-        }
+    "description": "Dedicated BFAR scholarship track for recognized Indigenous Cultural Communities / Indigenous Peoples pursuing BS Fisheries.",
+    "benefits": [
+      "Full tuition and matriculation fees",
+      "₱5,000 monthly stipend",
+      "₱2,000 book allowance per semester",
+      "₱3,000 OJT support",
+      "₱7,000 thesis support",
+      "₱1,500 graduation/clothing allowance"
+    ],
+    "deadline": "2026-07-31",
+    "applicationUrl": "https://r7.bfar.da.gov.ph/wp-content/uploads/2023/09/Application-Form-Fisheries-Scholarship-Program-FSP-ICCsIPs.pdf",
+    "eligibility": {
+      "educationLevel": [
+        "Graduating Grade 12",
+        "SHS Graduate",
+        "ALS Graduate",
+        "Old curriculum High School Graduate"
+      ],
+      "gwa": {
+        "minimum": 75
+      },
+      "courses": [
+        "Bachelor of Science in Fisheries"
+      ],
+      "locations": [
+        "Philippines"
+      ]
     },
-    {
-        "id": 24,
-        "name": "OWWA Education for Development Scholarship Program (EDSP)",
-        "status": "CLOSED_CYCLE",
-        "benefits": {
-            "items": [
-                "Up to ₱60,000 per school year",
-                "Support up to completion of a 4-5 year baccalaureate course"
-            ]
-        },
-        "deadline": "2025-11-28",
-        "logo_url": "https://res.cloudinary.com/mewk52ex/image/upload/v1786587166/OWWA.webp",
-        "provider": "Overseas Workers Welfare Administration (OWWA)",
-        "created_at": "2026-08-12T14:58:56.119832+00:00",
-        "updated_at": "2026-08-12T14:58:56.119832+00:00",
-        "description": "Scholarship providing up to ₱60,000 per year to qualified dependents of active OWWA members for bachelor's degree study in the Philippines.",
-        "minimum_gwa": 80,
-        "source_urls": [
-            "https://owwa.gov.ph/",
-            "https://scholarship.owwa.gov.ph/",
-            "https://bit.ly/OWWA-RegionalDirectory",
-            "https://philscholar.com/owwa-education-for-development-scholarship-program/"
-        ],
-        "official_url": "https://owwa.gov.ph/",
-        "provider_type": "Government (under DOLE)",
-        "application_url": "https://scholarship.owwa.gov.ph/",
-        "eligible_courses": [
-            "Bachelor's degree courses at accredited Philippine colleges/universities"
-        ],
-        "last_verified_at": "2026-08-11T16:00:00+00:00",
-        "required_documents": [
-            "OFW Passport Bio Page",
-            "Dependent School ID / Valid ID",
-            "PSA Birth Certificate or Baptismal Certificate",
-            "Proof of Grades",
-            "2x2 ID Photo"
-        ],
-        "special_categories": [
-            "Child or eligible sibling of active OWWA member",
-            "Single",
-            "Age limits apply",
-            "No other OWWA scholarship in family",
-            "DOST-SEI examination basis"
-        ],
-        "income_requirements": {
-            "specific_limit": null
-        },
-        "verification_status": "VERIFIED_CLOSED_REFERENCE",
-        "eligible_year_levels": [
-            "Incoming 1st Year College",
-            "2nd-5th Year College for EDSP 2 when open"
-        ],
-        "geographic_requirements": {
-            "scope": "Nationwide",
-            "institution": "Philippine-based college/university"
-        }
+    "requirements": [
+      "Indigenous Cultural Community",
+      "Indigenous Peoples",
+      "NCIP-certified",
+      "Age 25 or below"
+    ],
+    "requiredDocuments": [
+      "FSP-ICCs/IPs Application Form",
+      "NCIP Certificate of Tribal Membership / Confirmation",
+      "PSA Birth Certificate",
+      "SHS Report Card / Form 138 / ALS Certificate",
+      "Certificate of Good Moral Character",
+      "Barangay Certificate of Residency",
+      "Two 2x2 Photos"
+    ],
+    "tags": [
+      "government",
+      "national"
+    ],
+    "lastVerified": "2026-08-11",
+    "verificationSource": "official",
+    "verificationStatus": "Verified",
+    "logoUrl": "https://res.cloudinary.com/mewk52ex/image/upload/v1786549202/BFAR_Fisheries_Scholarship_Program_Fisherfolk_Children_Educational_Grant_BFAR-FSP-FCEG.png"
+  },
+  {
+    "id": "bfar-fisheries-scholarship-program-fisheries-industry-leaders-grant-bfar-7",
+    "name": "BFAR Fisheries Scholarship Program – Fisheries Industry Leaders Grant (BFAR-FSP-FILG)",
+    "provider": {
+      "name": "Bureau of Fisheries and Aquatic Resources (BFAR) – Department of Agriculture (DA)",
+      "type": "government",
+      "website": "https://www.bfar.da.gov.ph/opportunities/scholarship/"
     },
-    {
-        "id": 21,
-        "name": "MDFI Gawad Talino Scholarship",
-        "status": "ANNUAL",
-        "benefits": {
-            "items": [
-                "Full tuition and miscellaneous fees",
-                "Monthly stipends",
-                "Living expenses",
-                "Transportation costs",
-                "Job offer from Mercury Drug Corporation upon graduation"
-            ]
-        },
-        "deadline": "2026-08-31",
-        "logo_url": "https://res.cloudinary.com/mewk52ex/image/upload/v1786549709/Mercury_Drug_Foundation_Inc._MDFI_Pharmacy_Scholarship.png",
-        "provider": "Mercury Drug Foundation, Inc. (MDFI)",
-        "created_at": "2026-08-12T14:58:56.119832+00:00",
-        "updated_at": "2026-08-12T14:58:56.119832+00:00",
-        "description": "Scholarship for MDFI Gawad Talino awardees recognized for exceptional achievement in Mathematics or Science who will pursue selected programs in state universities.",
-        "minimum_gwa": null,
-        "source_urls": [
-            "https://philscholar.com/mdfi-gawad-talino-scholarship/"
-        ],
-        "official_url": "https://philscholar.com/mdfi-gawad-talino-scholarship/",
-        "provider_type": "Private / Corporate Foundation",
-        "application_url": "https://philscholar.com/mdfi-gawad-talino-scholarship/",
-        "eligible_courses": [
-            "Accountancy",
-            "Financial Management",
-            "Architecture",
-            "Business Administration",
-            "Civil Engineering",
-            "Computer Engineering",
-            "Electrical Engineering",
-            "Industrial Engineering",
-            "Mechanical Engineering",
-            "Information Technology",
-            "Mathematics",
-            "Pharmacy",
-            "Psychology"
-        ],
-        "last_verified_at": "2026-08-11T16:00:00+00:00",
-        "required_documents": [
-            "Gawad Talino Certificate or award document"
-        ],
-        "special_categories": [
-            "MDFI Gawad Talino Awardee",
-            "Single",
-            "Age 21 or below",
-            "No other scholarship",
-            "Not dependent of Mercury Drug employee"
-        ],
-        "income_requirements": {
-            "specific_limit": null
-        },
-        "verification_status": "SOURCE_LIMITED",
-        "eligible_year_levels": [
-            "Incoming College Freshman"
-        ],
-        "geographic_requirements": {
-            "scope": "Philippines",
-            "institution": "State university or government-funded school"
-        }
+    "description": "Merit-based BFAR scholarship for high-performing Senior High School graduates pursuing BS Fisheries.",
+    "benefits": [
+      "Full tuition and matriculation fees",
+      "₱5,000 monthly stipend",
+      "₱2,000 book allowance per semester",
+      "₱3,000 OJT support",
+      "₱7,000 thesis support",
+      "₱1,500 graduation/clothing allowance",
+      "Academic honor incentives"
+    ],
+    "deadline": "2026-07-31",
+    "applicationUrl": "https://r7.bfar.da.gov.ph/wp-content/uploads/2023/09/Application-Form-Fisheries-Scholarship-Program-FILG.pdf",
+    "eligibility": {
+      "educationLevel": [
+        "Graduating Grade 12",
+        "SHS Graduate",
+        "Old curriculum High School Graduate with no college units"
+      ],
+      "gwa": {
+        "minimum": 80
+      },
+      "courses": [
+        "Bachelor of Science in Fisheries"
+      ],
+      "locations": [
+        "Philippines"
+      ]
     },
-    {
-        "id": 26,
-        "name": "CHED Medical Scholarship and Return Service Program (MSRS)",
-        "status": "CYCLE_SPECIFIC",
-        "benefits": {
-            "items": [
-                "Tuition and school-fee subsidy",
-                "Up to ₱177,000/year in book, clothing, miscellaneous, living, lodging, and transportation allowances",
-                "Internship/5th-year medicine allowances",
-                "Up to ₱16,000 one-time licensure review/application fees",
-                "PhilHealth enrollment",
-                "GSIS accident insurance"
-            ]
-        },
-        "deadline": "2025-11-07",
-        "logo_url": "https://res.cloudinary.com/mewk52ex/image/upload/v1786548905/CHED_Scholarship_Program_for_Coconut_Farmers_and_Their_Families_CoScho.png",
-        "provider": "Commission on Higher Education (CHED) - Office of Student Development and Services (OSDS)",
-        "created_at": "2026-08-12T14:58:56.119832+00:00",
-        "updated_at": "2026-08-12T14:58:56.119832+00:00",
-        "description": "Scholarship under the Doktor Para Sa Bayan Act for Filipino students pursuing Doctor of Medicine, prioritizing underserved areas and requiring return service.",
-        "minimum_gwa": null,
-        "source_urls": [
-            "https://ched.gov.ph/msrs/",
-            "https://www.facebook.com/PhCHED.gov/",
-            "https://philscholar.com/ched-medical-scholarship/"
-        ],
-        "official_url": "https://ched.gov.ph/msrs/",
-        "provider_type": "Government",
-        "application_url": "https://philscholar.com/ched-medical-scholarship/",
-        "eligible_courses": [
-            "Doctor of Medicine",
-            "INTARMED"
-        ],
-        "last_verified_at": "2026-08-11T16:00:00+00:00",
-        "required_documents": [
-            "Proof of Filipino Citizenship",
-            "Certificate of Good Moral Character",
-            "Priority-group certifications if applicable",
-            "Certification of Acceptance from SUC/PHEI",
-            "Affidavit of No Existing Scholarship Grant"
-        ],
-        "special_categories": [
-            "Return service required",
-            "Indigenous community priority",
-            "Dependents of community health volunteers",
-            "No other scholarship"
-        ],
-        "income_requirements": {
-            "priority_if_annual_family_income_below_php": 450000
-        },
-        "verification_status": "VERIFIED",
-        "eligible_year_levels": [
-            "Medical school applicant",
-            "Medical student"
-        ],
-        "geographic_requirements": {
-            "scope": "Nationwide",
-            "priority": [
-                "GIDA",
-                "Calamity-prone areas",
-                "Conflict areas",
-                "Areas with physician shortages",
-                "Low-income municipalities"
-            ]
-        }
+    "requirements": [
+      "Top 10 / Honor Student",
+      "Natural-born Filipino",
+      "Age 25 or below"
+    ],
+    "requiredDocuments": [
+      "FSP-FILG Application Form",
+      "PSA Birth Certificate",
+      "Report Card / Form 138/137",
+      "Certification of Top 10 / Honors status",
+      "Certificate of Good Moral Character",
+      "Barangay Certificate of Residency",
+      "Two 2x2 Photos"
+    ],
+    "tags": [
+      "government",
+      "national"
+    ],
+    "lastVerified": "2026-08-11",
+    "verificationSource": "official",
+    "verificationStatus": "Verified",
+    "logoUrl": "https://res.cloudinary.com/mewk52ex/image/upload/v1786549202/BFAR_Fisheries_Scholarship_Program_Fisherfolk_Children_Educational_Grant_BFAR-FSP-FCEG.png"
+  },
+  {
+    "id": "tulong-dunong-program-tdp-scholarship-18",
+    "name": "Tulong Dunong Program (TDP) Scholarship",
+    "provider": {
+      "name": "Commission on Higher Education (CHED) - Unified Student Financial Assistance System for Tertiary Education (UniFAST)",
+      "type": "government",
+      "website": "https://unifast.gov.ph/"
     },
-    {
-        "id": 4,
-        "name": "CHED Scholarship Program for Coconut Farmers and Their Families (CoScho)",
-        "status": "ANNUAL",
-        "benefits": {
-            "items": [
-                "Up to ₱80,000 per academic year in regular allowances",
-                "₱30,000 one-time laptop allowance",
-                "Up to ₱25,000 thesis assistance",
-                "Up to ₱10,000 OJT/internship allowance",
-                "₱10,000 conference allowance"
-            ]
-        },
-        "deadline": "2026-07-31",
-        "logo_url": "https://res.cloudinary.com/mewk52ex/image/upload/v1786548905/CHED_Scholarship_Program_for_Coconut_Farmers_and_Their_Families_CoScho.png",
-        "provider": "Commission on Higher Education (CHED) in partnership with the Philippine Coconut Authority (PCA)",
-        "created_at": "2026-08-12T14:58:56.119832+00:00",
-        "updated_at": "2026-08-12T14:58:56.119832+00:00",
-        "description": "Higher education financial grant under the Coconut Farmers and Industry Development Plan for registered coconut farmers and their dependents.",
-        "minimum_gwa": 80,
-        "source_urls": [
-            "https://legacy.ched.gov.ph/coscho/",
-            "https://philscholar.com/ched-coconut-scholarship-coscho/",
-            "https://caraga.ched.gov.ph/scholarship-program-for-coconut-farmers-and-their-families/"
-        ],
-        "official_url": "https://legacy.ched.gov.ph/coscho/",
-        "provider_type": "Government Agency",
-        "application_url": "https://jlss.science-scholarships.ph/",
-        "eligible_courses": [
-            "BS Agriculture",
-            "BS Agribusiness / Agribusiness Management",
-            "BS Agricultural & Biosystems Engineering",
-            "BS Agricultural Economics",
-            "BS Agricultural Biotechnology",
-            "BS Forestry",
-            "BS Food Technology",
-            "BS Fisheries",
-            "BS Computer Science",
-            "BS Information Technology",
-            "BS Biology",
-            "BS Environmental Science",
-            "BS Business Administration",
-            "BS Development Communication",
-            "BS Civil Engineering",
-            "BS Industrial Engineering",
-            "BS Social Work",
-            "BS Statistics"
-        ],
-        "last_verified_at": "2026-08-11T16:00:00+00:00",
-        "required_documents": [
-            "CHED CoScho Application Form",
-            "PSA Birth Certificate",
-            "PCA Certification / NCFRS Registration Number",
-            "Form 138 or Certified Copy of Grades",
-            "Certificate of Good Moral Character",
-            "Proof of Income",
-            "Notice of Admission / Certificate of Enrollment"
-        ],
-        "special_categories": [
-            "Registered coconut farmer",
-            "Dependent of registered coconut farmer",
-            "NCFRS-listed household"
-        ],
-        "income_requirements": {
-            "exceptions": "May be evaluated case-by-case for large families or medical hardship",
-            "max_annual_gross_income_php": 300000
-        },
-        "verification_status": "VERIFIED",
-        "eligible_year_levels": [
-            "Graduating Senior High School",
-            "SHS Graduate",
-            "ALS Completer",
-            "1st Year College",
-            "2nd Year College",
-            "3rd Year College",
-            "4th Year College"
-        ],
-        "geographic_requirements": {
-            "notes": "Across coconut-producing regions",
-            "scope": "Nationwide"
-        }
+    "description": "Tertiary education subsidy under RA 10931 providing partial financial support to qualified students in their first undergraduate degree.",
+    "benefits": [
+      "₱7,500 per semester",
+      "₱15,000 per academic year",
+      "Continuation subject to qualification, validation, and funding"
+    ],
+    "deadline": "2026-08-31",
+    "applicationUrl": "https://philscholar.com/ched-tulong-dunong-scholarship/",
+    "eligibility": {
+      "educationLevel": [
+        "New Undergraduate Applicant",
+        "Continuing Grantee"
+      ],
+      "courses": [
+        "Any first undergraduate degree in a CHED-recognized institution"
+      ],
+      "locations": [
+        "Philippines"
+      ]
     },
-    {
-        "id": 10,
-        "name": "Gokongwei Brothers Foundation (GBF) TeachSTEM Master's Degree Scholarship Program",
-        "status": "MULTIPLE_WINDOWS_ANNUALLY",
-        "benefits": {
-            "items": [
-                "Up to ₱65,000 per academic year",
-                "Mentoring",
-                "Research workshops",
-                "Leadership development",
-                "Upskilling opportunities",
-                "GBF Educator Network"
-            ]
-        },
-        "deadline": "2026-04-30",
-        "logo_url": "https://res.cloudinary.com/mewk52ex/image/upload/v1786549427/Gokongwei_Brothers_Foundation_GBF.png",
-        "provider": "Gokongwei Brothers Foundation (GBF)",
-        "created_at": "2026-08-12T14:58:56.119832+00:00",
-        "updated_at": "2026-08-12T14:58:56.119832+00:00",
-        "description": "Graduate scholarship for practicing STEM educators pursuing master's degrees in education-related specializations.",
-        "minimum_gwa": 85,
-        "source_urls": [
-            "https://philscholar.com/gbf-teachstem-masters-scholarship/",
-            "https://www.gokongweibrothersfoundation.org/"
-        ],
-        "official_url": "https://www.gokongweibrothersfoundation.org/",
-        "provider_type": "Private / Corporate Foundation",
-        "application_url": "https://philscholar.com/gbf-teachstem-masters-scholarship/",
-        "eligible_courses": [
-            "Master's in Science Education",
-            "Master's in Mathematics Education",
-            "Technology and Livelihood / Tech-Voc Education",
-            "Agricultural Education",
-            "Special Education",
-            "Educational Management",
-            "Curriculum Development"
-        ],
-        "last_verified_at": "2026-08-11T16:00:00+00:00",
-        "required_documents": [
-            "GBF Online Application Form",
-            "Proof of Admission/Enrollment",
-            "TOR / Certified True Copy of Grades",
-            "Bachelor's Diploma",
-            "Graduate Curriculum Plan",
-            "Certificate of Employment",
-            "PRC Professional Teacher License ID",
-            "Teaching Performance Rating",
-            "Proof of Household Income",
-            "Certificate of Good Moral Character",
-            "STEM-related accomplishment certificates if applicable"
-        ],
-        "special_categories": [
-            "Practicing teacher/instructor",
-            "At least 1 year teaching experience",
-            "Minimum 6 units per semester",
-            "Return service commitment"
-        ],
-        "income_requirements": {
-            "financial_need_required": true
-        },
-        "verification_status": "VERIFIED",
-        "eligible_year_levels": [
-            "Incoming Graduate Student",
-            "Current Graduate Student"
-        ],
-        "geographic_requirements": {
-            "scope": "Nationwide"
-        }
+    "requirements": [
+      "First undergraduate degree",
+      "Continuing grantee",
+      "Returning grantee",
+      "Transferee grantee"
+    ],
+    "requiredDocuments": [
+      "TDP Application Form",
+      "Certificate of Registration/Enrollment",
+      "Certificate of Indigency",
+      "Certificate of Tax Exemption or Social Case Study if indigency certificate unavailable",
+      "Additional continuing/returning/transferee documents as applicable"
+    ],
+    "tags": [
+      "government",
+      "national"
+    ],
+    "lastVerified": "2026-08-11",
+    "verificationSource": "official",
+    "verificationStatus": "Verified",
+    "logoUrl": "https://res.cloudinary.com/mewk52ex/image/upload/v1786548905/CHED_Scholarship_Program_for_Coconut_Farmers_and_Their_Families_CoScho.png"
+  },
+  {
+    "id": "security-bank-foundation-scholarships-internal-external-and-regalo-mo-ki-19",
+    "name": "Security Bank Foundation Scholarships (Internal, External, and Regalo Mo Kinabukasan Ko)",
+    "provider": {
+      "name": "Security Bank Foundation Inc. (SBFI)",
+      "type": "foundation",
+      "website": "https://www.securitybank.com/foundation/"
     },
-    {
-        "id": 17,
-        "name": "CHED Tertiary Education Subsidy (TES)",
-        "status": "ANNUAL",
-        "benefits": {
-            "items": [
-                "₱20,000/year for Priority 1 public SUC/LUC grantees",
-                "₱27,000/year for Priority 1 private PHEI grantees",
-                "₱10,000/year flat rate for Priority 2 grantees",
-                "Additional support for PWD students",
-                "Licensure exam reimbursement up to ₱8,000",
-                "SARDO one-time additional subsidy of ₱10,000"
-            ]
-        },
-        "deadline": "2026-08-31",
-        "logo_url": "https://res.cloudinary.com/mewk52ex/image/upload/v1786548905/CHED_Scholarship_Program_for_Coconut_Farmers_and_Their_Families_CoScho.png",
-        "provider": "Commission on Higher Education (CHED) - Unified Student Financial Assistance System for Tertiary Education (UniFAST)",
-        "created_at": "2026-08-12T14:58:56.119832+00:00",
-        "updated_at": "2026-08-12T14:58:56.119832+00:00",
-        "description": "Grant-in-aid under RA 10931 for qualified Filipino students in CHED-recognized SUCs, LUCs, and private HEIs, prioritizing low-income and marginalized sectors.",
-        "minimum_gwa": null,
-        "source_urls": [
-            "https://unifast.gov.ph/tes.html",
-            "https://unifast.gov.ph/assets/pdf/guidelines/revised-tes-pr-v2.pdf",
-            "https://philscholar.com/ched-unifast-tertiary-education-subsidy/"
-        ],
-        "official_url": "https://unifast.gov.ph/tes.html",
-        "provider_type": "Government",
-        "application_url": "https://philscholar.com/ched-unifast-tertiary-education-subsidy/",
-        "eligible_courses": [
-            "Any first undergraduate degree at a CHED-recognized SUC, LUC, or PHEI"
-        ],
-        "last_verified_at": "2026-08-11T16:00:00+00:00",
-        "required_documents": [
-            "CHED/UniFAST Annex 2 Forms as applicable",
-            "Registrar's Certificate",
-            "Certificate of Registration/Enrollment",
-            "Valid ID for direct submission",
-            "PWD ID if applicable",
-            "LOA for returning grantees",
-            "Additional documents for transferees/licensure reimbursement as applicable"
-        ],
-        "special_categories": [
-            "DSWD Listahanan/4Ps household",
-            "Solo parent dependent",
-            "ICC/IP",
-            "PWD",
-            "Student at risk of dropping out"
-        ],
-        "income_requirements": {
-            "prioritization": "Household per capita income",
-            "financial_need_required": true
-        },
-        "verification_status": "VERIFIED",
-        "eligible_year_levels": [
-            "Any College Year Level"
-        ],
-        "geographic_requirements": {
-            "scope": "Nationwide"
-        }
+    "description": "Umbrella entry covering Security Bank Foundation scholarship tracks for employees/dependents and external students in partner schools.",
+    "benefits": [
+      "Financial assistance for higher education",
+      "Support for underprivileged students",
+      "Employee and family educational support"
+    ],
+    "deadline": "2026-08-31",
+    "applicationUrl": "https://philscholar.com/list-of-security-bank-foundation-scholarships/",
+    "eligibility": {
+      "educationLevel": [
+        "Varies by scholarship track"
+      ],
+      "courses": [
+        "College degree programs; specific courses vary by track"
+      ],
+      "locations": [
+        "Philippines"
+      ]
     },
-    {
-        "id": 23,
-        "name": "CHED Agricultural Competitiveness Enhancement Fund – Grants-in-Aid for Higher Education Program (ACEF-GIAHEP) Scholarship",
-        "status": "CLOSED_CYCLE",
-        "benefits": {
-            "items": [
-                "Private HEI: up to ₱60,000/year total",
-                "SUC/LUC: up to ₱40,000/year total",
-                "Includes stipend and book allowance; tuition support differs by institution type"
-            ]
-        },
-        "deadline": "2024-08-15",
-        "logo_url": "https://res.cloudinary.com/mewk52ex/image/upload/v1786548905/CHED_Scholarship_Program_for_Coconut_Farmers_and_Their_Families_CoScho.png",
-        "provider": "Commission on Higher Education (CHED) - Unified Student Financial Assistance System for Tertiary Education (UniFAST)",
-        "created_at": "2026-08-12T14:58:56.119832+00:00",
-        "updated_at": "2026-08-12T14:58:56.119832+00:00",
-        "description": "CHED scholarship under the Agricultural Competitiveness Enhancement Fund for students in agriculture, forestry, fisheries, veterinary medicine, and related programs, with preference for dependents of registered farmers and fisherfolk.",
-        "minimum_gwa": null,
-        "source_urls": [
-            "https://ched.gov.ph/call-for-applications-for-the-agricultural-competitiveness-enhancement-fund-grants-in-aid-for-higher-education-program-ay-2024-2025/",
-            "https://philscholar.com/ched-acef-giahep-scholarship/"
-        ],
-        "official_url": "https://ched.gov.ph/call-for-applications-for-the-agricultural-competitiveness-enhancement-fund-grants-in-aid-for-higher-education-program-ay-2024-2025/",
-        "provider_type": "Government",
-        "application_url": "https://philscholar.com/ched-acef-giahep-scholarship/",
-        "eligible_courses": [
-            "Agricultural Technology",
-            "Agriculture",
-            "Agribusiness",
-            "Animal Science",
-            "Veterinary Medicine",
-            "Fisheries",
-            "Food Technology",
-            "Forestry",
-            "Agricultural and Biosystems Engineering",
-            "Agricultural Economics",
-            "Agronomy",
-            "Horticulture",
-            "Entomology",
-            "Agricultural Extension"
-        ],
-        "last_verified_at": "2026-08-11T16:00:00+00:00",
-        "required_documents": [
-            "PSA Birth Certificate",
-            "Form 138 / Grade 11 and Grade 12 grades / college grades as applicable",
-            "Proof of Income",
-            "Proof of special-group membership if applicable"
-        ],
-        "special_categories": [
-            "Dependents of registered farmers/fisherfolk preferred",
-            "No other government-funded student financial assistance"
-        ],
-        "income_requirements": {
-            "max_annual_gross_income_php": 400000
-        },
-        "verification_status": "VERIFIED_CLOSED_REFERENCE",
-        "eligible_year_levels": [
-            "Graduating SHS",
-            "SHS Graduate",
-            "College student with relevant units"
-        ],
-        "geographic_requirements": {
-            "scope": "Nationwide"
-        }
+    "requirements": [
+      "Security Bank employees/dependents",
+      "External students in partner schools"
+    ],
+    "requiredDocuments": [],
+    "tags": [
+      "foundation",
+      "national"
+    ],
+    "lastVerified": "2026-08-11",
+    "verificationSource": "secondary",
+    "verificationStatus": "Verified",
+    "logoUrl": "https://res.cloudinary.com/mewk52ex/image/upload/v1786586744/SBFI.png"
+  },
+  {
+    "id": "ayala-foundation-u-go-scholar-grant-program-14",
+    "name": "Ayala Foundation – U-Go Scholar Grant Program",
+    "provider": {
+      "name": "Ayala Foundation, Inc. (AFI) in partnership with U-Go",
+      "type": "foundation",
+      "website": "https://ayalafoundation.org/programs/scholarships/"
     },
-    {
-        "id": 20,
-        "name": "Security Bank External Scholarship (Security Bank Foundation Scholars for Better Communities Scholarship Program)",
-        "status": "ANNUAL_PARTNER_SCHOOL_DEADLINES",
-        "benefits": {
-            "items": [
-                "State university stipend up to ₱100,000/year",
-                "Private university stipend up to ₱50,000/year",
-                "Private university tuition/miscellaneous support up to ₱100,000/year",
-                "Internships",
-                "CSR participation",
-                "Learning and developmental training"
-            ]
-        },
-        "deadline": "2026-08-31",
-        "logo_url": "https://res.cloudinary.com/mewk52ex/image/upload/v1786586744/SBFI.png",
-        "provider": "Security Bank Foundation, Inc. (SBFI)",
-        "created_at": "2026-08-12T14:58:56.119832+00:00",
-        "updated_at": "2026-08-12T14:58:56.119832+00:00",
-        "description": "External scholarship for students not affiliated with Security Bank, enrolled in partner universities and pursuing degree programs aligned with banking and financial operations.",
-        "minimum_gwa": 93,
-        "source_urls": [
-            "https://www.securitybank.com/foundation/external-scholarship-program/",
-            "https://philscholar.com/security-bank-external-scholarship/"
-        ],
-        "official_url": "https://www.securitybank.com/foundation/external-scholarship-program/",
-        "provider_type": "Private / Corporate Foundation",
-        "application_url": "https://philscholar.com/security-bank-external-scholarship/",
-        "eligible_courses": [
-            "Accountancy",
-            "Accounting Information System / Technology",
-            "Internal Auditing",
-            "Marketing",
-            "Financial Management",
-            "Industrial Engineering",
-            "Management Engineering",
-            "Applied Mathematics",
-            "Business Analytics",
-            "Statistics",
-            "Data Science",
-            "Computer Science / Technology",
-            "Information Systems / Technology"
-        ],
-        "last_verified_at": "2026-08-11T16:00:00+00:00",
-        "required_documents": [
-            "Online Application Form",
-            "High School Grade 7-12 TOR",
-            "Proof of Financial Status",
-            "Partner-school Admission/Acceptance Letter",
-            "Birth Certificate",
-            "2x2 Portrait Photo",
-            "Upon admission: enrollment/registration card, school calendar, grading system, curriculum, parent/guardian government ID"
-        ],
-        "special_categories": [
-            "No child of Security Bank employee",
-            "No existing scholarship except school discounts",
-            "Academic excellence"
-        ],
-        "income_requirements": {
-            "proof": [
-                "ITR",
-                "Certificate of Indigency",
-                "OFW Employment Contract with Compensation"
-            ],
-            "financial_need_required": true
-        },
-        "verification_status": "VERIFIED",
-        "eligible_year_levels": [
-            "Incoming 1st Year College",
-            "Limited continuing students at selected universities"
-        ],
-        "geographic_requirements": {
-            "scope": "NCR partner schools",
-            "schools": [
-                "Ateneo de Manila University",
-                "Chiang Kai Shek College",
-                "De La Salle University – Manila",
-                "Far Eastern University – Manila",
-                "Pamantasan ng Lungsod ng Maynila",
-                "Polytechnic University of the Philippines – Manila",
-                "University of the Philippines – Diliman",
-                "University of Santo Tomas – Manila"
-            ]
-        }
+    "description": "Nationwide scholarship grant for promising young women from low-income families enrolled in public/state universities and colleges.",
+    "benefits": [
+      "Approximately ₱40,000 per academic year",
+      "Support for food, transportation, lodging, and academic materials",
+      "Leadership and skills training",
+      "Mentorship and career networking"
+    ],
+    "deadline": "2026-06-13",
+    "applicationUrl": "https://philscholar.com/ayala-foundation-scholarship/",
+    "eligibility": {
+      "educationLevel": [
+        "Incoming 1st Year College",
+        "Incoming 2nd Year College",
+        "Incoming 3rd Year College",
+        "Incoming 4th Year in a 5-year program"
+      ],
+      "gwa": {
+        "minimum": 85
+      },
+      "courses": [
+        "All undergraduate degree programs at accredited public universities/SUCs"
+      ],
+      "locations": [
+        "Philippines"
+      ]
     },
-    {
-        "id": 27,
-        "name": "DOST S&T Undergraduate Scholarship Program",
-        "status": "UPCOMING",
-        "benefits": {
-            "items": [
-                "Tuition and school fees up to ₱40,000/year for private HEIs",
-                "₱10,000/year learning materials/connectivity allowance",
-                "₱8,000 monthly living allowance",
-                "₱1,000 first-year clothing allowance",
-                "Roundtrip transportation allowance when studying outside home province",
-                "Accident and health insurance",
-                "₱10,000 thesis allowance",
-                "₱1,000 graduation allowance",
-                "Mid-year support when required"
-            ]
-        },
-        "deadline": "2026-09-17",
-        "logo_url": "https://res.cloudinary.com/mewk52ex/image/upload/v1786587296/DOST.png",
-        "provider": "Department of Science and Technology - Science Education Institute (DOST-SEI)",
-        "created_at": "2026-08-12T14:58:56.119832+00:00",
-        "updated_at": "2026-08-12T14:58:56.119832+00:00",
-        "description": "Undergraduate scholarship for Filipino students pursuing priority science and technology programs at identified higher education institutions.",
-        "minimum_gwa": null,
-        "source_urls": [
-            "https://sei.dost.gov.ph/",
-            "https://sei.dost.gov.ph/index.php/2018/05/04/undergraduate-s-t-scholarships/",
-            "https://ugs.science-scholarships.ph/",
-            "https://helpdesk.sei.dost.gov.ph/",
-            "https://philscholar.com/dost-st-undergraduate-scholarship/"
-        ],
-        "official_url": "https://sei.dost.gov.ph/index.php/2018/05/04/undergraduate-s-t-scholarships/",
-        "provider_type": "Government",
-        "application_url": "https://ugs.science-scholarships.ph/",
-        "eligible_courses": [
-            "Priority Engineering programs",
-            "Natural Sciences",
-            "Computer Science",
-            "Information Technology",
-            "Information Systems",
-            "Medical Technology",
-            "Nutrition and Dietetics",
-            "Pharmacy",
-            "Public Health",
-            "Speech Pathology",
-            "Agriculture and Fisheries programs",
-            "Architecture",
-            "Priority STEM teacher education programs"
-        ],
-        "last_verified_at": "2026-08-11T16:00:00+00:00",
-        "required_documents": [
-            "Good Moral Character Form",
-            "Good Health Form",
-            "Principal Certification",
-            "Certificate of Residency",
-            "Parent Certification of No Pending Immigration Application",
-            "DOST-SEI Exam/Award Form",
-            "No Post-Secondary Units Certification",
-            "Applicant/Parent Declaration",
-            "Passport-size Photo",
-            "Birth Certificate",
-            "Proof of Income",
-            "Affidavit of Guardianship if applicable",
-            "Marriage Certificate if applicable"
-        ],
-        "special_categories": [
-            "Natural-born Filipino",
-            "STEM students eligible",
-            "Non-STEM must be top 5% of graduating class",
-            "No post-secondary units",
-            "Return service expectation"
-        ],
-        "income_requirements": {
-            "notes": "Parents/guardian annual gross income information is required",
-            "specific_limit": null
-        },
-        "verification_status": "VERIFIED_UPCOMING_2027_2028",
-        "eligible_year_levels": [
-            "Graduating Grade 12",
-            "Grade 12 graduate not yet enrolled in college"
-        ],
-        "geographic_requirements": {
-            "scope": "Nationwide",
-            "institution": "Identified universities/programs recognized under DOST-SEI rules"
-        }
+    "requirements": [
+      "Female applicants",
+      "Low-income household",
+      "No concurrent major scholarship"
+    ],
+    "requiredDocuments": [
+      "Certificate of Registration/Enrollment",
+      "Latest Official Copy of Grades/TOR",
+      "Proof of Household Income",
+      "Recent electric/water bill if available",
+      "Recommendation Letter for shortlisted applicants"
+    ],
+    "tags": [
+      "foundation",
+      "national"
+    ],
+    "lastVerified": "2026-08-11",
+    "verificationSource": "official",
+    "verificationStatus": "Verified",
+    "logoUrl": "https://res.cloudinary.com/mewk52ex/image/upload/v1786586374/ayala.png"
+  },
+  {
+    "id": "pshs-grade-7-scholarship-national-competitive-examination-nce-22",
+    "name": "PSHS Grade 7 Scholarship (National Competitive Examination - NCE)",
+    "provider": {
+      "name": "Philippine Science High School (PSHS) System",
+      "type": "university",
+      "website": "https://pshs.edu.ph/application-for-incoming-grade-7-students/"
     },
-    {
-        "id": 2,
-        "name": "Panasonic College Scholarship Asia (Philippines)",
-        "status": "ANNUAL",
-        "benefits": {
-            "items": [
-                "Educational allowance/stipend for tuition, books, and living expenses",
-                "Career development opportunities",
-                "Potential exposure to Panasonic CSR projects"
-            ]
-        },
-        "deadline": "2026-04-30",
-        "logo_url": "https://res.cloudinary.com/mewk52ex/image/upload/v1786548904/Panasonic_College_Scholarship_Asia_Philippines.png",
-        "provider": "Panasonic Manufacturing Philippines Corporation (PMPC)",
-        "created_at": "2026-08-12T14:58:56.119832+00:00",
-        "updated_at": "2026-08-12T14:58:56.119832+00:00",
-        "description": "Corporate social responsibility scholarship providing financial assistance to academically deserving college students facing financial hardship, with emphasis on societal progress and technology innovation.",
-        "minimum_gwa": 85,
-        "source_urls": [
-            "https://www.panasonic.com/ph/corporate/sustainability.html",
-            "https://philscholar.com/panasonic-college-scholarship/"
-        ],
-        "official_url": "https://www.panasonic.com/ph/corporate/sustainability.html",
-        "provider_type": "Corporate",
-        "application_url": "https://philscholar.com/panasonic-college-scholarship/",
-        "eligible_courses": [
-            "Engineering",
-            "Information Technology",
-            "Computer Science",
-            "Applied Sciences",
-            "Industrial Design",
-            "Accountancy",
-            "Business Administration",
-            "Management"
-        ],
-        "last_verified_at": "2026-08-11T16:00:00+00:00",
-        "required_documents": [
-            "Updated CV/Resume",
-            "Certified True Copy / Informative Copy of Grades",
-            "Recommendation Letter from Dean or Department Chair",
-            "2x2 ID Photo",
-            "Valid School ID"
-        ],
-        "special_categories": [
-            "Academic Excellence",
-            "Leadership",
-            "STEM/Business innovation"
-        ],
-        "income_requirements": {
-            "financial_need_required": true
-        },
-        "verification_status": "VERIFIED",
-        "eligible_year_levels": [
-            "College student graduating in approximately 2 years",
-            "Typically incoming 3rd Year",
-            "Typically incoming 4th Year"
-        ],
-        "geographic_requirements": {
-            "scope": "Nationwide",
-            "institution": "State College or University (SUC)"
-        }
+    "description": "Scholarship and admission program for incoming Grade 7 students through the PSHS National Competitive Examination.",
+    "benefits": [
+      "Free tuition",
+      "Free textbook loan",
+      "₱500 monthly stipend for all scholars",
+      "Living allowances based on socio-economic status up to ₱3,500/month for full scholars",
+      "Uniform/transport/living allowances for low-income groups",
+      "Dormitory accommodation if applicable"
+    ],
+    "deadline": "2025-11-07",
+    "applicationUrl": "https://nce.pshs.edu.ph/",
+    "eligibility": {
+      "citizenship": [
+        "Filipino"
+      ],
+      "educationLevel": [
+        "Current Grade 6 pupil"
+      ],
+      "courses": [
+        "PSHS Grade 7 STEM curriculum"
+      ],
+      "locations": [
+        "Philippines"
+      ]
     },
-    {
-        "id": 11,
-        "name": "Mercury Drug Foundation, Inc. (MDFI) Pharmacy Scholarship",
-        "status": "ANNUAL",
-        "benefits": {
-            "items": [
-                "100% tuition",
-                "Miscellaneous school fees",
-                "Monthly living and food allowance",
-                "Transportation allowance"
-            ]
-        },
-        "deadline": "2026-04-30",
-        "logo_url": "https://res.cloudinary.com/mewk52ex/image/upload/v1786549709/Mercury_Drug_Foundation_Inc._MDFI_Pharmacy_Scholarship.png",
-        "provider": "Mercury Drug Foundation, Inc. (MDFI)",
-        "created_at": "2026-08-12T14:58:56.119832+00:00",
-        "updated_at": "2026-08-12T14:58:56.119832+00:00",
-        "description": "Full scholarship for financially challenged pharmacy students in the last two years of their BS Pharmacy program.",
-        "minimum_gwa": 80,
-        "source_urls": [
-            "https://www.mercurydrugfoundation.org/pharmacy-scholarship.html",
-            "https://philscholar.com/mercury-drug-foundation-scholarship/"
-        ],
-        "official_url": "https://www.mercurydrugfoundation.org/pharmacy-scholarship.html",
-        "provider_type": "Private / Corporate Foundation",
-        "application_url": "https://philscholar.com/mercury-drug-foundation-scholarship/",
-        "eligible_courses": [
-            "Bachelor of Science in Pharmacy"
-        ],
-        "last_verified_at": "2026-08-11T16:00:00+00:00",
-        "required_documents": [
-            "MDFI Application Form",
-            "TOR / Certified True Copy of Grades",
-            "Dean/Department Head Endorsement",
-            "Proof of Household Income",
-            "PSA Birth Certificate",
-            "Certificate of Good Moral Character",
-            "Certificate of Good Health",
-            "2x2 ID Photo"
-        ],
-        "special_categories": [
-            "Financial need",
-            "Single",
-            "Age limit applies",
-            "No other scholarship",
-            "Not dependent of Mercury Drug employee"
-        ],
-        "income_requirements": {
-            "max_annual_gross_family_income_php": 250000
-        },
-        "verification_status": "VERIFIED",
-        "eligible_year_levels": [
-            "Last two years of BS Pharmacy",
-            "Typically incoming 3rd Year",
-            "Typically incoming 4th Year"
-        ],
-        "geographic_requirements": {
-            "scope": "Nationwide",
-            "institution": "Recognized partner school or PACOP member institution"
-        }
+    "requirements": [
+      "Filipino citizen",
+      "Under 15 by June 30, 2026",
+      "National Competitive Examination required"
+    ],
+    "requiredDocuments": [
+      "Application Form",
+      "1x1 ID Photos",
+      "Processing fee proof if applicable",
+      "Certified True Copy of Report Card",
+      "Upper 10% certification if Science/Math below 85%",
+      "Private school scholarship certification if applicable"
+    ],
+    "tags": [
+      "university",
+      "national"
+    ],
+    "lastVerified": "2026-08-11",
+    "verificationSource": "official",
+    "verificationStatus": "Expired",
+    "logoUrl": "https://res.cloudinary.com/mewk52ex/image/upload/v1786587071/PSHS_System_Logo.png"
+  },
+  {
+    "id": "owwa-education-for-development-scholarship-program-edsp-24",
+    "name": "OWWA Education for Development Scholarship Program (EDSP)",
+    "provider": {
+      "name": "Overseas Workers Welfare Administration (OWWA)",
+      "type": "government",
+      "website": "https://owwa.gov.ph/"
     },
-    {
-        "id": 25,
-        "name": "OWWA OFW Dependent Scholarship Program (ODSP)",
-        "status": "CLOSED_CYCLE",
-        "benefits": {
-            "items": [
-                "₱20,000 per school year",
-                "May be used for tuition, books, supplies, and other educational expenses"
-            ]
-        },
-        "deadline": "2025-07-31",
-        "logo_url": "https://res.cloudinary.com/mewk52ex/image/upload/v1786587166/OWWA.webp",
-        "provider": "Overseas Workers Welfare Administration (OWWA)",
-        "created_at": "2026-08-12T14:58:56.119832+00:00",
-        "updated_at": "2026-08-12T14:58:56.119832+00:00",
-        "description": "OWWA financial assistance for eligible children or siblings of active OFWs pursuing four- or five-year baccalaureate or associate courses in the Philippines.",
-        "minimum_gwa": null,
-        "source_urls": [
-            "https://owwa.gov.ph/",
-            "https://owwa.gov.ph/?page_id=3622",
-            "https://philscholar.com/owwa-ofw-dependent-scholarship-program-odsp/"
-        ],
-        "official_url": "https://owwa.gov.ph/?page_id=3622",
-        "provider_type": "Government (under DOLE)",
-        "application_url": "https://philscholar.com/owwa-ofw-dependent-scholarship-program-odsp/",
-        "eligible_courses": [
-            "Four-year baccalaureate course",
-            "Five-year baccalaureate course",
-            "Associate course"
-        ],
-        "last_verified_at": "2026-08-11T16:00:00+00:00",
-        "required_documents": [
-            "OFW Passport Bio Page",
-            "Dependent School ID / Valid ID",
-            "Copy of Grades",
-            "Proof of Dependent Identity",
-            "Proof of OFW Income"
-        ],
-        "special_categories": [
-            "Child or eligible sibling of active OWWA member",
-            "Single",
-            "Age limits apply",
-            "OWWA membership validation"
-        ],
-        "income_requirements": {
-            "max_monthly_ofw_income_usd": 1000
-        },
-        "verification_status": "VERIFIED_CLOSED_REFERENCE",
-        "eligible_year_levels": [
-            "Incoming Freshman",
-            "2nd-5th Year College"
-        ],
-        "geographic_requirements": {
-            "scope": "Nationwide",
-            "institution": "Philippine-based college/university"
-        }
+    "description": "Scholarship providing up to ₱60,000 per year to qualified dependents of active OWWA members for bachelor's degree study in the Philippines.",
+    "benefits": [
+      "Up to ₱60,000 per school year",
+      "Support up to completion of a 4-5 year baccalaureate course"
+    ],
+    "deadline": "2025-11-28",
+    "applicationUrl": "https://scholarship.owwa.gov.ph/",
+    "eligibility": {
+      "educationLevel": [
+        "Incoming 1st Year College",
+        "2nd-5th Year College for EDSP 2 when open"
+      ],
+      "gwa": {
+        "minimum": 80
+      },
+      "courses": [
+        "Bachelor's degree courses at accredited Philippine colleges/universities"
+      ],
+      "locations": [
+        "Philippines"
+      ]
     },
-    {
-        "id": 5,
-        "name": "DOST-SEI Junior Level Science Scholarship (JLSS)",
-        "status": "ANNUAL",
-        "benefits": {
-            "items": [
-                "Tuition/fees up to ₱40,000 per academic year for private HEIs",
-                "₱8,000 monthly living allowance",
-                "₱10,000 learning materials/connectivity allowance",
-                "₱10,000 thesis allowance",
-                "₱1,000 graduation allowance",
-                "Accident and health insurance",
-                "Roundtrip transportation allowance when studying outside home province",
-                "Summer/mid-year stipend when required"
-            ]
-        },
-        "deadline": "2026-05-15",
-        "logo_url": "https://res.cloudinary.com/mewk52ex/image/upload/v1786548904/DOST-SEI_Junior_Level_Science_Scholarship_JLSS.png",
-        "provider": "Department of Science and Technology – Science Education Institute (DOST-SEI)",
-        "created_at": "2026-08-12T14:58:56.119832+00:00",
-        "updated_at": "2026-08-12T14:58:56.119832+00:00",
-        "description": "Nation-building scholarship for regular 2nd-year college students entering their 3rd year in priority S&T programs.",
-        "minimum_gwa": 83,
-        "source_urls": [
-            "https://jlss.science-scholarships.ph/",
-            "https://www.sei.dost.gov.ph/",
-            "https://philscholar.com/dost-sei-jlss/"
-        ],
-        "official_url": "https://www.sei.dost.gov.ph/",
-        "provider_type": "Government Agency",
-        "application_url": "https://philscholar.com/dost-sei-jlss/",
-        "eligible_courses": [
-            "Priority Engineering programs",
-            "Information Technology",
-            "Computer Science",
-            "Data Science",
-            "Applied Mathematics",
-            "Applied Physics",
-            "Chemistry",
-            "Biology",
-            "Environmental Science",
-            "Food Technology",
-            "Marine Biology",
-            "Statistics",
-            "Biochemistry",
-            "Secondary Education major in Science/Mathematics/Physics/Chemistry/Biology"
-        ],
-        "last_verified_at": "2026-08-11T16:00:00+00:00",
-        "required_documents": [
-            "TOR / True Copy of Grades",
-            "Certificate of Year Level & Standing / Program of Study",
-            "Certificate of Good Moral Character",
-            "Certificate of Good Health",
-            "Certificate of Residency for RA 7687",
-            "Proof of Income",
-            "PSA Birth Certificate",
-            "2x2 ID Photo",
-            "Signed Applicant and Parent/Guardian Declaration Forms"
-        ],
-        "special_categories": [
-            "RA 7687",
-            "Merit",
-            "RA 10612",
-            "Return service obligation"
-        ],
-        "income_requirements": {
-            "RA_7687": "Household income below socio-economic cutoff",
-            "RA_10612_and_Merit": "No strict income ceiling"
-        },
-        "verification_status": "VERIFIED",
-        "eligible_year_levels": [
-            "Regular 2nd Year College",
-            "Incoming 3rd Year College"
-        ],
-        "geographic_requirements": {
-            "scope": "Nationwide"
-        }
+    "requirements": [
+      "Child or eligible sibling of active OWWA member",
+      "Single",
+      "Age limits apply",
+      "No other OWWA scholarship in family",
+      "DOST-SEI examination basis"
+    ],
+    "requiredDocuments": [
+      "OFW Passport Bio Page",
+      "Dependent School ID / Valid ID",
+      "PSA Birth Certificate or Baptismal Certificate",
+      "Proof of Grades",
+      "2x2 ID Photo"
+    ],
+    "tags": [
+      "government",
+      "national"
+    ],
+    "lastVerified": "2026-08-11",
+    "verificationSource": "official",
+    "verificationStatus": "Expired",
+    "logoUrl": "https://res.cloudinary.com/mewk52ex/image/upload/v1786587166/OWWA.webp"
+  },
+  {
+    "id": "mdfi-gawad-talino-scholarship-21",
+    "name": "MDFI Gawad Talino Scholarship",
+    "provider": {
+      "name": "Mercury Drug Foundation, Inc. (MDFI)",
+      "type": "foundation",
+      "website": "https://philscholar.com/mdfi-gawad-talino-scholarship/"
     },
-    {
-        "id": 9,
-        "name": "Gokongwei Brothers Foundation (GBF) TeachSTEM College Scholarship Program",
-        "status": "ANNUAL",
-        "benefits": {
-            "items": [
-                "₱65,000 annual grant for SUC scholars",
-                "₱85,000 annual grant for private institution scholars",
-                "Leadership and teaching upskilling programs",
-                "Mentoring",
-                "GBF Scholar Educator Network"
-            ]
-        },
-        "deadline": "2026-04-30",
-        "logo_url": "https://res.cloudinary.com/mewk52ex/image/upload/v1786549427/Gokongwei_Brothers_Foundation_GBF.png",
-        "provider": "Gokongwei Brothers Foundation (GBF)",
-        "created_at": "2026-08-12T14:58:56.119832+00:00",
-        "updated_at": "2026-08-12T14:58:56.119832+00:00",
-        "description": "Undergraduate scholarship for aspiring STEM educators pursuing teacher-education degrees with STEM specializations.",
-        "minimum_gwa": 85,
-        "source_urls": [
-            "https://www.gokongweibrothersfoundation.org/",
-            "https://philscholar.com/gbf-teachstem-college-scholarship/",
-            "https://governmentph.com/gbf-scholarship/"
-        ],
-        "official_url": "https://www.gokongweibrothersfoundation.org/",
-        "provider_type": "Private / Corporate Foundation",
-        "application_url": "https://philscholar.com/gbf-teachstem-college-scholarship/\r\n",
-        "eligible_courses": [
-            "BSEd major in Science",
-            "BSEd major in Mathematics",
-            "BTVTED / Technical Education",
-            "BITED / Computer Education",
-            "Elementary/General Education with STEM specialization"
-        ],
-        "last_verified_at": "2026-08-11T16:00:00+00:00",
-        "required_documents": [
-            "GBF Online Application Form",
-            "Proof of Admission/Enrollment",
-            "Certified True Copy of Grades",
-            "Proof of Household Income",
-            "Certificate of Good Moral Character",
-            "Community/extracurricular portfolio",
-            "Proof of Residence",
-            "2x2 Photo"
-        ],
-        "special_categories": [
-            "Future STEM Educator",
-            "Return service commitment"
-        ],
-        "income_requirements": {
-            "financial_need_required": true
-        },
-        "verification_status": "VERIFIED",
-        "eligible_year_levels": [
-            "Incoming 1st Year College",
-            "Ongoing College Student"
-        ],
-        "geographic_requirements": {
-            "scope": "Nationwide",
-            "institution": "Philippine Teacher Education Institution with above-average LET performance"
-        }
+    "description": "Scholarship for MDFI Gawad Talino awardees recognized for exceptional achievement in Mathematics or Science who will pursue selected programs in state universities.",
+    "benefits": [
+      "Full tuition and miscellaneous fees",
+      "Monthly stipends",
+      "Living expenses",
+      "Transportation costs",
+      "Job offer from Mercury Drug Corporation upon graduation"
+    ],
+    "deadline": "2026-08-31",
+    "applicationUrl": "https://philscholar.com/mdfi-gawad-talino-scholarship/",
+    "eligibility": {
+      "educationLevel": [
+        "Incoming College Freshman"
+      ],
+      "courses": [
+        "Accountancy",
+        "Financial Management",
+        "Architecture",
+        "Business Administration",
+        "Civil Engineering",
+        "Computer Engineering",
+        "Electrical Engineering",
+        "Industrial Engineering",
+        "Mechanical Engineering",
+        "Information Technology",
+        "Mathematics",
+        "Pharmacy",
+        "Psychology"
+      ],
+      "locations": [
+        "Philippines"
+      ]
     },
-    {
-        "id": 12,
-        "name": "Asian Development Bank – Japan Scholarship Program (ADB-JSP)",
-        "status": "ANNUAL",
-        "benefits": {
-            "items": [
-                "Full tuition",
-                "Monthly subsistence/living allowance",
-                "Books and instructional materials allowance",
-                "Medical and health insurance",
-                "Economy-class roundtrip airfare",
-                "Thesis/research allowance where applicable"
-            ]
-        },
-        "deadline": "2026-03-31",
-        "logo_url": "https://res.cloudinary.com/mewk52ex/image/upload/v1786585761/Asian_Development_Bank_Japan_Scholarship_Program_ADB-JSP.png",
-        "provider": "Asian Development Bank (ADB) with funding from the Government of Japan",
-        "created_at": "2026-08-12T14:58:56.119832+00:00",
-        "updated_at": "2026-08-12T14:58:56.119832+00:00",
-        "description": "Postgraduate scholarship for citizens of ADB developing member countries pursuing development-related master's degrees at designated institutions.",
-        "minimum_gwa": null,
-        "source_urls": [
-            "https://www.adb.org/work-with-us/careers/japan-scholarship-program",
-            "https://www.adb.org/work-with-us/careers/japan-scholarship-program/faq",
-            "https://philscholar.com/asian-development-bank-japan-scholarship-program-adb-jsp/"
-        ],
-        "official_url": "https://www.adb.org/work-with-us/careers/japan-scholarship-program",
-        "provider_type": "International / Intergovernmental Organization",
-        "application_url": "https://philscholar.com/asian-development-bank-japan-scholarship/",
-        "eligible_courses": [
-            "Economics",
-            "Finance",
-            "Management",
-            "Business Administration",
-            "Development Management",
-            "Applied Economics",
-            "International Finance",
-            "Computer Science",
-            "Information Technology",
-            "Civil Engineering",
-            "Environmental Engineering",
-            "Energy & Infrastructure",
-            "Agriculture",
-            "Forestry",
-            "Climate Studies",
-            "Public Administration",
-            "Public Policy",
-            "Governance",
-            "International Development"
-        ],
-        "last_verified_at": "2026-08-11T16:00:00+00:00",
-        "required_documents": [
-            "ADB-JSP Information Sheet",
-            "Bachelor's Diploma",
-            "Academic TOR",
-            "Certificate of Employment & Compensation",
-            "Proof of Family Income",
-            "Passport",
-            "Admission Offer Letter from Designated Institution",
-            "English proficiency results if required"
-        ],
-        "special_categories": [
-            "At least 2 years professional work experience",
-            "Age 35 or below normally",
-            "Return service to home country for at least 2 years"
-        ],
-        "income_requirements": {
-            "max_individual_annual_income_usd": 25000,
-            "max_combined_gross_annual_family_income_usd": 50000
-        },
-        "verification_status": "VERIFIED",
-        "eligible_year_levels": [
-            "Master's Degree Applicant"
-        ],
-        "geographic_requirements": {
-            "notes": "Applicant must be a citizen of and reside/work in home country",
-            "scope": "ADB borrowing member countries"
-        }
+    "requirements": [
+      "MDFI Gawad Talino Awardee",
+      "Single",
+      "Age 21 or below",
+      "No other scholarship",
+      "Not dependent of Mercury Drug employee"
+    ],
+    "requiredDocuments": [
+      "Gawad Talino Certificate or award document"
+    ],
+    "tags": [
+      "foundation",
+      "national"
+    ],
+    "lastVerified": "2026-08-11",
+    "verificationSource": "secondary",
+    "verificationStatus": "Needs Verification",
+    "logoUrl": "https://res.cloudinary.com/mewk52ex/image/upload/v1786549709/Mercury_Drug_Foundation_Inc._MDFI_Pharmacy_Scholarship.png"
+  },
+  {
+    "id": "ched-medical-scholarship-and-return-service-program-msrs-26",
+    "name": "CHED Medical Scholarship and Return Service Program (MSRS)",
+    "provider": {
+      "name": "Commission on Higher Education (CHED) - Office of Student Development and Services (OSDS)",
+      "type": "government",
+      "website": "https://ched.gov.ph/msrs/"
     },
-    {
-        "id": 13,
-        "name": "Vivant STEM Scholarship Program",
-        "status": "ANNUAL",
-        "benefits": {
-            "items": [
-                "Full tuition and miscellaneous fees",
-                "₱4,000 monthly living allowance",
-                "₱1,500 monthly transportation allowance",
-                "₱400 monthly miscellaneous allowance",
-                "₱6,000 book allowance per semester",
-                "₱1,000 annual uniform allowance",
-                "₱1,000 graduation clothing allowance",
-                "Internship and priority employment consideration within Vivant Group"
-            ]
-        },
-        "deadline": "2026-05-15",
-        "logo_url": "https://res.cloudinary.com/mewk52ex/image/upload/v1786586294/Vivant_STEM_Scholarship_Program.png",
-        "provider": "Vivant Foundation, Inc. (VFI)",
-        "created_at": "2026-08-12T14:58:56.119832+00:00",
-        "updated_at": "2026-08-12T14:58:56.119832+00:00",
-        "description": "Regional STEM scholarship for deserving public high school graduates in Central Visayas who will enroll in selected private universities in Cebu.",
-        "minimum_gwa": 90,
-        "source_urls": [
-            "https://vivantfoundation.org/stem-scholarship/",
-            "https://philscholar.com/vivant-stem-scholarship/"
-        ],
-        "official_url": "https://vivantfoundation.org/stem-scholarship/",
-        "provider_type": "Private / Corporate Foundation",
-        "application_url": "https://philscholar.com/vivant-stem-scholarship/",
-        "eligible_courses": [
-            "Chemical Engineering",
-            "Civil Engineering",
-            "Computer Engineering",
-            "Electrical Engineering",
-            "Electronics & Communication Engineering",
-            "Mechanical Engineering",
-            "Computer Science",
-            "Information Technology",
-            "Mathematics",
-            "Psychology"
-        ],
-        "last_verified_at": "2026-08-11T16:00:00+00:00",
-        "required_documents": [
-            "Vivant Online Application Form",
-            "Proof of Admission",
-            "Grade 11 and Grade 12 Report Cards",
-            "Proof of Household Income",
-            "PSA Birth Certificate",
-            "Certificate of Good Moral Character",
-            "Personal Essay"
-        ],
-        "special_categories": [
-            "Public SHS graduate",
-            "RSTF-7 participation bonus",
-            "No other scholarship upon acceptance"
-        ],
-        "income_requirements": {
-            "max_annual_household_income_php": 300000
-        },
-        "verification_status": "VERIFIED",
-        "eligible_year_levels": [
-            "Graduating Grade 12"
-        ],
-        "geographic_requirements": {
-            "areas": [
-                "Cebu",
-                "Bohol",
-                "Siquijor",
-                "Negros Oriental"
-            ],
-            "scope": "Region VII only",
-            "eligible_universities": [
-                "CIT-U",
-                "UC",
-                "USC",
-                "USJ-R",
-                "USPF"
-            ]
-        }
+    "description": "Scholarship under the Doktor Para Sa Bayan Act for Filipino students pursuing Doctor of Medicine, prioritizing underserved areas and requiring return service.",
+    "benefits": [
+      "Tuition and school-fee subsidy",
+      "Up to ₱177,000/year in book, clothing, miscellaneous, living, lodging, and transportation allowances",
+      "Internship/5th-year medicine allowances",
+      "Up to ₱16,000 one-time licensure review/application fees",
+      "PhilHealth enrollment",
+      "GSIS accident insurance"
+    ],
+    "deadline": "2025-11-07",
+    "applicationUrl": "https://philscholar.com/ched-medical-scholarship/",
+    "eligibility": {
+      "educationLevel": [
+        "Medical school applicant",
+        "Medical student"
+      ],
+      "courses": [
+        "Doctor of Medicine",
+        "INTARMED"
+      ],
+      "locations": [
+        "Philippines"
+      ]
     },
-    {
-        "id": 15,
-        "name": "Aboitiz Future Leaders Scholarship Program",
-        "status": "ANNUAL",
-        "benefits": {
-            "items": [
-                "100% tuition",
-                "Monthly living allowance",
-                "Academic excellence incentive",
-                "Latin honor and board exam topnotcher incentives",
-                "Board exam review support",
-                "400-hour internship",
-                "Learning and leadership development"
-            ]
-        },
-        "deadline": "2026-06-30",
-        "logo_url": "https://res.cloudinary.com/mewk52ex/image/upload/v1786586479/aboitiz.png",
-        "provider": "Aboitiz Foundation, Inc.",
-        "created_at": "2026-08-12T14:58:56.119832+00:00",
-        "updated_at": "2026-08-12T14:58:56.119832+00:00",
-        "description": "Flagship scholarship for high-potential incoming sophomore students in selected programs and partner universities, with leadership development and corporate internship.",
-        "minimum_gwa": 88,
-        "source_urls": [
-            "https://aboitiz.com/aboitiz-foundation/aboitiz-future-leaders-scholarship",
-            "https://philscholar.com/aboitiz-future-leaders-scholarship-program/"
-        ],
-        "official_url": "https://aboitiz.com/aboitiz-foundation/aboitiz-future-leaders-scholarship",
-        "provider_type": "Private / Corporate Foundation",
-        "application_url": "https://philscholar.com/aboitiz-future-leaders-scholarship-program/",
-        "eligible_courses": [
-            "Civil Engineering",
-            "Electrical Engineering",
-            "Mechanical Engineering",
-            "Industrial Engineering",
-            "Chemical Engineering",
-            "Computer Engineering",
-            "Computer Science",
-            "Information Technology",
-            "Data Science",
-            "Business Administration",
-            "Management",
-            "Finance",
-            "Accountancy",
-            "Communication",
-            "Economics",
-            "Political Science",
-            "Psychology"
-        ],
-        "last_verified_at": "2026-08-11T16:00:00+00:00",
-        "required_documents": [
-            "Student ID",
-            "Certified True Copy of First-Year Grades/TOR",
-            "Certificate of Enrollment/Registration",
-            "Certificate of Good Moral Character",
-            "Leadership/Award/Seminar/Community certificates",
-            "Two Recommendation Letters",
-            "Personal Essay"
-        ],
-        "special_categories": [
-            "Leadership",
-            "Community involvement",
-            "No failing/dropped/incomplete grades",
-            "400-hour internship commitment"
-        ],
-        "income_requirements": {
-            "financial_need_required": true
-        },
-        "verification_status": "VERIFIED",
-        "eligible_year_levels": [
-            "Incoming 2nd Year College"
-        ],
-        "geographic_requirements": {
-            "scope": "Nationwide",
-            "institution": "Designated Aboitiz Foundation partner university"
-        }
+    "requirements": [
+      "Return service required",
+      "Indigenous community priority",
+      "Dependents of community health volunteers",
+      "No other scholarship"
+    ],
+    "requiredDocuments": [
+      "Proof of Filipino Citizenship",
+      "Certificate of Good Moral Character",
+      "Priority-group certifications if applicable",
+      "Certification of Acceptance from SUC/PHEI",
+      "Affidavit of No Existing Scholarship Grant"
+    ],
+    "tags": [
+      "government",
+      "national"
+    ],
+    "lastVerified": "2026-08-11",
+    "verificationSource": "official",
+    "verificationStatus": "Verified",
+    "logoUrl": "https://res.cloudinary.com/mewk52ex/image/upload/v1786548905/CHED_Scholarship_Program_for_Coconut_Farmers_and_Their_Families_CoScho.png"
+  },
+  {
+    "id": "ched-scholarship-program-for-coconut-farmers-and-their-families-coscho-4",
+    "name": "CHED Scholarship Program for Coconut Farmers and Their Families (CoScho)",
+    "provider": {
+      "name": "Commission on Higher Education (CHED) in partnership with the Philippine Coconut Authority (PCA)",
+      "type": "government",
+      "website": "https://legacy.ched.gov.ph/coscho/"
     },
-    {
-        "id": 28,
-        "name": "GrabScholar College Scholarship",
-        "status": "CLOSED",
-        "benefits": {
-            "items": [
-                "100% tuition and miscellaneous fees for the entire 3-4 year college program, subject to retention requirements",
-                "₱11,000 school supplies allowance per year",
-                "₱8,000 monthly student allowance",
-                "Learning and development programs",
-                "Internship opportunities"
-            ]
-        },
-        "deadline": "2026-07-17",
-        "logo_url": null,
-        "provider": "Grab Philippines",
-        "created_at": "2026-08-13T09:28:42.634534+00:00",
-        "updated_at": "2026-08-13T09:28:42.634534+00:00",
-        "description": "A merit-based, full-ride scholarship program for incoming first-year college students for Academic Year 2026-2030, supporting eligible Business, STEM (excluding medical courses), and Sustainability courses at universities or colleges in the Philippines.",
-        "minimum_gwa": 90,
-        "source_urls": [
-            "https://www.grab.com/ph/community/grabscholar-college-scholarship/"
-        ],
-        "official_url": "https://www.grab.com/ph/community/grabscholar-college-scholarship/",
-        "provider_type": "Private / Corporate Foundation",
-        "application_url": "https://www.grab.com/ph/community/grabscholar-college-scholarship/",
-        "eligible_courses": [
-            "Computer Science",
-            "Data Science",
-            "Data Analytics",
-            "Information Technology",
-            "Electrical Engineering",
-            "Software Engineering",
-            "Computer Engineering",
-            "Artificial Intelligence",
-            "Machine Learning",
-            "Information Systems",
-            "Cybersecurity",
-            "Business Administration",
-            "Management",
-            "Finance",
-            "Marketing",
-            "Operations Management",
-            "Human Resource",
-            "Entrepreneurship",
-            "Accounting",
-            "Economics",
-            "Sustainable Development",
-            "Environmental Science",
-            "Community Development",
-            "Urban Planning and Sustainability",
-            "Corporate Social Responsibility",
-            "Development Studies",
-            "Environmental Engineering",
-            "Agroforestry"
-        ],
-        "last_verified_at": "2026-08-12T16:00:00+00:00",
-        "required_documents": [
-            "Birth Certificate",
-            "Grade 12 Report Card",
-            "Acceptance Letter from College/University or similar document",
-            "Certificate of Good Moral Standing",
-            "Marriage Certificate if spouse of a Grab/Move It partner",
-            "Certificate of Legal Guardianship if applicable",
-            "Proof of Partnership if applicable"
-        ],
-        "special_categories": [
-            "Filipino citizen",
-            "No other active scholarship or educational assistance",
-            "No disciplinary sanction during Senior High School",
-            "Retention requirements apply"
-        ],
-        "income_requirements": {
-            "notes": "None specified; scholarship is merit-based.",
-            "income_limit": null
-        },
-        "verification_status": "VERIFIED",
-        "eligible_year_levels": [
-            "Incoming 1st Year College"
-        ],
-        "geographic_requirements": {
-            "scope": "Nationwide",
-            "institution": "Any university or college in the Philippines"
-        }
+    "description": "Higher education financial grant under the Coconut Farmers and Industry Development Plan for registered coconut farmers and their dependents.",
+    "benefits": [
+      "Up to ₱80,000 per academic year in regular allowances",
+      "₱30,000 one-time laptop allowance",
+      "Up to ₱25,000 thesis assistance",
+      "Up to ₱10,000 OJT/internship allowance",
+      "₱10,000 conference allowance"
+    ],
+    "deadline": "2026-07-31",
+    "applicationUrl": "https://jlss.science-scholarships.ph/",
+    "eligibility": {
+      "educationLevel": [
+        "Graduating Senior High School",
+        "SHS Graduate",
+        "ALS Completer",
+        "1st Year College",
+        "2nd Year College",
+        "3rd Year College",
+        "4th Year College"
+      ],
+      "gwa": {
+        "minimum": 80
+      },
+      "courses": [
+        "BS Agriculture",
+        "BS Agribusiness / Agribusiness Management",
+        "BS Agricultural & Biosystems Engineering",
+        "BS Agricultural Economics",
+        "BS Agricultural Biotechnology",
+        "BS Forestry",
+        "BS Food Technology",
+        "BS Fisheries",
+        "BS Computer Science",
+        "BS Information Technology",
+        "BS Biology",
+        "BS Environmental Science",
+        "BS Business Administration",
+        "BS Development Communication",
+        "BS Civil Engineering",
+        "BS Industrial Engineering",
+        "BS Social Work",
+        "BS Statistics"
+      ],
+      "locations": [
+        "Philippines"
+      ]
     },
-    {
-        "id": 29,
-        "name": "Cebuana Lhuillier Foundation Inc. (CLFI) Nationwide Scholarship Program",
-        "status": "ACTIVE",
-        "benefits": {
-            "items": [
-                "Financial grants for tuition and other school-related expenses, credited to the scholar's Cebuana Lhuillier Microsavings account",
-                "Access to financial literacy programs and inclusive financial solutions"
-            ]
-        },
-        "deadline": null,
-        "logo_url": null,
-        "provider": "Cebuana Lhuillier Foundation Inc. (CLFI)",
-        "created_at": "2026-08-13T09:28:42.634534+00:00",
-        "updated_at": "2026-08-13T09:28:42.634534+00:00",
-        "description": "A scholarship program providing financial support to incoming or currently enrolled college students in public universities, focused on selected degree programs and including financial literacy support.",
-        "minimum_gwa": 85,
-        "source_urls": [
-            "https://cebuanafoundation.org/qualification.php",
-            "https://www.cebuanalhuillier.com/"
-        ],
-        "official_url": "https://cebuanafoundation.org/qualification.php",
-        "provider_type": "Private / Corporate Foundation",
-        "application_url": "https://cebuanafoundation.org/qualification.php",
-        "eligible_courses": [
-            "Accountancy",
-            "Financial Management",
-            "Business",
-            "Hotel & Restaurant Management",
-            "Hospitality Management",
-            "Electrical Engineering",
-            "Civil Engineering",
-            "Mechanical Engineering",
-            "Industrial Engineering",
-            "Architecture",
-            "Psychology",
-            "Information Technology"
-        ],
-        "last_verified_at": "2026-08-12T16:00:00+00:00",
-        "required_documents": [
-            "Proof of Cebuana Lhuillier client relationship",
-            "Proof of Cebuana Lhuillier Microsavings account",
-            "Proof of Income",
-            "Official grades showing GWA of at least 85%"
-        ],
-        "special_categories": [
-            "Applicant or qualifying relative must be a Cebuana Lhuillier client",
-            "Cebuana Lhuillier Microsavings account required",
-            "Public university/college enrollment required"
-        ],
-        "income_requirements": {
-            "max_annual_family_income_php": 350000
-        },
-        "verification_status": "VERIFIED",
-        "eligible_year_levels": [
-            "Incoming College Student",
-            "Currently Enrolled College Student"
-        ],
-        "geographic_requirements": {
-            "scope": "Nationwide",
-            "institution": "Public university or college in the Philippines"
-        }
+    "requirements": [
+      "Registered coconut farmer",
+      "Dependent of registered coconut farmer",
+      "NCFRS-listed household"
+    ],
+    "requiredDocuments": [
+      "CHED CoScho Application Form",
+      "PSA Birth Certificate",
+      "PCA Certification / NCFRS Registration Number",
+      "Form 138 or Certified Copy of Grades",
+      "Certificate of Good Moral Character",
+      "Proof of Income",
+      "Notice of Admission / Certificate of Enrollment"
+    ],
+    "tags": [
+      "government",
+      "national"
+    ],
+    "lastVerified": "2026-08-11",
+    "verificationSource": "official",
+    "verificationStatus": "Verified",
+    "logoUrl": "https://res.cloudinary.com/mewk52ex/image/upload/v1786548905/CHED_Scholarship_Program_for_Coconut_Farmers_and_Their_Families_CoScho.png"
+  },
+  {
+    "id": "gokongwei-brothers-foundation-gbf-teachstem-master-s-degree-scholarship--10",
+    "name": "Gokongwei Brothers Foundation (GBF) TeachSTEM Master's Degree Scholarship Program",
+    "provider": {
+      "name": "Gokongwei Brothers Foundation (GBF)",
+      "type": "foundation",
+      "website": "https://www.gokongweibrothersfoundation.org/"
     },
-    {
-        "id": 33,
-        "name": "Shell Unlad sa Pasada (USP) Scholarship Program",
-        "status": "CLOSED_CYCLE_REFERENCE",
-        "benefits": {
-            "items": [
-                "Free tuition and training fees for selected course",
-                "Skills training leading to a National Certificate for technical courses",
-                "Online and on-site classes depending on the course"
-            ]
-        },
-        "deadline": null,
-        "logo_url": null,
-        "provider": "Pilipinas Shell Foundation, Inc. (PSFI) in partnership with Shell Go+ Pro",
-        "created_at": "2026-08-13T09:28:42.634534+00:00",
-        "updated_at": "2026-08-13T09:28:42.634534+00:00",
-        "description": "An educational scholarship program for Shell Go+ Pro members or qualified dependents, offering technical-vocational and entrepreneurship training for employment or small-business development.",
-        "minimum_gwa": null,
-        "source_urls": [
-            "https://www.shell.com.ph/shell-go-plus/shell-go-plus-pro-progress-in-passengers.html"
-        ],
-        "official_url": "https://www.shell.com.ph/shell-go-plus/shell-go-plus-pro-progress-in-passengers.html",
-        "provider_type": "Private / Corporate Foundation",
-        "application_url": null,
-        "eligible_courses": [
-            "Entrep.Nation (Basic Entrepreneurship)",
-            "Automotive Servicing NC II",
-            "Motorcycle/Small Engine Servicing NC II",
-            "Bookkeeping NC III",
-            "Bread and Pastry",
-            "Cookery",
-            "Contact Center Services"
-        ],
-        "last_verified_at": "2026-08-12T16:00:00+00:00",
-        "required_documents": [
-            "USP Application Form",
-            "Data Consent Form",
-            "High School Diploma or ALS Certificate",
-            "NBI Clearance or Barangay Clearance"
-        ],
-        "special_categories": [
-            "Shell Go+ Pro member or qualified dependent/relative up to 3rd degree",
-            "Age 18 or above",
-            "At least 6 months Shell Go+ Pro membership",
-            "Must pass PSFI examinations and interviews"
-        ],
-        "income_requirements": {
-            "income_limit": null,
-            "shell_go_plus_pro_fuel_spend_requirement": {
-                "jeepney_taxi_fx_van_bus_truck_liters_per_month": 200,
-                "tricycle_habal_habal_kuliglig_bangka_liters_per_month": 50
-            }
-        },
-        "verification_status": "VERIFIED_CLOSED_REFERENCE",
-        "eligible_year_levels": [
-            "High School Graduate",
-            "ALS Certificate Holder"
-        ],
-        "geographic_requirements": {
-            "notes": "Training location depends on course.",
-            "scope": "Nationwide for eligible Shell Go+ Pro members/dependents"
-        }
+    "description": "Graduate scholarship for practicing STEM educators pursuing master's degrees in education-related specializations.",
+    "benefits": [
+      "Up to ₱65,000 per academic year",
+      "Mentoring",
+      "Research workshops",
+      "Leadership development",
+      "Upskilling opportunities",
+      "GBF Educator Network"
+    ],
+    "deadline": "2026-04-30",
+    "applicationUrl": "https://philscholar.com/gbf-teachstem-masters-scholarship/",
+    "eligibility": {
+      "educationLevel": [
+        "Incoming Graduate Student",
+        "Current Graduate Student"
+      ],
+      "gwa": {
+        "minimum": 85
+      },
+      "courses": [
+        "Master's in Science Education",
+        "Master's in Mathematics Education",
+        "Technology and Livelihood / Tech-Voc Education",
+        "Agricultural Education",
+        "Special Education",
+        "Educational Management",
+        "Curriculum Development"
+      ],
+      "locations": [
+        "Philippines"
+      ]
     },
-    {
-        "id": 34,
-        "name": "Bagong Pilipinas Merit Scholarship Program — Higher Education Track",
-        "status": "CLOSED_CYCLE_REFERENCE",
-        "benefits": { "items": ["Up to ₱45,000 annual tuition and other school fees at a private HEI", "₱45,000 annual stipend and allowance"] },
-        "deadline": "2026-06-30",
-        "logo_url": null,
-        "provider": "Commission on Higher Education (CHED), Department of Education, and TESDA",
-        "description": "A 2026 merit-based scholarship for incoming first-year students in CHED priority programs at participating higher education institutions. This record preserves the 2026 call as a closed-cycle reference.",
-        "minimum_gwa": 95,
-        "source_urls": ["https://caraga.ched.gov.ph/wp-content/uploads/2026/05/BPMSP_FAQ_0428.pdf", "https://bpms.ched.gov.ph/priority-lists"],
-        "official_url": "https://caraga.ched.gov.ph/wp-content/uploads/2026/05/BPMSP_FAQ_0428.pdf",
-        "provider_type": "National government scholarship",
-        "application_url": "https://bpms.ched.gov.ph",
-        "eligible_courses": ["CHED-identified priority programs"],
-        "last_verified_at": "2026-08-14T00:00:00+00:00",
-        "required_documents": ["Official BPMSP online application", "PSA birth certificate", "Certified true copy of School Form 9 / Form 138", "One accepted proof of parent or guardian income", "Proof of admission or acceptance when required"],
-        "special_categories": ["Incoming first-year college student", "Top 5 of graduating class or at least 95% GWA", "No prior tertiary units or degree"],
-        "income_requirements": { "max_annual_gross_family_income_php": 2000000 },
-        "verification_status": "VERIFIED_CLOSED_REFERENCE",
-        "eligible_year_levels": ["Incoming College"],
-        "geographic_requirements": { "scope": "Nationwide", "institution": "CHED-recognized priority-program HEI participating as a DHEI" }
+    "requirements": [
+      "Practicing teacher/instructor",
+      "At least 1 year teaching experience",
+      "Minimum 6 units per semester",
+      "Return service commitment"
+    ],
+    "requiredDocuments": [
+      "GBF Online Application Form",
+      "Proof of Admission/Enrollment",
+      "TOR / Certified True Copy of Grades",
+      "Bachelor's Diploma",
+      "Graduate Curriculum Plan",
+      "Certificate of Employment",
+      "PRC Professional Teacher License ID",
+      "Teaching Performance Rating",
+      "Proof of Household Income",
+      "Certificate of Good Moral Character",
+      "STEM-related accomplishment certificates if applicable"
+    ],
+    "tags": [
+      "foundation",
+      "national"
+    ],
+    "lastVerified": "2026-08-11",
+    "verificationSource": "official",
+    "verificationStatus": "Verified",
+    "logoUrl": "https://res.cloudinary.com/mewk52ex/image/upload/v1786549427/Gokongwei_Brothers_Foundation_GBF.png"
+  },
+  {
+    "id": "ched-tertiary-education-subsidy-tes-17",
+    "name": "CHED Tertiary Education Subsidy (TES)",
+    "provider": {
+      "name": "Commission on Higher Education (CHED) - Unified Student Financial Assistance System for Tertiary Education (UniFAST)",
+      "type": "government",
+      "website": "https://unifast.gov.ph/tes.html"
     },
-    {
-        "id": 35,
-        "name": "Bagong Pilipinas Merit Scholarship Program — TVET Diploma Track",
-        "status": "CLOSED_CYCLE_REFERENCE",
-        "benefits": { "items": ["Up to ₱70,000 annual tuition and other school fees", "₱40,000 annual stipend", "₱10,000 annual book and connectivity allowance"] },
-        "deadline": "2026-06-30",
-        "logo_url": null,
-        "provider": "Technical Education and Skills Development Authority (TESDA), CHED, and Department of Education",
-        "description": "A 2026 merit-based scholarship for senior high school graduates pursuing TESDA-identified priority diploma programs. This record preserves the 2026 call as a closed-cycle reference.",
-        "minimum_gwa": 90,
-        "source_urls": ["https://caraga.ched.gov.ph/wp-content/uploads/2026/05/BPMSP_FAQ_0428.pdf", "https://bpms.ched.gov.ph"],
-        "official_url": "https://caraga.ched.gov.ph/wp-content/uploads/2026/05/BPMSP_FAQ_0428.pdf",
-        "provider_type": "National government scholarship",
-        "application_url": "https://bpms.ched.gov.ph",
-        "eligible_courses": ["TESDA-identified priority diploma programs"],
-        "last_verified_at": "2026-08-14T00:00:00+00:00",
-        "required_documents": ["Official BPMSP online application", "PSA birth certificate", "Certified true copy of School Form 9 / Form 138", "One accepted proof of parent or guardian income", "TVI acceptance or enrollment confirmation"],
-        "special_categories": ["Senior High School graduate", "No technical-vocational diploma or NC III and above outside the SHS curriculum"],
-        "income_requirements": { "max_annual_gross_family_income_php": 2000000 },
-        "verification_status": "VERIFIED_CLOSED_REFERENCE",
-        "eligible_year_levels": ["Incoming College"],
-        "geographic_requirements": { "scope": "Nationwide", "institution": "TESDA-registered TVI offering an identified priority diploma" }
+    "description": "Grant-in-aid under RA 10931 for qualified Filipino students in CHED-recognized SUCs, LUCs, and private HEIs, prioritizing low-income and marginalized sectors.",
+    "benefits": [
+      "₱20,000/year for Priority 1 public SUC/LUC grantees",
+      "₱27,000/year for Priority 1 private PHEI grantees",
+      "₱10,000/year flat rate for Priority 2 grantees",
+      "Additional support for PWD students",
+      "Licensure exam reimbursement up to ₱8,000",
+      "SARDO one-time additional subsidy of ₱10,000"
+    ],
+    "deadline": "2026-08-31",
+    "applicationUrl": "https://philscholar.com/ched-unifast-tertiary-education-subsidy/",
+    "eligibility": {
+      "educationLevel": [
+        "Any College Year Level"
+      ],
+      "courses": [
+        "Any first undergraduate degree at a CHED-recognized SUC, LUC, or PHEI"
+      ],
+      "locations": [
+        "Philippines"
+      ],
+      "specialCategories": [
+        "PWD"
+      ]
     },
-    {
-        "id": 36,
-        "name": "CHED SIKAP Scholarship — Regular / Plantilla Track",
-        "status": "PERIODIC",
-        "benefits": { "items": ["Actual tuition and fees", "Up to ₱41,000 monthly stipend for full-time master's study", "Up to ₱150,000 research allowance for master's study", "Up to ₱54,000 monthly stipend for full-time doctoral study", "Up to ₱250,000 research allowance for doctoral study"] },
-        "deadline": null,
-        "logo_url": null,
-        "provider": "Commission on Higher Education (CHED)",
-        "description": "CHED's Scholarships for Staff and Instructors' Knowledge Advancement Program supports qualified regular or plantilla teaching and non-teaching personnel pursuing priority graduate studies. Check the official portal for a current call and deadline.",
-        "minimum_gwa": null,
-        "source_urls": ["https://sikap.ched.gov.ph/", "https://sikap.ched.gov.ph/sikap-apply-now"],
-        "official_url": "https://sikap.ched.gov.ph/",
-        "provider_type": "National government graduate scholarship",
-        "application_url": "https://sikap.ched.gov.ph/sikap-apply-now",
-        "eligible_courses": ["CHED priority graduate disciplines"],
-        "last_verified_at": "2026-08-14T00:00:00+00:00",
-        "required_documents": ["Check the current CHED SIKAP call and in-portal requirements form"],
-        "special_categories": ["Teaching or non-teaching HEI personnel", "Regular or plantilla position"],
-        "income_requirements": null,
-        "verification_status": "PARTIALLY_VERIFIED",
-        "eligible_year_levels": ["Graduate Student"],
-        "geographic_requirements": { "scope": "Nationwide", "institution": "CHED-recognized HEI or a qualifying institution with a CHED MOU/MOA" }
+    "requirements": [
+      "DSWD Listahanan/4Ps household",
+      "Solo parent dependent",
+      "ICC/IP",
+      "PWD",
+      "Student at risk of dropping out"
+    ],
+    "requiredDocuments": [
+      "CHED/UniFAST Annex 2 Forms as applicable",
+      "Registrar's Certificate",
+      "Certificate of Registration/Enrollment",
+      "Valid ID for direct submission",
+      "PWD ID if applicable",
+      "LOA for returning grantees",
+      "Additional documents for transferees/licensure reimbursement as applicable"
+    ],
+    "tags": [
+      "government",
+      "national"
+    ],
+    "lastVerified": "2026-08-11",
+    "verificationSource": "official",
+    "verificationStatus": "Verified",
+    "logoUrl": "https://res.cloudinary.com/mewk52ex/image/upload/v1786548905/CHED_Scholarship_Program_for_Coconut_Farmers_and_Their_Families_CoScho.png"
+  },
+  {
+    "id": "ched-agricultural-competitiveness-enhancement-fund-grants-in-aid-for-hig-23",
+    "name": "CHED Agricultural Competitiveness Enhancement Fund – Grants-in-Aid for Higher Education Program (ACEF-GIAHEP) Scholarship",
+    "provider": {
+      "name": "Commission on Higher Education (CHED) - Unified Student Financial Assistance System for Tertiary Education (UniFAST)",
+      "type": "government",
+      "website": "https://ched.gov.ph/call-for-applications-for-the-agricultural-competitiveness-enhancement-fund-grants-in-aid-for-higher-education-program-ay-2024-2025/"
     },
-    {
-        "id": 37,
-        "name": "CHED SIKAP-N Scholarship — Non-Regular / Non-Plantilla Track",
-        "status": "PERIODIC",
-        "benefits": { "items": ["Actual tuition and fees", "Up to ₱41,000 monthly stipend for full-time master's study", "Up to ₱150,000 research allowance for master's study", "Up to ₱54,000 monthly stipend for full-time doctoral study", "Up to ₱250,000 research allowance for doctoral study"] },
-        "deadline": null,
-        "logo_url": null,
-        "provider": "Commission on Higher Education (CHED)",
-        "description": "CHED's SIKAP-N track supports eligible non-regular or non-plantilla teaching and non-teaching personnel pursuing priority graduate studies. Check the official portal for a current call and deadline.",
-        "minimum_gwa": null,
-        "source_urls": ["https://sikap.ched.gov.ph/", "https://sikap.ched.gov.ph/sikap-apply-now"],
-        "official_url": "https://sikap.ched.gov.ph/",
-        "provider_type": "National government graduate scholarship",
-        "application_url": "https://sikap.ched.gov.ph/sikap-apply-now",
-        "eligible_courses": ["CHED priority graduate disciplines"],
-        "last_verified_at": "2026-08-14T00:00:00+00:00",
-        "required_documents": ["Check the current CHED SIKAP call and in-portal requirements form"],
-        "special_categories": ["Teaching or non-teaching personnel", "Non-plantilla or non-regular employment", "At least five years of service in the sending HEI"],
-        "income_requirements": null,
-        "verification_status": "PARTIALLY_VERIFIED",
-        "eligible_year_levels": ["Graduate Student"],
-        "geographic_requirements": { "scope": "Nationwide", "institution": "Qualified sending HEI" }
+    "description": "CHED scholarship under the Agricultural Competitiveness Enhancement Fund for students in agriculture, forestry, fisheries, veterinary medicine, and related programs, with preference for dependents of registered farmers and fisherfolk.",
+    "benefits": [
+      "Private HEI: up to ₱60,000/year total",
+      "SUC/LUC: up to ₱40,000/year total",
+      "Includes stipend and book allowance; tuition support differs by institution type"
+    ],
+    "deadline": "2024-08-15",
+    "applicationUrl": "https://philscholar.com/ched-acef-giahep-scholarship/",
+    "eligibility": {
+      "educationLevel": [
+        "Graduating SHS",
+        "SHS Graduate",
+        "College student with relevant units"
+      ],
+      "courses": [
+        "Agricultural Technology",
+        "Agriculture",
+        "Agribusiness",
+        "Animal Science",
+        "Veterinary Medicine",
+        "Fisheries",
+        "Food Technology",
+        "Forestry",
+        "Agricultural and Biosystems Engineering",
+        "Agricultural Economics",
+        "Agronomy",
+        "Horticulture",
+        "Entomology",
+        "Agricultural Extension"
+      ],
+      "locations": [
+        "Philippines"
+      ]
     },
-    {
-        "id": 38,
-        "name": "CHED SIKAP-L Scholarship — Legal Education Track",
-        "status": "PERIODIC",
-        "benefits": { "items": ["Scholarship support for eligible LL.M. and doctoral study at Legal Education Institutions", "Check the official SIKAP portal for the current benefits and call terms"] },
-        "deadline": null,
-        "logo_url": null,
-        "provider": "Commission on Higher Education (CHED) and Legal Education Board",
-        "description": "CHED's SIKAP-L track is for Philippine Bar members pursuing LL.M. and doctoral programs at partner Legal Education Institutions. Check the official portal for a current call and deadline.",
-        "minimum_gwa": null,
-        "source_urls": ["https://sikap.ched.gov.ph/", "https://sikap.ched.gov.ph/sikap-apply-now"],
-        "official_url": "https://sikap.ched.gov.ph/",
-        "provider_type": "National government graduate scholarship",
-        "application_url": "https://sikap.ched.gov.ph/sikap-apply-now",
-        "eligible_courses": ["LL.M. programs", "Doctoral legal education programs"],
-        "last_verified_at": "2026-08-14T00:00:00+00:00",
-        "required_documents": ["Check the current CHED SIKAP-L call and in-portal requirements form"],
-        "special_categories": ["Philippine Bar member"],
-        "income_requirements": null,
-        "verification_status": "PARTIALLY_VERIFIED",
-        "eligible_year_levels": ["Graduate Student"],
-        "geographic_requirements": { "scope": "Nationwide", "institution": "Partner Legal Education Institution" }
+    "requirements": [
+      "Dependents of registered farmers/fisherfolk preferred",
+      "No other government-funded student financial assistance"
+    ],
+    "requiredDocuments": [
+      "PSA Birth Certificate",
+      "Form 138 / Grade 11 and Grade 12 grades / college grades as applicable",
+      "Proof of Income",
+      "Proof of special-group membership if applicable"
+    ],
+    "tags": [
+      "government",
+      "national"
+    ],
+    "lastVerified": "2026-08-11",
+    "verificationSource": "official",
+    "verificationStatus": "Expired",
+    "logoUrl": "https://res.cloudinary.com/mewk52ex/image/upload/v1786548905/CHED_Scholarship_Program_for_Coconut_Farmers_and_Their_Families_CoScho.png"
+  },
+  {
+    "id": "security-bank-external-scholarship-security-bank-foundation-scholars-for-20",
+    "name": "Security Bank External Scholarship (Security Bank Foundation Scholars for Better Communities Scholarship Program)",
+    "provider": {
+      "name": "Security Bank Foundation, Inc. (SBFI)",
+      "type": "foundation",
+      "website": "https://www.securitybank.com/foundation/external-scholarship-program/"
     },
-    {
-        "id": 39,
-        "name": "CHED Merit Scholarship Program (CMSP) — AY 2026–2027",
-        "status": "CLOSED_CYCLE_REFERENCE",
-        "benefits": { "items": ["Financial assistance for qualified incoming first-year college students", "Check CHED's next official call for the benefit schedule"] },
-        "deadline": "2026-07-31",
-        "logo_url": null,
-        "provider": "Commission on Higher Education (CHED)",
-        "description": "CHED's merit scholarship program for qualified incoming first-year college students. The official AY 2026–2027 regional announcement described this cycle as open from June 22 to July 31, 2026; this record is retained as a closed-cycle reference.",
-        "minimum_gwa": 93,
-        "source_urls": ["https://region1.ched.gov.ph/%F0%9D%90%87%F0%9D%90%9E%F0%9D%90%A5%F0%9D%90%A5%F0%9D%90%A8-%F0%9D%90%92%F0%9D%90%9E%F0%9D%90%A7%F0%9D%90%A2%F0%9D%90%A8%F0%9D%90%AB-%F0%9D%90%87%F0%9D%90%A2%F0%9D%90%A0%F0%9D%90%A1-%F0%9D%90%92/", "https://ched.gov.ph/wp-content/uploads/CMO-8-s.-2019-Policies-and-Guidelines-for-CHED-Scholarship-Programs-CSPs.pdf"],
-        "official_url": "https://region1.ched.gov.ph/%F0%9D%90%87%F0%9D%90%9E%F0%9D%90%A5%F0%9D%90%A5%F0%9D%90%A8-%F0%9D%90%92%F0%9D%90%9E%F0%9D%90%A7%F0%9D%90%A2%F0%9D%90%A8%F0%9D%90%AB-%F0%9D%90%87%F0%9D%90%A2%F0%9D%90%A0%F0%9D%90%A1-%F0%9D%90%92/",
-        "provider_type": "National government scholarship",
-        "application_url": null,
-        "eligible_courses": ["CHED priority programs"],
-        "last_verified_at": "2026-08-14T00:00:00+00:00",
-        "required_documents": ["Check the next official CHED CMSP call for the current document checklist"],
-        "special_categories": ["Incoming first-year college student", "Philippine senior high school graduate"],
-        "income_requirements": { "max_annual_gross_family_income_php": 500000 },
-        "verification_status": "VERIFIED_CLOSED_REFERENCE",
-        "eligible_year_levels": ["Incoming College"],
-        "geographic_requirements": { "scope": "Nationwide", "institution": "Program conditions are published per CHED call" }
+    "description": "External scholarship for students not affiliated with Security Bank, enrolled in partner universities and pursuing degree programs aligned with banking and financial operations.",
+    "benefits": [
+      "State university stipend up to ₱100,000/year",
+      "Private university stipend up to ₱50,000/year",
+      "Private university tuition/miscellaneous support up to ₱100,000/year",
+      "Internships",
+      "CSR participation",
+      "Learning and developmental training"
+    ],
+    "deadline": "2026-08-31",
+    "applicationUrl": "https://philscholar.com/security-bank-external-scholarship/",
+    "eligibility": {
+      "educationLevel": [
+        "Incoming 1st Year College",
+        "Limited continuing students at selected universities"
+      ],
+      "gwa": {
+        "minimum": 93
+      },
+      "courses": [
+        "Accountancy",
+        "Accounting Information System / Technology",
+        "Internal Auditing",
+        "Marketing",
+        "Financial Management",
+        "Industrial Engineering",
+        "Management Engineering",
+        "Applied Mathematics",
+        "Business Analytics",
+        "Statistics",
+        "Data Science",
+        "Computer Science / Technology",
+        "Information Systems / Technology"
+      ],
+      "locations": [
+        "NCR partner schools"
+      ]
     },
-    {
-        "id": 40,
-        "name": "Cebu Province CP-GIFTS Tertiary Education Grant — 2026 Season",
-        "status": "OPEN_STATUS_NEEDS_VERIFICATION",
-        "benefits": { "items": ["₱10,000 financial assistance for a deserving college student"] },
-        "deadline": null,
-        "logo_url": null,
-        "provider": "Province of Cebu",
-        "description": "The Province of Cebu announced the 2026 CP-GIFTS season with 5,900 slots and ₱10,000 assistance for deserving college students. The announcement reported available slots but did not publish a closing date or full documentary checklist; confirm the current intake with the Provincial School Board or PESO before applying.",
-        "minimum_gwa": null,
-        "source_urls": ["https://www.cebu.gov.ph/12954/capitol-launches-new-season-of-cp-gifts-scholarship-program-with-%E2%82%B159m-funding/"],
-        "official_url": "https://www.cebu.gov.ph/12954/capitol-launches-new-season-of-cp-gifts-scholarship-program-with-%E2%82%B159m-funding/",
-        "provider_type": "Local government education grant",
-        "application_url": null,
-        "eligible_courses": null,
-        "last_verified_at": "2026-08-14T00:00:00+00:00",
-        "required_documents": ["Confirm the current CP-GIFTS application checklist with the Province of Cebu"],
-        "special_categories": ["College student", "Constituency or district allocation may apply"],
-        "income_requirements": null,
-        "verification_status": "PARTIALLY_VERIFIED",
-        "eligible_year_levels": ["College Student"],
-        "geographic_requirements": { "scope": "Cebu Province", "notes": "Governor and Vice Governor allocations may be open to students from across Cebu Province; district allocations have their own constituency scope." }
-    }
+    "requirements": [
+      "No child of Security Bank employee",
+      "No existing scholarship except school discounts",
+      "Academic excellence"
+    ],
+    "requiredDocuments": [
+      "Online Application Form",
+      "High School Grade 7-12 TOR",
+      "Proof of Financial Status",
+      "Partner-school Admission/Acceptance Letter",
+      "Birth Certificate",
+      "2x2 Portrait Photo",
+      "Upon admission: enrollment/registration card, school calendar, grading system, curriculum, parent/guardian government ID"
+    ],
+    "tags": [
+      "foundation"
+    ],
+    "lastVerified": "2026-08-11",
+    "verificationSource": "secondary",
+    "verificationStatus": "Verified",
+    "logoUrl": "https://res.cloudinary.com/mewk52ex/image/upload/v1786586744/SBFI.png"
+  },
+  {
+    "id": "dost-s-t-undergraduate-scholarship-program-27",
+    "name": "DOST S&T Undergraduate Scholarship Program",
+    "provider": {
+      "name": "Department of Science and Technology - Science Education Institute (DOST-SEI)",
+      "type": "government",
+      "website": "https://sei.dost.gov.ph/index.php/2018/05/04/undergraduate-s-t-scholarships/"
+    },
+    "description": "Undergraduate scholarship for Filipino students pursuing priority science and technology programs at identified higher education institutions.",
+    "benefits": [
+      "Tuition and school fees up to ₱40,000/year for private HEIs",
+      "₱10,000/year learning materials/connectivity allowance",
+      "₱8,000 monthly living allowance",
+      "₱1,000 first-year clothing allowance",
+      "Roundtrip transportation allowance when studying outside home province",
+      "Accident and health insurance",
+      "₱10,000 thesis allowance",
+      "₱1,000 graduation allowance",
+      "Mid-year support when required"
+    ],
+    "deadline": "2026-09-17",
+    "applicationUrl": "https://ugs.science-scholarships.ph/",
+    "eligibility": {
+      "educationLevel": [
+        "Graduating Grade 12",
+        "Grade 12 graduate not yet enrolled in college"
+      ],
+      "courses": [
+        "Priority Engineering programs",
+        "Natural Sciences",
+        "Computer Science",
+        "Information Technology",
+        "Information Systems",
+        "Medical Technology",
+        "Nutrition and Dietetics",
+        "Pharmacy",
+        "Public Health",
+        "Speech Pathology",
+        "Agriculture and Fisheries programs",
+        "Architecture",
+        "Priority STEM teacher education programs"
+      ],
+      "locations": [
+        "Philippines"
+      ]
+    },
+    "requirements": [
+      "Natural-born Filipino",
+      "STEM students eligible",
+      "Non-STEM must be top 5% of graduating class",
+      "No post-secondary units",
+      "Return service expectation"
+    ],
+    "requiredDocuments": [
+      "Good Moral Character Form",
+      "Good Health Form",
+      "Principal Certification",
+      "Certificate of Residency",
+      "Parent Certification of No Pending Immigration Application",
+      "DOST-SEI Exam/Award Form",
+      "No Post-Secondary Units Certification",
+      "Applicant/Parent Declaration",
+      "Passport-size Photo",
+      "Birth Certificate",
+      "Proof of Income",
+      "Affidavit of Guardianship if applicable",
+      "Marriage Certificate if applicable"
+    ],
+    "tags": [
+      "government",
+      "national"
+    ],
+    "lastVerified": "2026-08-11",
+    "verificationSource": "official",
+    "verificationStatus": "Verified",
+    "logoUrl": "https://res.cloudinary.com/mewk52ex/image/upload/v1786587296/DOST.png"
+  },
+  {
+    "id": "panasonic-college-scholarship-asia-philippines-2",
+    "name": "Panasonic College Scholarship Asia (Philippines)",
+    "provider": {
+      "name": "Panasonic Manufacturing Philippines Corporation (PMPC)",
+      "type": "foundation",
+      "website": "https://www.panasonic.com/ph/corporate/sustainability.html"
+    },
+    "description": "Corporate social responsibility scholarship providing financial assistance to academically deserving college students facing financial hardship, with emphasis on societal progress and technology innovation.",
+    "benefits": [
+      "Educational allowance/stipend for tuition, books, and living expenses",
+      "Career development opportunities",
+      "Potential exposure to Panasonic CSR projects"
+    ],
+    "deadline": "2026-04-30",
+    "applicationUrl": "https://philscholar.com/panasonic-college-scholarship/",
+    "eligibility": {
+      "educationLevel": [
+        "College student graduating in approximately 2 years",
+        "Typically incoming 3rd Year",
+        "Typically incoming 4th Year"
+      ],
+      "gwa": {
+        "minimum": 85
+      },
+      "courses": [
+        "Engineering",
+        "Information Technology",
+        "Computer Science",
+        "Applied Sciences",
+        "Industrial Design",
+        "Accountancy",
+        "Business Administration",
+        "Management"
+      ],
+      "locations": [
+        "Philippines"
+      ]
+    },
+    "requirements": [
+      "Academic Excellence",
+      "Leadership",
+      "STEM/Business innovation"
+    ],
+    "requiredDocuments": [
+      "Updated CV/Resume",
+      "Certified True Copy / Informative Copy of Grades",
+      "Recommendation Letter from Dean or Department Chair",
+      "2x2 ID Photo",
+      "Valid School ID"
+    ],
+    "tags": [
+      "foundation",
+      "national"
+    ],
+    "lastVerified": "2026-08-11",
+    "verificationSource": "secondary",
+    "verificationStatus": "Verified",
+    "logoUrl": "https://res.cloudinary.com/mewk52ex/image/upload/v1786548904/Panasonic_College_Scholarship_Asia_Philippines.png"
+  },
+  {
+    "id": "mercury-drug-foundation-inc-mdfi-pharmacy-scholarship-11",
+    "name": "Mercury Drug Foundation, Inc. (MDFI) Pharmacy Scholarship",
+    "provider": {
+      "name": "Mercury Drug Foundation, Inc. (MDFI)",
+      "type": "foundation",
+      "website": "https://www.mercurydrugfoundation.org/pharmacy-scholarship.html"
+    },
+    "description": "Full scholarship for financially challenged pharmacy students in the last two years of their BS Pharmacy program.",
+    "benefits": [
+      "100% tuition",
+      "Miscellaneous school fees",
+      "Monthly living and food allowance",
+      "Transportation allowance"
+    ],
+    "deadline": "2026-04-30",
+    "applicationUrl": "https://philscholar.com/mercury-drug-foundation-scholarship/",
+    "eligibility": {
+      "educationLevel": [
+        "Last two years of BS Pharmacy",
+        "Typically incoming 3rd Year",
+        "Typically incoming 4th Year"
+      ],
+      "gwa": {
+        "minimum": 80
+      },
+      "courses": [
+        "Bachelor of Science in Pharmacy"
+      ],
+      "locations": [
+        "Philippines"
+      ],
+      "incomeMaxMonthly": 20833
+    },
+    "requirements": [
+      "Financial need",
+      "Single",
+      "Age limit applies",
+      "No other scholarship",
+      "Not dependent of Mercury Drug employee"
+    ],
+    "requiredDocuments": [
+      "MDFI Application Form",
+      "TOR / Certified True Copy of Grades",
+      "Dean/Department Head Endorsement",
+      "Proof of Household Income",
+      "PSA Birth Certificate",
+      "Certificate of Good Moral Character",
+      "Certificate of Good Health",
+      "2x2 ID Photo"
+    ],
+    "tags": [
+      "foundation",
+      "national"
+    ],
+    "lastVerified": "2026-08-11",
+    "verificationSource": "official",
+    "verificationStatus": "Verified",
+    "logoUrl": "https://res.cloudinary.com/mewk52ex/image/upload/v1786549709/Mercury_Drug_Foundation_Inc._MDFI_Pharmacy_Scholarship.png"
+  },
+  {
+    "id": "owwa-ofw-dependent-scholarship-program-odsp-25",
+    "name": "OWWA OFW Dependent Scholarship Program (ODSP)",
+    "provider": {
+      "name": "Overseas Workers Welfare Administration (OWWA)",
+      "type": "government",
+      "website": "https://owwa.gov.ph/?page_id=3622"
+    },
+    "description": "OWWA financial assistance for eligible children or siblings of active OFWs pursuing four- or five-year baccalaureate or associate courses in the Philippines.",
+    "benefits": [
+      "₱20,000 per school year",
+      "May be used for tuition, books, supplies, and other educational expenses"
+    ],
+    "deadline": "2025-07-31",
+    "applicationUrl": "https://philscholar.com/owwa-ofw-dependent-scholarship-program-odsp/",
+    "eligibility": {
+      "educationLevel": [
+        "Incoming Freshman",
+        "2nd-5th Year College"
+      ],
+      "courses": [
+        "Four-year baccalaureate course",
+        "Five-year baccalaureate course",
+        "Associate course"
+      ],
+      "locations": [
+        "Philippines"
+      ]
+    },
+    "requirements": [
+      "Child or eligible sibling of active OWWA member",
+      "Single",
+      "Age limits apply",
+      "OWWA membership validation"
+    ],
+    "requiredDocuments": [
+      "OFW Passport Bio Page",
+      "Dependent School ID / Valid ID",
+      "Copy of Grades",
+      "Proof of Dependent Identity",
+      "Proof of OFW Income"
+    ],
+    "tags": [
+      "government",
+      "national"
+    ],
+    "lastVerified": "2026-08-11",
+    "verificationSource": "official",
+    "verificationStatus": "Expired",
+    "logoUrl": "https://res.cloudinary.com/mewk52ex/image/upload/v1786587166/OWWA.webp"
+  },
+  {
+    "id": "dost-sei-junior-level-science-scholarship-jlss-5",
+    "name": "DOST-SEI Junior Level Science Scholarship (JLSS)",
+    "provider": {
+      "name": "Department of Science and Technology – Science Education Institute (DOST-SEI)",
+      "type": "government",
+      "website": "https://www.sei.dost.gov.ph/"
+    },
+    "description": "Nation-building scholarship for regular 2nd-year college students entering their 3rd year in priority S&T programs.",
+    "benefits": [
+      "Tuition/fees up to ₱40,000 per academic year for private HEIs",
+      "₱8,000 monthly living allowance",
+      "₱10,000 learning materials/connectivity allowance",
+      "₱10,000 thesis allowance",
+      "₱1,000 graduation allowance",
+      "Accident and health insurance",
+      "Roundtrip transportation allowance when studying outside home province",
+      "Summer/mid-year stipend when required"
+    ],
+    "deadline": "2026-05-15",
+    "applicationUrl": "https://philscholar.com/dost-sei-jlss/",
+    "eligibility": {
+      "educationLevel": [
+        "Regular 2nd Year College",
+        "Incoming 3rd Year College"
+      ],
+      "gwa": {
+        "minimum": 83
+      },
+      "courses": [
+        "Priority Engineering programs",
+        "Information Technology",
+        "Computer Science",
+        "Data Science",
+        "Applied Mathematics",
+        "Applied Physics",
+        "Chemistry",
+        "Biology",
+        "Environmental Science",
+        "Food Technology",
+        "Marine Biology",
+        "Statistics",
+        "Biochemistry",
+        "Secondary Education major in Science/Mathematics/Physics/Chemistry/Biology"
+      ],
+      "locations": [
+        "Philippines"
+      ]
+    },
+    "requirements": [
+      "RA 7687",
+      "Merit",
+      "RA 10612",
+      "Return service obligation"
+    ],
+    "requiredDocuments": [
+      "TOR / True Copy of Grades",
+      "Certificate of Year Level & Standing / Program of Study",
+      "Certificate of Good Moral Character",
+      "Certificate of Good Health",
+      "Certificate of Residency for RA 7687",
+      "Proof of Income",
+      "PSA Birth Certificate",
+      "2x2 ID Photo",
+      "Signed Applicant and Parent/Guardian Declaration Forms"
+    ],
+    "tags": [
+      "government",
+      "national"
+    ],
+    "lastVerified": "2026-08-11",
+    "verificationSource": "official",
+    "verificationStatus": "Verified",
+    "logoUrl": "https://res.cloudinary.com/mewk52ex/image/upload/v1786548904/DOST-SEI_Junior_Level_Science_Scholarship_JLSS.png"
+  },
+  {
+    "id": "gokongwei-brothers-foundation-gbf-teachstem-college-scholarship-program-9",
+    "name": "Gokongwei Brothers Foundation (GBF) TeachSTEM College Scholarship Program",
+    "provider": {
+      "name": "Gokongwei Brothers Foundation (GBF)",
+      "type": "foundation",
+      "website": "https://www.gokongweibrothersfoundation.org/"
+    },
+    "description": "Undergraduate scholarship for aspiring STEM educators pursuing teacher-education degrees with STEM specializations.",
+    "benefits": [
+      "₱65,000 annual grant for SUC scholars",
+      "₱85,000 annual grant for private institution scholars",
+      "Leadership and teaching upskilling programs",
+      "Mentoring",
+      "GBF Scholar Educator Network"
+    ],
+    "deadline": "2026-04-30",
+    "applicationUrl": "https://philscholar.com/gbf-teachstem-college-scholarship/\r\n",
+    "eligibility": {
+      "educationLevel": [
+        "Incoming 1st Year College",
+        "Ongoing College Student"
+      ],
+      "gwa": {
+        "minimum": 85
+      },
+      "courses": [
+        "BSEd major in Science",
+        "BSEd major in Mathematics",
+        "BTVTED / Technical Education",
+        "BITED / Computer Education",
+        "Elementary/General Education with STEM specialization"
+      ],
+      "locations": [
+        "Philippines"
+      ]
+    },
+    "requirements": [
+      "Future STEM Educator",
+      "Return service commitment"
+    ],
+    "requiredDocuments": [
+      "GBF Online Application Form",
+      "Proof of Admission/Enrollment",
+      "Certified True Copy of Grades",
+      "Proof of Household Income",
+      "Certificate of Good Moral Character",
+      "Community/extracurricular portfolio",
+      "Proof of Residence",
+      "2x2 Photo"
+    ],
+    "tags": [
+      "foundation",
+      "national"
+    ],
+    "lastVerified": "2026-08-11",
+    "verificationSource": "official",
+    "verificationStatus": "Verified",
+    "logoUrl": "https://res.cloudinary.com/mewk52ex/image/upload/v1786549427/Gokongwei_Brothers_Foundation_GBF.png"
+  },
+  {
+    "id": "asian-development-bank-japan-scholarship-program-adb-jsp-12",
+    "name": "Asian Development Bank – Japan Scholarship Program (ADB-JSP)",
+    "provider": {
+      "name": "Asian Development Bank (ADB) with funding from the Government of Japan",
+      "type": "government",
+      "website": "https://www.adb.org/work-with-us/careers/japan-scholarship-program"
+    },
+    "description": "Postgraduate scholarship for citizens of ADB developing member countries pursuing development-related master's degrees at designated institutions.",
+    "benefits": [
+      "Full tuition",
+      "Monthly subsistence/living allowance",
+      "Books and instructional materials allowance",
+      "Medical and health insurance",
+      "Economy-class roundtrip airfare",
+      "Thesis/research allowance where applicable"
+    ],
+    "deadline": "2026-03-31",
+    "applicationUrl": "https://philscholar.com/asian-development-bank-japan-scholarship/",
+    "eligibility": {
+      "educationLevel": [
+        "Master's Degree Applicant"
+      ],
+      "courses": [
+        "Economics",
+        "Finance",
+        "Management",
+        "Business Administration",
+        "Development Management",
+        "Applied Economics",
+        "International Finance",
+        "Computer Science",
+        "Information Technology",
+        "Civil Engineering",
+        "Environmental Engineering",
+        "Energy & Infrastructure",
+        "Agriculture",
+        "Forestry",
+        "Climate Studies",
+        "Public Administration",
+        "Public Policy",
+        "Governance",
+        "International Development"
+      ],
+      "locations": [
+        "ADB borrowing member countries"
+      ]
+    },
+    "requirements": [
+      "At least 2 years professional work experience",
+      "Age 35 or below normally",
+      "Return service to home country for at least 2 years"
+    ],
+    "requiredDocuments": [
+      "ADB-JSP Information Sheet",
+      "Bachelor's Diploma",
+      "Academic TOR",
+      "Certificate of Employment & Compensation",
+      "Proof of Family Income",
+      "Passport",
+      "Admission Offer Letter from Designated Institution",
+      "English proficiency results if required"
+    ],
+    "tags": [
+      "government"
+    ],
+    "lastVerified": "2026-08-11",
+    "verificationSource": "secondary",
+    "verificationStatus": "Verified",
+    "logoUrl": "https://res.cloudinary.com/mewk52ex/image/upload/v1786585761/Asian_Development_Bank_Japan_Scholarship_Program_ADB-JSP.png"
+  },
+  {
+    "id": "vivant-stem-scholarship-program-13",
+    "name": "Vivant STEM Scholarship Program",
+    "provider": {
+      "name": "Vivant Foundation, Inc. (VFI)",
+      "type": "foundation",
+      "website": "https://vivantfoundation.org/stem-scholarship/"
+    },
+    "description": "Regional STEM scholarship for deserving public high school graduates in Central Visayas who will enroll in selected private universities in Cebu.",
+    "benefits": [
+      "Full tuition and miscellaneous fees",
+      "₱4,000 monthly living allowance",
+      "₱1,500 monthly transportation allowance",
+      "₱400 monthly miscellaneous allowance",
+      "₱6,000 book allowance per semester",
+      "₱1,000 annual uniform allowance",
+      "₱1,000 graduation clothing allowance",
+      "Internship and priority employment consideration within Vivant Group"
+    ],
+    "deadline": "2026-05-15",
+    "applicationUrl": "https://philscholar.com/vivant-stem-scholarship/",
+    "eligibility": {
+      "educationLevel": [
+        "Graduating Grade 12"
+      ],
+      "gwa": {
+        "minimum": 90
+      },
+      "courses": [
+        "Chemical Engineering",
+        "Civil Engineering",
+        "Computer Engineering",
+        "Electrical Engineering",
+        "Electronics & Communication Engineering",
+        "Mechanical Engineering",
+        "Computer Science",
+        "Information Technology",
+        "Mathematics",
+        "Psychology"
+      ],
+      "locations": [
+        "Region VII only"
+      ]
+    },
+    "requirements": [
+      "Public SHS graduate",
+      "RSTF-7 participation bonus",
+      "No other scholarship upon acceptance"
+    ],
+    "requiredDocuments": [
+      "Vivant Online Application Form",
+      "Proof of Admission",
+      "Grade 11 and Grade 12 Report Cards",
+      "Proof of Household Income",
+      "PSA Birth Certificate",
+      "Certificate of Good Moral Character",
+      "Personal Essay"
+    ],
+    "tags": [
+      "foundation"
+    ],
+    "lastVerified": "2026-08-11",
+    "verificationSource": "official",
+    "verificationStatus": "Verified",
+    "logoUrl": "https://res.cloudinary.com/mewk52ex/image/upload/v1786586294/Vivant_STEM_Scholarship_Program.png"
+  },
+  {
+    "id": "aboitiz-future-leaders-scholarship-program-15",
+    "name": "Aboitiz Future Leaders Scholarship Program",
+    "provider": {
+      "name": "Aboitiz Foundation, Inc.",
+      "type": "foundation",
+      "website": "https://aboitiz.com/aboitiz-foundation/aboitiz-future-leaders-scholarship"
+    },
+    "description": "Flagship scholarship for high-potential incoming sophomore students in selected programs and partner universities, with leadership development and corporate internship.",
+    "benefits": [
+      "100% tuition",
+      "Monthly living allowance",
+      "Academic excellence incentive",
+      "Latin honor and board exam topnotcher incentives",
+      "Board exam review support",
+      "400-hour internship",
+      "Learning and leadership development"
+    ],
+    "deadline": "2026-06-30",
+    "applicationUrl": "https://philscholar.com/aboitiz-future-leaders-scholarship-program/",
+    "eligibility": {
+      "educationLevel": [
+        "Incoming 2nd Year College"
+      ],
+      "gwa": {
+        "minimum": 88
+      },
+      "courses": [
+        "Civil Engineering",
+        "Electrical Engineering",
+        "Mechanical Engineering",
+        "Industrial Engineering",
+        "Chemical Engineering",
+        "Computer Engineering",
+        "Computer Science",
+        "Information Technology",
+        "Data Science",
+        "Business Administration",
+        "Management",
+        "Finance",
+        "Accountancy",
+        "Communication",
+        "Economics",
+        "Political Science",
+        "Psychology"
+      ],
+      "locations": [
+        "Philippines"
+      ]
+    },
+    "requirements": [
+      "Leadership",
+      "Community involvement",
+      "No failing/dropped/incomplete grades",
+      "400-hour internship commitment"
+    ],
+    "requiredDocuments": [
+      "Student ID",
+      "Certified True Copy of First-Year Grades/TOR",
+      "Certificate of Enrollment/Registration",
+      "Certificate of Good Moral Character",
+      "Leadership/Award/Seminar/Community certificates",
+      "Two Recommendation Letters",
+      "Personal Essay"
+    ],
+    "tags": [
+      "foundation",
+      "national"
+    ],
+    "lastVerified": "2026-08-11",
+    "verificationSource": "secondary",
+    "verificationStatus": "Verified",
+    "logoUrl": "https://res.cloudinary.com/mewk52ex/image/upload/v1786586479/aboitiz.png"
+  },
+  {
+    "id": "grabscholar-college-scholarship-28",
+    "name": "GrabScholar College Scholarship",
+    "provider": {
+      "name": "Grab Philippines",
+      "type": "foundation",
+      "website": "https://www.grab.com/ph/community/grabscholar-college-scholarship/"
+    },
+    "description": "A merit-based, full-ride scholarship program for incoming first-year college students for Academic Year 2026-2030, supporting eligible Business, STEM (excluding medical courses), and Sustainability courses at universities or colleges in the Philippines.",
+    "benefits": [
+      "100% tuition and miscellaneous fees for the entire 3-4 year college program, subject to retention requirements",
+      "₱11,000 school supplies allowance per year",
+      "₱8,000 monthly student allowance",
+      "Learning and development programs",
+      "Internship opportunities"
+    ],
+    "deadline": "2026-07-17",
+    "applicationUrl": "https://www.grab.com/ph/community/grabscholar-college-scholarship/",
+    "eligibility": {
+      "citizenship": [
+        "Filipino"
+      ],
+      "educationLevel": [
+        "Incoming 1st Year College"
+      ],
+      "gwa": {
+        "minimum": 90
+      },
+      "courses": [
+        "Computer Science",
+        "Data Science",
+        "Data Analytics",
+        "Information Technology",
+        "Electrical Engineering",
+        "Software Engineering",
+        "Computer Engineering",
+        "Artificial Intelligence",
+        "Machine Learning",
+        "Information Systems",
+        "Cybersecurity",
+        "Business Administration",
+        "Management",
+        "Finance",
+        "Marketing",
+        "Operations Management",
+        "Human Resource",
+        "Entrepreneurship",
+        "Accounting",
+        "Economics",
+        "Sustainable Development",
+        "Environmental Science",
+        "Community Development",
+        "Urban Planning and Sustainability",
+        "Corporate Social Responsibility",
+        "Development Studies",
+        "Environmental Engineering",
+        "Agroforestry"
+      ],
+      "locations": [
+        "Philippines"
+      ]
+    },
+    "requirements": [
+      "Filipino citizen",
+      "No other active scholarship or educational assistance",
+      "No disciplinary sanction during Senior High School",
+      "Retention requirements apply"
+    ],
+    "requiredDocuments": [
+      "Birth Certificate",
+      "Grade 12 Report Card",
+      "Acceptance Letter from College/University or similar document",
+      "Certificate of Good Moral Standing",
+      "Marriage Certificate if spouse of a Grab/Move It partner",
+      "Certificate of Legal Guardianship if applicable",
+      "Proof of Partnership if applicable"
+    ],
+    "tags": [
+      "foundation",
+      "national"
+    ],
+    "lastVerified": "2026-08-12",
+    "verificationSource": "secondary",
+    "verificationStatus": "Expired"
+  },
+  {
+    "id": "cebuana-lhuillier-foundation-inc-clfi-nationwide-scholarship-program-29",
+    "name": "Cebuana Lhuillier Foundation Inc. (CLFI) Nationwide Scholarship Program",
+    "provider": {
+      "name": "Cebuana Lhuillier Foundation Inc. (CLFI)",
+      "type": "foundation",
+      "website": "https://cebuanafoundation.org/qualification.php"
+    },
+    "description": "A scholarship program providing financial support to incoming or currently enrolled college students in public universities, focused on selected degree programs and including financial literacy support.",
+    "benefits": [
+      "Financial grants for tuition and other school-related expenses, credited to the scholar's Cebuana Lhuillier Microsavings account",
+      "Access to financial literacy programs and inclusive financial solutions"
+    ],
+    "deadline": null,
+    "applicationUrl": "https://cebuanafoundation.org/qualification.php",
+    "eligibility": {
+      "educationLevel": [
+        "Incoming College Student",
+        "Currently Enrolled College Student"
+      ],
+      "gwa": {
+        "minimum": 85
+      },
+      "courses": [
+        "Accountancy",
+        "Financial Management",
+        "Business",
+        "Hotel & Restaurant Management",
+        "Hospitality Management",
+        "Electrical Engineering",
+        "Civil Engineering",
+        "Mechanical Engineering",
+        "Industrial Engineering",
+        "Architecture",
+        "Psychology",
+        "Information Technology"
+      ],
+      "locations": [
+        "Philippines"
+      ],
+      "incomeMaxMonthly": 29167
+    },
+    "requirements": [
+      "Applicant or qualifying relative must be a Cebuana Lhuillier client",
+      "Cebuana Lhuillier Microsavings account required",
+      "Public university/college enrollment required"
+    ],
+    "requiredDocuments": [
+      "Proof of Cebuana Lhuillier client relationship",
+      "Proof of Cebuana Lhuillier Microsavings account",
+      "Proof of Income",
+      "Official grades showing GWA of at least 85%"
+    ],
+    "tags": [
+      "foundation",
+      "national"
+    ],
+    "lastVerified": "2026-08-12",
+    "verificationSource": "official",
+    "verificationStatus": "Verified"
+  },
+  {
+    "id": "shell-unlad-sa-pasada-usp-scholarship-program-33",
+    "name": "Shell Unlad sa Pasada (USP) Scholarship Program",
+    "provider": {
+      "name": "Pilipinas Shell Foundation, Inc. (PSFI) in partnership with Shell Go+ Pro",
+      "type": "foundation",
+      "website": "https://www.shell.com.ph/shell-go-plus/shell-go-plus-pro-progress-in-passengers.html"
+    },
+    "description": "An educational scholarship program for Shell Go+ Pro members or qualified dependents, offering technical-vocational and entrepreneurship training for employment or small-business development.",
+    "benefits": [
+      "Free tuition and training fees for selected course",
+      "Skills training leading to a National Certificate for technical courses",
+      "Online and on-site classes depending on the course"
+    ],
+    "deadline": null,
+    "applicationUrl": null,
+    "eligibility": {
+      "educationLevel": [
+        "High School Graduate",
+        "ALS Certificate Holder"
+      ],
+      "courses": [
+        "Entrep.Nation (Basic Entrepreneurship)",
+        "Automotive Servicing NC II",
+        "Motorcycle/Small Engine Servicing NC II",
+        "Bookkeeping NC III",
+        "Bread and Pastry",
+        "Cookery",
+        "Contact Center Services"
+      ],
+      "locations": [
+        "Philippines"
+      ]
+    },
+    "requirements": [
+      "Shell Go+ Pro member or qualified dependent/relative up to 3rd degree",
+      "Age 18 or above",
+      "At least 6 months Shell Go+ Pro membership",
+      "Must pass PSFI examinations and interviews"
+    ],
+    "requiredDocuments": [
+      "USP Application Form",
+      "Data Consent Form",
+      "High School Diploma or ALS Certificate",
+      "NBI Clearance or Barangay Clearance"
+    ],
+    "tags": [
+      "foundation",
+      "national"
+    ],
+    "lastVerified": "2026-08-12",
+    "verificationSource": "secondary",
+    "verificationStatus": "Expired"
+  },
+  {
+    "id": "bagong-pilipinas-merit-scholarship-program-higher-education-track-34",
+    "name": "Bagong Pilipinas Merit Scholarship Program — Higher Education Track",
+    "provider": {
+      "name": "Commission on Higher Education (CHED), Department of Education, and TESDA",
+      "type": "government",
+      "website": "https://caraga.ched.gov.ph/wp-content/uploads/2026/05/BPMSP_FAQ_0428.pdf"
+    },
+    "description": "A 2026 merit-based scholarship for incoming first-year students in CHED priority programs at participating higher education institutions. This record preserves the 2026 call as a closed-cycle reference.",
+    "benefits": [
+      "Up to ₱45,000 annual tuition and other school fees at a private HEI",
+      "₱45,000 annual stipend and allowance"
+    ],
+    "deadline": "2026-06-30",
+    "applicationUrl": "https://bpms.ched.gov.ph",
+    "eligibility": {
+      "educationLevel": [
+        "Incoming College"
+      ],
+      "gwa": {
+        "minimum": 95
+      },
+      "courses": [
+        "CHED-identified priority programs"
+      ],
+      "locations": [
+        "Philippines"
+      ],
+      "incomeMaxMonthly": 166667
+    },
+    "requirements": [
+      "Incoming first-year college student",
+      "Top 5 of graduating class or at least 95% GWA",
+      "No prior tertiary units or degree"
+    ],
+    "requiredDocuments": [
+      "Official BPMSP online application",
+      "PSA birth certificate",
+      "Certified true copy of School Form 9 / Form 138",
+      "One accepted proof of parent or guardian income",
+      "Proof of admission or acceptance when required"
+    ],
+    "tags": [
+      "government",
+      "national"
+    ],
+    "lastVerified": "2026-08-14",
+    "verificationSource": "official",
+    "verificationStatus": "Expired"
+  },
+  {
+    "id": "bagong-pilipinas-merit-scholarship-program-tvet-diploma-track-35",
+    "name": "Bagong Pilipinas Merit Scholarship Program — TVET Diploma Track",
+    "provider": {
+      "name": "Technical Education and Skills Development Authority (TESDA), CHED, and Department of Education",
+      "type": "government",
+      "website": "https://caraga.ched.gov.ph/wp-content/uploads/2026/05/BPMSP_FAQ_0428.pdf"
+    },
+    "description": "A 2026 merit-based scholarship for senior high school graduates pursuing TESDA-identified priority diploma programs. This record preserves the 2026 call as a closed-cycle reference.",
+    "benefits": [
+      "Up to ₱70,000 annual tuition and other school fees",
+      "₱40,000 annual stipend",
+      "₱10,000 annual book and connectivity allowance"
+    ],
+    "deadline": "2026-06-30",
+    "applicationUrl": "https://bpms.ched.gov.ph",
+    "eligibility": {
+      "educationLevel": [
+        "Incoming College"
+      ],
+      "gwa": {
+        "minimum": 90
+      },
+      "courses": [
+        "TESDA-identified priority diploma programs"
+      ],
+      "locations": [
+        "Philippines"
+      ],
+      "incomeMaxMonthly": 166667
+    },
+    "requirements": [
+      "Senior High School graduate",
+      "No technical-vocational diploma or NC III and above outside the SHS curriculum"
+    ],
+    "requiredDocuments": [
+      "Official BPMSP online application",
+      "PSA birth certificate",
+      "Certified true copy of School Form 9 / Form 138",
+      "One accepted proof of parent or guardian income",
+      "TVI acceptance or enrollment confirmation"
+    ],
+    "tags": [
+      "government",
+      "national"
+    ],
+    "lastVerified": "2026-08-14",
+    "verificationSource": "official",
+    "verificationStatus": "Expired"
+  },
+  {
+    "id": "ched-sikap-scholarship-regular-plantilla-track-36",
+    "name": "CHED SIKAP Scholarship — Regular / Plantilla Track",
+    "provider": {
+      "name": "Commission on Higher Education (CHED)",
+      "type": "government",
+      "website": "https://sikap.ched.gov.ph/"
+    },
+    "description": "CHED's Scholarships for Staff and Instructors' Knowledge Advancement Program supports qualified regular or plantilla teaching and non-teaching personnel pursuing priority graduate studies. Check the official portal for a current call and deadline.",
+    "benefits": [
+      "Actual tuition and fees",
+      "Up to ₱41,000 monthly stipend for full-time master's study",
+      "Up to ₱150,000 research allowance for master's study",
+      "Up to ₱54,000 monthly stipend for full-time doctoral study",
+      "Up to ₱250,000 research allowance for doctoral study"
+    ],
+    "deadline": null,
+    "applicationUrl": "https://sikap.ched.gov.ph/sikap-apply-now",
+    "eligibility": {
+      "educationLevel": [
+        "Graduate Student"
+      ],
+      "courses": [
+        "CHED priority graduate disciplines"
+      ],
+      "locations": [
+        "Philippines"
+      ]
+    },
+    "requirements": [
+      "Teaching or non-teaching HEI personnel",
+      "Regular or plantilla position"
+    ],
+    "requiredDocuments": [
+      "Check the current CHED SIKAP call and in-portal requirements form"
+    ],
+    "tags": [
+      "government",
+      "national"
+    ],
+    "lastVerified": "2026-08-14",
+    "verificationSource": "official",
+    "verificationStatus": "Verified"
+  },
+  {
+    "id": "ched-sikap-n-scholarship-non-regular-non-plantilla-track-37",
+    "name": "CHED SIKAP-N Scholarship — Non-Regular / Non-Plantilla Track",
+    "provider": {
+      "name": "Commission on Higher Education (CHED)",
+      "type": "government",
+      "website": "https://sikap.ched.gov.ph/"
+    },
+    "description": "CHED's SIKAP-N track supports eligible non-regular or non-plantilla teaching and non-teaching personnel pursuing priority graduate studies. Check the official portal for a current call and deadline.",
+    "benefits": [
+      "Actual tuition and fees",
+      "Up to ₱41,000 monthly stipend for full-time master's study",
+      "Up to ₱150,000 research allowance for master's study",
+      "Up to ₱54,000 monthly stipend for full-time doctoral study",
+      "Up to ₱250,000 research allowance for doctoral study"
+    ],
+    "deadline": null,
+    "applicationUrl": "https://sikap.ched.gov.ph/sikap-apply-now",
+    "eligibility": {
+      "educationLevel": [
+        "Graduate Student"
+      ],
+      "courses": [
+        "CHED priority graduate disciplines"
+      ],
+      "locations": [
+        "Philippines"
+      ]
+    },
+    "requirements": [
+      "Teaching or non-teaching personnel",
+      "Non-plantilla or non-regular employment",
+      "At least five years of service in the sending HEI"
+    ],
+    "requiredDocuments": [
+      "Check the current CHED SIKAP call and in-portal requirements form"
+    ],
+    "tags": [
+      "government",
+      "national"
+    ],
+    "lastVerified": "2026-08-14",
+    "verificationSource": "official",
+    "verificationStatus": "Verified"
+  },
+  {
+    "id": "ched-sikap-l-scholarship-legal-education-track-38",
+    "name": "CHED SIKAP-L Scholarship — Legal Education Track",
+    "provider": {
+      "name": "Commission on Higher Education (CHED) and Legal Education Board",
+      "type": "government",
+      "website": "https://sikap.ched.gov.ph/"
+    },
+    "description": "CHED's SIKAP-L track is for Philippine Bar members pursuing LL.M. and doctoral programs at partner Legal Education Institutions. Check the official portal for a current call and deadline.",
+    "benefits": [
+      "Scholarship support for eligible LL.M. and doctoral study at Legal Education Institutions",
+      "Check the official SIKAP portal for the current benefits and call terms"
+    ],
+    "deadline": null,
+    "applicationUrl": "https://sikap.ched.gov.ph/sikap-apply-now",
+    "eligibility": {
+      "educationLevel": [
+        "Graduate Student"
+      ],
+      "courses": [
+        "LL.M. programs",
+        "Doctoral legal education programs"
+      ],
+      "locations": [
+        "Philippines"
+      ]
+    },
+    "requirements": [
+      "Philippine Bar member"
+    ],
+    "requiredDocuments": [
+      "Check the current CHED SIKAP-L call and in-portal requirements form"
+    ],
+    "tags": [
+      "government",
+      "national"
+    ],
+    "lastVerified": "2026-08-14",
+    "verificationSource": "official",
+    "verificationStatus": "Verified"
+  },
+  {
+    "id": "ched-merit-scholarship-program-cmsp-ay-2026-2027-39",
+    "name": "CHED Merit Scholarship Program (CMSP) — AY 2026–2027",
+    "provider": {
+      "name": "Commission on Higher Education (CHED)",
+      "type": "government",
+      "website": "https://region1.ched.gov.ph/%F0%9D%90%87%F0%9D%90%9E%F0%9D%90%A5%F0%9D%90%A5%F0%9D%90%A8-%F0%9D%90%92%F0%9D%90%9E%F0%9D%90%A7%F0%9D%90%A2%F0%9D%90%A8%F0%9D%90%AB-%F0%9D%90%87%F0%9D%90%A2%F0%9D%90%A0%F0%9D%90%A1-%F0%9D%90%92/"
+    },
+    "description": "CHED's merit scholarship program for qualified incoming first-year college students. The official AY 2026–2027 regional announcement described this cycle as open from June 22 to July 31, 2026; this record is retained as a closed-cycle reference.",
+    "benefits": [
+      "Financial assistance for qualified incoming first-year college students",
+      "Check CHED's next official call for the benefit schedule"
+    ],
+    "deadline": "2026-07-31",
+    "applicationUrl": null,
+    "eligibility": {
+      "educationLevel": [
+        "Incoming College"
+      ],
+      "gwa": {
+        "minimum": 93
+      },
+      "courses": [
+        "CHED priority programs"
+      ],
+      "locations": [
+        "Philippines"
+      ],
+      "incomeMaxMonthly": 41667
+    },
+    "requirements": [
+      "Incoming first-year college student",
+      "Philippine senior high school graduate"
+    ],
+    "requiredDocuments": [
+      "Check the next official CHED CMSP call for the current document checklist"
+    ],
+    "tags": [
+      "government",
+      "national"
+    ],
+    "lastVerified": "2026-08-14",
+    "verificationSource": "official",
+    "verificationStatus": "Expired"
+  },
+  {
+    "id": "cebu-province-cp-gifts-tertiary-education-grant-2026-season-40",
+    "name": "Cebu Province CP-GIFTS Tertiary Education Grant — 2026 Season",
+    "provider": {
+      "name": "Province of Cebu",
+      "type": "lgu",
+      "website": "https://www.cebu.gov.ph/12954/capitol-launches-new-season-of-cp-gifts-scholarship-program-with-%E2%82%B159m-funding/"
+    },
+    "description": "The Province of Cebu announced the 2026 CP-GIFTS season with 5,900 slots and ₱10,000 assistance for deserving college students. The announcement reported available slots but did not publish a closing date or full documentary checklist; confirm the current intake with the Provincial School Board or PESO before applying.",
+    "benefits": [
+      "₱10,000 financial assistance for a deserving college student"
+    ],
+    "deadline": null,
+    "applicationUrl": null,
+    "eligibility": {
+      "educationLevel": [
+        "College Student"
+      ],
+      "locations": [
+        "Cebu Province"
+      ]
+    },
+    "requirements": [
+      "College student",
+      "Constituency or district allocation may apply"
+    ],
+    "requiredDocuments": [
+      "Confirm the current CP-GIFTS application checklist with the Province of Cebu"
+    ],
+    "tags": [
+      "lgu"
+    ],
+    "lastVerified": "2026-08-14",
+    "verificationSource": "official",
+    "verificationStatus": "Verified"
+  }
 ]

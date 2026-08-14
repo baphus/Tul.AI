@@ -11,6 +11,7 @@
 
 import { GWA_BANDS, bandByValue, upperExclusive } from "@/lib/reference/bands";
 import { CHIP_NONE, PLANNING, type Scholarship } from "@/lib/scholarships";
+import { provinceOf } from "@/lib/reference/locations";
 import { matchCohort, matchCourse } from "./normalize";
 import type { Profile } from "./state";
 
@@ -102,6 +103,10 @@ export function matchScholarship(card: Scholarship, profile: Profile): RankedMat
   const checks: RequirementCheck[] = [];
   const el = card.eligibility;
 
+  if (el.citizenship && el.citizenship.length > 0) {
+    checks.push(citizenshipCheck(el.citizenship, profile));
+  }
+
   if (el.gwaMin !== undefined) {
     checks.push(gwaCheck(el.gwaMin, profile));
   }
@@ -162,15 +167,17 @@ export function matchScholarship(card: Scholarship, profile: Profile): RankedMat
 
   if (el.locations && el.locations.length > 0) {
     const city = profile.city.trim();
-    const listed = el.locations.includes(city);
+    const location = matchLocation(el.locations, city);
     checks.push({
       label: "Location",
-      state: !city ? "unknown" : listed ? "met" : "not-met",
+      state: location.state,
       detail: !city
         ? "No location on your profile — cannot confirm the residency requirement."
-        : listed
-          ? `${city} satisfies the residency requirement.`
-          : `This programme is limited to ${el.locations.join(" or ")}.`,
+        : location.state === "met"
+          ? `${city} satisfies the published ${location.matched} location scope.`
+          : location.state === "unknown"
+            ? `We cannot safely compare ${city} with the provider's published location scope, so this stays unknown.`
+            : `This programme is limited to ${el.locations.join(" or ")}.`,
     });
   }
 
@@ -221,6 +228,57 @@ export function matchScholarship(card: Scholarship, profile: Profile): RankedMat
     percent: total === 0 ? null : Math.round((met / total) * 100),
     match: TONE_LABEL[tone],
     checks,
+  };
+}
+
+/**
+ * Compare the onboarding location with a provider's geographic scope. National
+ * programmes publish "Philippines" while onboarding records a city or province;
+ * city-to-province matching is similarly necessary for "Cebu Province". A free
+ * text location that cannot be placed is Unknown, never a false rejection.
+ */
+export function matchLocation(
+  published: string[],
+  location: string
+): { state: CheckState; matched: string | null } {
+  const mine = location.trim();
+  if (!mine) return { state: "unknown", matched: null };
+
+  const exact = published.find((entry) => entry.trim().toLowerCase() === mine.toLowerCase());
+  if (exact) return { state: "met", matched: exact };
+
+  const nationwide = published.find((entry) => /^(philippines|nationwide)$/i.test(entry.trim()));
+  if (nationwide) return { state: "met", matched: nationwide };
+
+  const province = provinceOf(mine);
+  if (!province) return { state: "unknown", matched: null };
+
+  const provinceMatch = published.find((entry) => {
+    const normalized = entry.trim().replace(/\s+province$/i, "").toLowerCase();
+    return normalized === province.toLowerCase();
+  });
+  if (provinceMatch) return { state: "met", matched: provinceMatch };
+
+  return { state: "not-met", matched: null };
+}
+
+function citizenshipCheck(accepted: string[], profile: Profile): RequirementCheck {
+  const citizenship = profile.citizenship.trim();
+  if (!citizenship || citizenship === "Prefer not to say") {
+    return {
+      label: "Citizenship",
+      state: "unknown",
+      detail: `No citizenship confirmation on your profile — cannot confirm the published ${accepted.join(" or ")} requirement.`,
+    };
+  }
+
+  const matched = accepted.some((value) => value.trim().toLowerCase() === citizenship.toLowerCase());
+  return {
+    label: "Citizenship",
+    state: matched ? "met" : "not-met",
+    detail: matched
+      ? `You confirmed ${citizenship}, which meets the published requirement.`
+      : `This programme is limited to ${accepted.join(" or ")} citizens.`,
   };
 }
 

@@ -33,6 +33,7 @@ import {
   CHIP_EXCLUSIVE,
   CHIP_NONE,
   CIRCUMSTANCE_CHIPS,
+  CITIZENSHIP_OPTIONS,
   COURSE_SUGGESTIONS,
   DEPENDENT_HINT,
   INCOMES,
@@ -336,6 +337,16 @@ export function OnboardingFlow({ step }: { step: number }) {
                 </select>
               </div>
             )}
+
+            <fieldset className="mt-6">
+              <legend className="t-body-strong">Citizenship <span className="t-micro text-ink-mute">— optional</span></legend>
+              <p className="t-caption mt-1 text-ink-mute text-pretty">Only used when a provider publishes a citizenship requirement. Leaving it blank stays unknown, never ineligible.</p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {CITIZENSHIP_OPTIONS.map((option) => (
+                  <ChoiceChip key={option} label={option} pressed={profile.citizenship === option} onToggle={() => setField("citizenship", profile.citizenship === option ? "" : option)} />
+                ))}
+              </div>
+            </fieldset>
 
             {planning && (
               <Aside>

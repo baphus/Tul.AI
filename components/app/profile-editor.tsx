@@ -23,6 +23,7 @@ import { GWA_BANDS, HOUSEHOLD_BANDS } from "@/lib/reference/bands";
 import {
   CHIP_EXCLUSIVE,
   CIRCUMSTANCE_CHIPS,
+  CITIZENSHIP_OPTIONS,
   CITIES,
   INCOMES,
   STAGE_OPTS,
@@ -229,6 +230,19 @@ export function ProfileEditor() {
                 </p>
               )}
             </div>
+          </div>
+        </Fieldset>
+
+        <Fieldset
+          legend="Citizenship"
+          why="A small number of providers publish citizenship as a requirement. Leaving this unanswered keeps that requirement unknown."
+        >
+          <div className="grid gap-2.5 sm:max-w-sm">
+            <Label htmlFor="citizenship">Citizenship confirmation</Label>
+            <select id="citizenship" className={selectClass} value={profile.citizenship} onChange={(e) => set("citizenship", e.target.value)}>
+              <option value="">Prefer not to say</option>
+              {CITIZENSHIP_OPTIONS.map((option) => <option key={option} value={option}>{option}</option>)}
+            </select>
           </div>
         </Fieldset>
 

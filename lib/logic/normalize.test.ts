@@ -222,8 +222,11 @@ describe("matchCohort", () => {
 });
 
 describe("against the real data set", () => {
-  const published = (rawScholarships as { eligible_year_levels?: unknown }[]).flatMap((r) =>
-    Array.isArray(r.eligible_year_levels) ? (r.eligible_year_levels as string[]) : []
+  const published = (rawScholarships as { eligibility?: { educationLevel?: unknown } }[]).flatMap(
+    (r) =>
+      Array.isArray(r.eligibility?.educationLevel)
+        ? (r.eligibility.educationLevel as string[])
+        : []
   );
 
   it("resolves the great majority of published year levels to a cohort", () => {

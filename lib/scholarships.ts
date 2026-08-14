@@ -63,6 +63,8 @@ export type VerificationStatus =
  * is presentation, never the source of a match decision.
  */
 export interface Eligibility {
+  /** Citizenships accepted by the provider. */
+  citizenship?: string[];
   /** Minimum GWA on the 60–100 scale. Omitted = no published minimum. */
   gwaMin?: number;
   /** Student stages accepted (see STAGE_OPTS). */
@@ -129,22 +131,43 @@ export interface Scholarship {
   sourceTier: 1 | 2 | 3 | 4;
 }
 
+/**
+ * Canonical scholarship record stored in `data/scholarships.json`.
+ *
+ * The JSON deliberately mirrors the provider-facing shape used by research and
+ * future API reads. `Scholarship` above is the UI projection; keeping that
+ * boundary means presentation fields never become a second source of truth for
+ * eligibility.
+ */
 type RawScholarship = {
-  id: number; name: string; provider: string; provider_type?: string | null;
-  description?: string | null; benefits?: { items?: unknown } | null;
-  application_url?: string | null; official_url?: string | null; deadline?: string | null;
-  status?: string | null; eligible_courses?: unknown; eligible_year_levels?: unknown;
-  minimum_gwa?: number | null; income_requirements?: Record<string, unknown> | null;
-  geographic_requirements?: Record<string, unknown> | null; special_categories?: unknown;
-  required_documents?: unknown; source_urls?: unknown; last_verified_at?: string | null;
-  verification_status?: string | null; logo_url?: string | null;
+  id: string;
+  name: string;
+  provider: { name: string; type: string; website: string | null };
+  description: string;
+  benefits: string[];
+  deadline: string | null;
+  applicationUrl: string | null;
+  eligibility: {
+    citizenship?: string[];
+    educationLevel?: string[];
+    gwa?: { minimum?: number };
+    courses?: string[];
+    locations?: string[];
+    incomeMaxMonthly?: number;
+    specialCategories?: string[];
+    school?: string;
+  };
+  requirements: string[];
+  requiredDocuments?: string[];
+  tags: string[];
+  lastVerified: string;
+  verificationSource: "official" | "document" | "secondary" | "discovery" | "unknown";
+  verificationStatus: VerificationStatus;
+  logoUrl?: string | null;
 };
 
 const rawRecords = rawScholarships as RawScholarship[];
 
-function strings(value: unknown): string[] {
-  return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string" && item.trim().length > 0) : [];
-}
 function dateOnly(value: string | null | undefined): string { return value ? value.slice(0, 10) : ""; }
 function displayDate(value: string | null | undefined): string {
   const iso = dateOnly(value);
@@ -172,62 +195,46 @@ function sourceName(url: string, provider: string): string {
  * Returns null when the record publishes no crest, which renders as a monogram.
  */
 function providerLogo(record: RawScholarship): string | null {
-  if (!record.logo_url) return null;
-  const basename = record.logo_url.split("/").pop();
+  if (!record.logoUrl) return null;
+  const basename = record.logoUrl.split("/").pop();
   return basename ? `/logos/providers/${basename}` : null;
 }
 function benefitAmount(record: RawScholarship): number {
-  const text = strings(record.benefits?.items).join(" ");
+  const text = record.benefits.join(" ");
   const values = [...text.matchAll(/[₱]\s*([0-9,]+)/g)].map((match) => Number(match[1].replace(/,/g, "")));
   return values.length ? Math.max(...values) : 0;
 }
-function locations(record: RawScholarship): string[] | undefined {
-  const geo = record.geographic_requirements ?? {};
-  const values = [geo.locations, geo.cities, geo.provinces, geo.scope].flatMap(strings);
-  if (values.some((value) => value.toLowerCase().includes("nationwide"))) return undefined;
-  return values.length ? values : undefined;
-}
-function incomeMax(record: RawScholarship): number | undefined {
-  const income = record.income_requirements ?? {};
-  const monthly = income.max_monthly_income_php;
-  if (typeof monthly === "number") return monthly;
-  const annual = income.max_annual_gross_family_income_php;
-  return typeof annual === "number" ? Math.round(annual / 12) : undefined;
-}
-function verificationStatus(record: RawScholarship): VerificationStatus {
-  const raw = (record.verification_status ?? "").toUpperCase();
-  const status = record.status?.toUpperCase() ?? "";
-  if (status.includes("CLOSED") || raw.includes("CLOSED")) return "Expired";
-  if (raw === "VERIFIED" || raw.startsWith("VERIFIED_")) return "Verified";
-  if (raw.includes("UPDATED")) return "Updated";
-  return "Needs Verification";
-}
 function sourceTier(record: RawScholarship): 1 | 2 | 3 | 4 {
-  const url = record.official_url ?? "";
-  try {
-    const host = new URL(url).hostname.toLowerCase();
-    if (host.endsWith(".gov.ph") || host.endsWith(".edu.ph") || host.includes("foundation") || host.includes("scholarship")) return 1;
-    return url ? 3 : 4;
-  } catch { return 4; }
+  switch (record.verificationSource) {
+    case "official": return 1;
+    case "document": return 2;
+    case "secondary": return 3;
+    default: return 4;
+  }
 }
 function kindFor(record: RawScholarship): ScholarshipKind {
-  const type = (record.provider_type ?? "").toLowerCase();
+  const type = record.provider.type.toLowerCase();
   if (type.includes("university") || type.includes("school")) return "university";
   if (type.includes("lgu") || type.includes("local")) return "lgu";
   return "national";
 }
 function criteriaFor(record: RawScholarship): Eligibility {
-  const courses = strings(record.eligible_courses);
-  const years = strings(record.eligible_year_levels);
+  const courses = record.eligibility.courses ?? [];
+  const years = record.eligibility.educationLevel ?? [];
   return {
-    gwaMin: typeof record.minimum_gwa === "number" ? record.minimum_gwa : undefined,
+    citizenship: record.eligibility.citizenship?.length ? record.eligibility.citizenship : undefined,
+    gwaMin: record.eligibility.gwa?.minimum,
     courses: courses.length ? courses : undefined, courseMode: courses.length ? "published" : undefined,
-    years: years.length ? years : undefined, locations: locations(record), incomeMax: incomeMax(record),
-    special: strings(record.special_categories),
+    years: years.length ? years : undefined,
+    locations: record.eligibility.locations?.length ? record.eligibility.locations : undefined,
+    incomeMax: record.eligibility.incomeMaxMonthly,
+    special: record.eligibility.specialCategories?.length ? record.eligibility.specialCategories : undefined,
+    school: record.eligibility.school,
   };
 }
 function rowsFor(criteria: Eligibility): RequirementRow[] {
   const rows: RequirementRow[] = [];
+  if (criteria.citizenship?.length) rows.push({ state: "none", label: "Citizenship", text: "Published eligible citizenship: " + criteria.citizenship.join(", ") + "." });
   if (criteria.gwaMin !== undefined) rows.push({ state: "none", label: "GWA", text: "Published minimum: " + criteria.gwaMin + "%." });
   if (criteria.courses?.length) rows.push({ state: "none", label: "Course", text: "Published eligible courses include " + criteria.courses.slice(0, 4).join(", ") + "." });
   if (criteria.years?.length) rows.push({ state: "none", label: "Year level", text: "Published eligible year levels include " + criteria.years.join(", ") + "." });
@@ -237,20 +244,21 @@ function rowsFor(criteria: Eligibility): RequirementRow[] {
   return rows.length ? rows : [{ state: "none", label: "Published criteria", text: "The provider has not published enough structured criteria for an automatic comparison." }];
 }
 function adapt(record: RawScholarship): Scholarship {
-  const eligibility = criteriaFor(record); const rows = rowsFor(eligibility); const urls = strings(record.source_urls);
-  const lastVerified = dateOnly(record.last_verified_at) || "Unknown"; const verification = verificationStatus(record);
+  const eligibility = criteriaFor(record); const rows = rowsFor(eligibility);
+  const lastVerified = dateOnly(record.lastVerified) || "Unknown"; const verification = record.verificationStatus;
   const amount = benefitAmount(record); const deadlineIso = dateOnly(record.deadline) || "9999-12-31";
+  const sourceUrl = record.provider.website ?? record.applicationUrl ?? "";
   return {
-    id: String(record.id), provider: record.provider, logo: providerLogo(record), title: record.name, amount,
+    id: record.id, provider: record.provider.name, logo: providerLogo(record), title: record.name, amount,
     amountNote: amount ? "published benefit" : "see provider details", deadline: displayDate(record.deadline), deadlineIso,
     match: "Possible match", matchShort: "Review " + rows.length + " published requirement" + (rows.length === 1 ? "" : "s"),
     tone: "possible", met: 0, total: rows.length,
     why: rows.slice(0, 3).map((row) => ({ state: row.state, label: row.label + " published" })), rows,
-    needs: strings(record.required_documents).length ? strings(record.required_documents) : ["Check the provider's official application instructions"],
-    sources: urls.length ? urls.map((url) => ({ name: sourceName(url, record.provider), url, date: "Checked " + lastVerified, short: lastVerified.slice(5) })) : [{ name: record.provider, url: record.official_url ?? record.application_url ?? "", date: "Checked " + lastVerified, short: lastVerified.slice(5) }],
-    host: sourceHost(record.application_url || record.official_url, record.provider), applicationUrl: record.application_url ?? record.official_url ?? null,
-    verify: record.description ?? "Review the provider's official source for current details.", kind: kindFor(record), eligibility,
-    back: { about: record.description ?? "No description published.", facts: [["Provider type", record.provider_type ?? "Not published"], ["Status", record.status ?? "Not published"], ["Source count", String(urls.length)]] },
+    needs: record.requiredDocuments?.length ? record.requiredDocuments : ["Check the provider's official application instructions"],
+    sources: [{ name: sourceName(sourceUrl, record.provider.name), url: sourceUrl, date: "Checked " + lastVerified, short: lastVerified.slice(5) }],
+    host: sourceHost(record.applicationUrl || record.provider.website, record.provider.name), applicationUrl: record.applicationUrl ?? record.provider.website ?? null,
+    verify: record.description || "Review the provider's official source for current details.", kind: kindFor(record), eligibility,
+    back: { about: record.description || "No description published.", facts: [["Provider type", record.provider.type], ["Verification", record.verificationStatus], ["Tags", record.tags.join(", ") || "Not published"]] },
     verification, lastVerified, sourceTier: sourceTier(record),
   };
 }
@@ -362,6 +370,9 @@ export const STAGE_OPTS = [
   "Graduate Student",
   PLANNING,
 ];
+
+/** Optional, narrowly-scoped confirmation for published citizenship requirements. */
+export const CITIZENSHIP_OPTIONS = ["Filipino", "Not a Filipino citizen", "Prefer not to say"];
 
 /** What each stage means, shown under the option on step 1. */
 export const STAGE_NOTES: Record<string, string> = {

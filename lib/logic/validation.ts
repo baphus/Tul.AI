@@ -85,6 +85,7 @@ export function isProfileReady(profile: Profile): boolean {
 export function profileCompleteness(profile: Profile): { filled: number; total: number } {
   const fields = [
     profile.city,
+    profile.citizenship,
     profile.course,
     profile.school,
     profile.stage,

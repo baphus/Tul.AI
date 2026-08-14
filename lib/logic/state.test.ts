@@ -164,6 +164,14 @@ describe("deck sorting", () => {
     expect(reset.profile.city).toBe("Cebu City");
   });
 
+  it("flips the card and can be forced back", () => {
+    const flipped = reducer(createInitialState(), { type: "TAP_CARD" });
+    expect(flipped.flipped).toBe(true);
+    const back = reducer(flipped, { type: "SET_FLIPPED", value: false });
+    expect(back.flipped).toBe(false);
+    expect(reducer(back, { type: "SET_FLIPPED", value: false })).toBe(back);
+  });
+
   it("shows a piece of cross-scholarship advice at most once", () => {
     // The first two cards are both national programs.
     expect(KIND[0]).toBe("national");

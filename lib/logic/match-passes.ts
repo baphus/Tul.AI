@@ -64,7 +64,7 @@ const PASSES: { label: string; labels: string[] | null }[] = [
   },
   {
     label: "Looking for programmes you may have missed",
-    labels: ["Special circumstances"],
+    labels: ["Special circumstances", "Citizenship"],
   },
 ];
 

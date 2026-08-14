@@ -7,7 +7,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { ScholarshipCard } from "@/components/scholarship/scholarship-card";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { usePrefersReducedMotion } from "@/hooks/use-media-query";
+import { useToday } from "@/hooks/use-today";
 import { useTulAi } from "@/hooks/use-tul-ai";
+import { isDeadlineOpen } from "@/lib/logic/deadlines";
 import { rankScholarships } from "@/lib/logic/matching";
 import { ROUTES } from "@/lib/logic/routes";
 import { savedCount } from "@/lib/logic/state";
@@ -35,6 +37,7 @@ export function Deck({ detailOpen }: { detailOpen: boolean }) {
   const router = useRouter();
   const { state, dispatch, cards } = useTulAi();
   const reduced = usePrefersReducedMotion();
+  const today = useToday();
 
   const deck = rankScholarships(cards, state.profile)
     .filter((result) => result.tone !== "none")
@@ -43,7 +46,9 @@ export function Deck({ detailOpen }: { detailOpen: boolean }) {
       result,
       rawIndex: cards.findIndex((item) => item.id === result.id),
     }))
-    .filter(({ card }) => card.verification !== "Expired");
+    .filter(({ card }) =>
+      card.verification !== "Expired" && (!today || isDeadlineOpen(card.deadlineIso, today))
+    );
   const current = deck[state.idx];
   const card = current?.card ?? null;
 
@@ -133,6 +138,11 @@ export function Deck({ detailOpen }: { detailOpen: boolean }) {
     if (!activeDrag.active) return;
     drag.current = { ...activeDrag, active: false };
     setDragging(false);
+    if (activeDrag.moved < TAP_SLOP) {
+      paint(0, 1);
+      dispatch({ type: "TAP_CARD" });
+      return;
+    }
     if (activeDrag.dx > COMMIT_X) return fling(1);
     if (activeDrag.dx < -COMMIT_X) return fling(-1);
     paint(0, 1);
@@ -151,11 +161,14 @@ export function Deck({ detailOpen }: { detailOpen: boolean }) {
       } else if (event.key === "ArrowRight") {
         event.preventDefault();
         fling(1);
+      } else if (event.key === " ") {
+        event.preventDefault();
+        dispatch({ type: "TAP_CARD" });
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [card, detailOpen, fling]);
+  }, [card, detailOpen, dispatch, fling]);
 
   const saved = savedCount(state);
 
@@ -194,7 +207,14 @@ export function Deck({ detailOpen }: { detailOpen: boolean }) {
                 : "transition-[transform,opacity] duration-[260ms] ease-[cubic-bezier(.32,.72,0,1)]"
             )}
           >
-            <ScholarshipCard card={card} index={current.rawIndex} result={current.result} />
+            <ScholarshipCard
+              card={card}
+              index={current.rawIndex}
+              flipped={state.flipped}
+              reduced={reduced}
+              onFlip={() => dispatch({ type: "TAP_CARD" })}
+              result={current.result}
+            />
           </div>
         ) : (
           <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center">

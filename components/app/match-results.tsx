@@ -10,9 +10,11 @@ import { ProviderCrest } from "@/components/scholarship/provider-logo";
 import { DotGrid } from "@/components/site/dot-grid";
 import { ButtonLink } from "@/components/ui/button";
 import { usePrefersReducedMotion } from "@/hooks/use-media-query";
+import { useToday } from "@/hooks/use-today";
 import { useTulAi } from "@/hooks/use-tul-ai";
 import { useLanguage } from "@/lib/logic/language";
 import { formatPeso } from "@/lib/logic/format";
+import { isDeadlineOpen } from "@/lib/logic/deadlines";
 import { aiReRank } from "@/lib/logic/matching.ai";
 import { countsOf, rankScholarships, type MatchTone4, type RankedMatch } from "@/lib/logic/matching";
 import { ROUTES } from "@/lib/logic/routes";
@@ -34,13 +36,17 @@ export function MatchResults() {
   const { state, cards, ready } = useTulAi();
   const language = useLanguage();
   const reduced = usePrefersReducedMotion();
+  const today = useToday();
   const [aiExplanations, setAiExplanations] = useState<Record<string, string>>({});
 
   const profileReady = isProfileReady(state.profile);
 
   const ranked = useMemo(
-    () => rankScholarships(cards, state.profile),
-    [cards, state.profile]
+    () => rankScholarships(cards, state.profile).filter((result) => {
+      const card = cards.find((item) => item.id === result.id);
+      return Boolean(card && card.verification !== "Expired" && (!today || isDeadlineOpen(card.deadlineIso, today)));
+    }),
+    [cards, state.profile, today]
   );
   const counts = useMemo(() => countsOf(ranked), [ranked]);
 
