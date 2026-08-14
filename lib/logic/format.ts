@@ -1,5 +1,4 @@
-import type { Scholarship } from "@/lib/scholarships";
-import type { MatchTone } from "@/lib/scholarships";
+import type { MatchTone4 } from "./matching";
 
 /** Format an amount as Philippine pesos, e.g. 60000 -> ₱60,000. */
 export function formatPeso(amount: number): string {
@@ -18,7 +17,7 @@ export interface RequirementMetric {
    * rather than coercing it to a number.
    */
   pct: number | null;
-  tone: MatchTone;
+  tone: MatchTone4;
 }
 
 /**
@@ -28,7 +27,7 @@ export interface RequirementMetric {
  * count as *not met* so the metric never overstates eligibility.
  */
 export function requirementMetric(
-  card: Pick<Scholarship, "met" | "total" | "tone">
+  card: { met: number; total: number; tone: MatchTone4 }
 ): RequirementMetric {
   const total = Math.max(0, card.total);
   const met = Math.max(0, Math.min(card.met, total));

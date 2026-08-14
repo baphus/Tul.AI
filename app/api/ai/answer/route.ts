@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { DATA } from "@/lib/scholarships";
 import { answerFor } from "@/lib/logic/answerFor";
-import { allowAiRequest, generateTulAIResponse, shouldUseLiveResearch } from "@/lib/logic/ai-config";
+import { allowAiRequest, canUseLiveResearch, generateTulAIResponse, shouldUseLiveResearch } from "@/lib/logic/ai-config";
 import { requestedLanguage } from "@/lib/logic/locale";
 
 export async function POST(request: Request) {
@@ -20,7 +20,7 @@ export async function POST(request: Request) {
     if (!card) return NextResponse.json({ error: "Scholarship not found." }, { status: 404 });
 
     const responseLanguage = requestedLanguage(language);
-    const liveResearch = shouldUseLiveResearch(question);
+    const liveResearch = shouldUseLiveResearch(question) && canUseLiveResearch();
     const domains = card.sources
       .map((source) => {
         try {

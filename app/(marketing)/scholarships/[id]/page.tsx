@@ -1,15 +1,12 @@
-import { ArrowLeftIcon } from "lucide-react";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { ScholarshipDetail } from "@/components/scholarship/scholarship-detail";
+import { PersonalizedScholarshipDetail } from "@/components/scholarship/personalized-scholarship-detail";
 import { ScholarshipSummaryCard } from "@/components/scholarship/scholarship-summary-card";
 import { ClosingCta } from "@/components/site/closing-cta";
 import { Container, Section, SectionHead } from "@/components/site/layout-primitives";
 import { SiteHeader } from "@/components/site/site-header";
 import { formatPeso } from "@/lib/logic/format";
-import { ROUTES } from "@/lib/logic/routes";
 import { DATA, getScholarships } from "@/lib/scholarships";
 
 /** Every record is known at build time, so every page is prerendered. */
@@ -52,19 +49,7 @@ export default async function ScholarshipPage({ params }: PageProps<"/scholarshi
 
       <main id="main" className="flex-1">
         <Container width="narrow" className="px-0 sm:px-0">
-          <ScholarshipDetail
-            card={card}
-            index={index}
-            topSlot={
-              <Link
-                href={ROUTES.scholarships}
-                className="ring-brand t-caption inline-flex items-center gap-2 rounded-xs text-ink-mute hover:text-ink"
-              >
-                <ArrowLeftIcon className="size-3.5" aria-hidden="true" />
-                All scholarships
-              </Link>
-            }
-          />
+          <PersonalizedScholarshipDetail card={card} index={index} />
         </Container>
 
         {related.length > 0 && (

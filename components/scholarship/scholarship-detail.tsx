@@ -14,6 +14,8 @@ import {
 } from "@/components/scholarship/verification-badge";
 import { VerifyDialog } from "@/components/scholarship/verify-dialog";
 import { formatPeso } from "@/lib/logic/format";
+import { detailRequirements } from "@/lib/logic/detail-match";
+import type { RankedMatch } from "@/lib/logic/matching";
 import type { Scholarship } from "@/lib/scholarships";
 import { cn } from "@/lib/utils";
 
@@ -28,14 +30,23 @@ export function ScholarshipDetail({
   index,
   topSlot,
   className,
+  result,
+  matchExplanation,
 }: {
   card: Scholarship;
   index: number;
   topSlot?: ReactNode;
   className?: string;
+  /** The live deterministic result when a student is viewing this record in-app. */
+  result?: RankedMatch;
+  /** Advisory AI prose that is grounded in the live deterministic result. */
+  matchExplanation?: ReactNode;
 }) {
-  const unknowns = card.rows.filter((r) => r.state === "none").length;
-  const attention = card.rows.filter((r) => r.state === "warn").length;
+  const personalized = Boolean(result);
+  const rows = result ? detailRequirements(result) : card.rows;
+  const match = result ?? card;
+  const unknowns = rows.filter((r) => r.state === "none").length;
+  const attention = rows.filter((r) => r.state === "warn").length;
 
   return (
     <article className={cn("pb-16", className)}>
@@ -51,7 +62,7 @@ export function ScholarshipDetail({
         </div>
         <h1 className="t-display-xl mt-4 text-balance">{card.title}</h1>
         <div className="mt-5 flex flex-wrap items-center gap-2">
-          <MatchBadge card={card} />
+          {personalized && <MatchBadge card={match} />}
           <DeadlineChip deadline={card.deadline} deadlineIso={card.deadlineIso} />
           <VerificationBadge status={card.verification} />
         </div>
@@ -88,18 +99,20 @@ export function ScholarshipDetail({
         {/* ── Why this matched ── */}
         <section className="mt-12" aria-labelledby="why">
           <h2 id="why" className="t-display-lg">
-            Why this matched you
+            {personalized ? "Why this matched you" : "Published requirements"}
           </h2>
           <p className="t-body mt-2 text-ink-mute text-pretty">
-            Matching compares your profile against each published requirement. Open a row
-            to read the requirement behind it.
+            {personalized
+              ? "Matching compares your profile against each published requirement. Open a row to read the requirement behind it."
+              : "This public page lists provider-published requirements. Start matching to compare them with your own profile."}
           </p>
 
-          <MatchMetric card={card} className="mt-5" />
+          {matchExplanation}
+          {personalized && <MatchMetric card={match} className="mt-5" />}
 
           <ul className="mt-5 overflow-hidden rounded-lg border border-hairline bg-canvas">
-            {card.rows.map((row, i) => (
-              <li key={row.label} className={cn(i < card.rows.length - 1 && "border-b border-hairline")}>
+            {rows.map((row, i) => (
+              <li key={row.label} className={cn(i < rows.length - 1 && "border-b border-hairline")}>
                 <details className="group">
                   <summary className="ring-brand flex cursor-pointer list-none items-center gap-3 px-4 py-4 transition-colors hover:bg-canvas-soft">
                     <RequirementMark state={row.state} />
@@ -117,7 +130,7 @@ export function ScholarshipDetail({
             ))}
           </ul>
 
-          {(unknowns > 0 || attention > 0) && (
+          {personalized && (unknowns > 0 || attention > 0) && (
             <p className="t-caption mt-4 rounded-md border border-hairline bg-canvas-soft p-4 text-ink-mute text-pretty">
               {unknowns > 0 && (
                 <>

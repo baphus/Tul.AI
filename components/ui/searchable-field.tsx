@@ -2,6 +2,7 @@
 
 import { Autocomplete } from "@base-ui/react/autocomplete";
 import { CheckIcon, SearchIcon } from "lucide-react";
+import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -53,7 +54,12 @@ export function SearchableField({
   emptyMessage = "No match — your answer is kept as typed.",
   items,
   className,
-}: SearchableFieldProps & { items: string[] }) {
+  itemContent,
+}: SearchableFieldProps & {
+  items: string[];
+  /** Optional richer suggestion content; the stored value remains the item string. */
+  itemContent?: (item: string) => ReactNode;
+}) {
   return (
     <Autocomplete.Root
       items={items}
@@ -83,8 +89,12 @@ export function SearchableField({
             </Autocomplete.Empty>
             <Autocomplete.List className={LIST}>
               {(item: string) => (
-                <Autocomplete.Item key={item} value={item} className={ITEM}>
-                  <span className="t-body min-w-0 flex-1 truncate">{item}</span>
+                <Autocomplete.Item key={item} value={item} className={`${ITEM} group`}>
+                  {itemContent ? (
+                    <span className="min-w-0 flex-1">{itemContent(item)}</span>
+                  ) : (
+                    <span className="t-body min-w-0 flex-1 truncate">{item}</span>
+                  )}
                   {item === value && (
                     <CheckIcon className="size-3.5 flex-none" aria-hidden="true" />
                   )}

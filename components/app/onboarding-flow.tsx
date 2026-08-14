@@ -3,8 +3,12 @@
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
+  Building2Icon,
+  ChurchIcon,
   CheckIcon,
+  LandmarkIcon,
   Loader2Icon,
+  GraduationCapIcon,
   SparklesIcon,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -29,7 +33,7 @@ import { canAdvance, dependentsError, gwaError, isPlanning } from "@/lib/logic/v
 import { GWA_BANDS, HOUSEHOLD_BANDS } from "@/lib/reference/bands";
 import { COURSE_GROUPS, type CourseOption } from "@/lib/reference/courses";
 import { LOCATION_OPTIONS } from "@/lib/reference/locations";
-import { schoolsFor } from "@/lib/reference/schools";
+import { schoolsFor, type SchoolKind } from "@/lib/reference/schools";
 import {
   CHIP_EXCLUSIVE,
   CHIP_NONE,
@@ -74,6 +78,42 @@ interface StepMeta {
   question: string;
   why: string;
   optional?: boolean;
+}
+
+/* Main's school metadata is rendered in the searchable school results below. */
+const schoolKindLabels: Record<SchoolKind, string> = {
+  state: "State university",
+  local: "Local college",
+  private: "Private institution",
+  sectarian: "Sectarian institution",
+};
+
+type ExtractionProposal = {
+  city?: string;
+  course?: string;
+  gwa?: string;
+  chips?: string[];
+  summary?: string;
+};
+
+function SchoolKindIcon({ kind }: { kind: SchoolKind }) {
+  const Icon =
+    kind === "state"
+      ? LandmarkIcon
+      : kind === "local"
+        ? Building2Icon
+        : kind === "sectarian"
+          ? ChurchIcon
+          : GraduationCapIcon;
+
+  return (
+    <span
+      className="flex size-8 flex-none items-center justify-center rounded-full bg-canvas-soft text-ink group-data-highlighted:bg-white/15 group-data-highlighted:text-white"
+      aria-hidden="true"
+    >
+      <Icon className="size-4" />
+    </span>
+  );
 }
 
 function metaFor(step: number, planning: boolean, t: (key: TranslationKey) => string): StepMeta {
@@ -123,6 +163,7 @@ export function OnboardingFlow({ step }: { step: number }) {
 
   const [extracting, setExtracting] = useState(false);
   const [extractionResult, setExtractionResult] = useState<string | null>(null);
+  const [extractionProposal, setExtractionProposal] = useState<ExtractionProposal | null>(null);
   const [extractConsent, setExtractConsent] = useState(false);
 
   const planning = isPlanning(profile);
@@ -153,6 +194,7 @@ export function OnboardingFlow({ step }: { step: number }) {
     if (!profile.notes.trim() || extracting) return;
     setExtracting(true);
     setExtractionResult(null);
+    setExtractionProposal(null);
     try {
       const res = await fetch("/api/ai/extract", {
         method: "POST",
@@ -161,20 +203,9 @@ export function OnboardingFlow({ step }: { step: number }) {
       });
       const json = await res.json();
       if (json?.extracted) {
-        const ext = json.extracted;
-        if (ext.course && !profile.course) setField("course", ext.course);
-        if (ext.city && !profile.city) setField("city", ext.city);
-        if (ext.gwa && !profile.gwa) setField("gwa", ext.gwa);
-        if (ext.chips && Array.isArray(ext.chips)) {
-          ext.chips.forEach((c: string) => {
-            if (!profile.chips.includes(c)) {
-              dispatch({ type: "TOGGLE_CHIP", value: c });
-            }
-          });
-        }
-        setExtractionResult(
-          ext.summary || "AI extracted structured details into your profile."
-        );
+        const ext = json.extracted as ExtractionProposal;
+        setExtractionProposal(ext);
+        setExtractionResult(ext.summary || "Review each suggestion before adding it to your profile.");
       }
     } catch (err) {
       console.error("AI extraction error:", err);
@@ -245,6 +276,10 @@ export function OnboardingFlow({ step }: { step: number }) {
     profile.stage === "College Student" || profile.stage === "Graduate Student";
 
   const schools = useMemo(() => schoolsFor(profile.city), [profile.city]);
+  const schoolsByName = useMemo(
+    () => new Map(schools.schools.map((school) => [school.name, school])),
+    [schools.schools]
+  );
   const locationNames = useMemo(() => LOCATION_OPTIONS.map((o) => o.value), []);
 
   const display = (value: string) =>
@@ -518,6 +553,22 @@ export function OnboardingFlow({ step }: { step: number }) {
                   value={profile.school}
                   onValueChange={(value) => setField("school", value)}
                   placeholder="hal. Cebu Technological University"
+                  itemContent={(name) => {
+                    const school = schoolsByName.get(name);
+                    if (!school) return name;
+
+                    return (
+                      <span className="flex min-w-0 items-center gap-3">
+                        <SchoolKindIcon kind={school.kind} />
+                        <span className="min-w-0 flex-1">
+                          <span className="t-body block truncate">{school.name}</span>
+                          <span className="t-micro block truncate text-ink-faint group-data-highlighted:text-white/70">
+                            {school.city} · {schoolKindLabels[school.kind]}
+                          </span>
+                        </span>
+                      </span>
+                    );
+                  }}
                   emptyMessage="Wala sa listahan — pananatilihin namin ang isinulat mo."
                 />
                 <p className="t-micro text-ink-mute text-pretty">
@@ -597,12 +648,12 @@ export function OnboardingFlow({ step }: { step: number }) {
               />
             </div>
 
-            <fieldset className="lg:col-start-2 lg:row-span-2">
+            <fieldset className="mx-auto w-full max-w-md text-center lg:col-start-2 lg:row-span-2 lg:row-start-1">
               <legend className="t-body-strong">{t("onboardingCircumstances")}</legend>
               <p className="t-caption mt-1 mb-3.5 text-ink-mute text-pretty">
                 Pumili ng ilan hangga't gusto mo — bawat isa ay nagbubukas ng partikular na programa. Ang dalawang nasa ibaba ng linya ay sagot tungkol sa buong listahan, kaya lilinisin ng pagpili sa alinman ang iba.
               </p>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap justify-center gap-2">
                 {CIRCUMSTANCE_CHIPS.map((option) => (
                   <ChoiceChip
                     key={option}
@@ -612,7 +663,7 @@ export function OnboardingFlow({ step }: { step: number }) {
                   />
                 ))}
               </div>
-              <div className="mt-3.5 flex flex-wrap gap-2 border-t border-hairline pt-3.5">
+              <div className="mt-3.5 flex flex-wrap justify-center gap-2 border-t border-hairline pt-3.5">
                 {CHIP_EXCLUSIVE.map((option) => (
                   <ChoiceChip
                     key={option}
@@ -623,7 +674,7 @@ export function OnboardingFlow({ step }: { step: number }) {
                 ))}
               </div>
               {profile.chips.includes(CHIP_NONE) && (
-                <p className="t-micro mt-3.5 max-w-[46ch] text-ink-mute text-pretty">
+                <p className="t-micro mx-auto mt-3.5 max-w-[46ch] text-ink-mute text-pretty">
                   Ang mga programang para sa isa sa mga kategorya sa itaas ay lalabas na hindi kasalukuyang kwalipikado dahil sinabi mong walang naaangkop. Alisin ang check kung mas gusto mong hindi ito sagutin.
                 </p>
               )}
@@ -734,6 +785,35 @@ export function OnboardingFlow({ step }: { step: number }) {
                     <p className="t-micro mt-2 text-ink-mute text-pretty">
                       {t("onboardingAiCorrection")}
                     </p>
+                    {extractionProposal && (
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {extractionProposal.course && !profile.course && (
+                          <Button type="button" size="sm" variant="outline" onClick={() => setField("course", extractionProposal.course!)}>
+                            Add course: {extractionProposal.course}
+                          </Button>
+                        )}
+                        {extractionProposal.city && !profile.city && (
+                          <Button type="button" size="sm" variant="outline" onClick={() => setField("city", extractionProposal.city!)}>
+                            Add location: {extractionProposal.city}
+                          </Button>
+                        )}
+                        {extractionProposal.gwa && !profile.gwa && (
+                          <Button type="button" size="sm" variant="outline" onClick={() => setField("gwa", extractionProposal.gwa!)}>
+                            Add GWA: {extractionProposal.gwa}
+                          </Button>
+                        )}
+                        {extractionProposal.chips?.filter((chip) => !profile.chips.includes(chip)).length ? (
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="outline"
+                            onClick={() => extractionProposal.chips?.filter((chip) => !profile.chips.includes(chip)).forEach((value) => dispatch({ type: "TOGGLE_CHIP", value }))}
+                          >
+                            Add circumstances: {extractionProposal.chips.filter((chip) => !profile.chips.includes(chip)).join(", ")}
+                          </Button>
+                        ) : null}
+                      </div>
+                    )}
                   </div>
                 </div>
               )}

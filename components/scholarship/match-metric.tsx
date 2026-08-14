@@ -1,5 +1,5 @@
 import { requirementMetric } from "@/lib/logic/format";
-import type { Scholarship } from "@/lib/scholarships";
+import type { MatchTone4 } from "@/lib/logic/matching";
 import { cn } from "@/lib/utils";
 
 /**
@@ -13,7 +13,7 @@ export function MatchMetric({
   className,
   showLabel = true,
 }: {
-  card: Pick<Scholarship, "met" | "total" | "tone" | "match">;
+  card: { met: number; total: number; tone: MatchTone4; match: string };
   className?: string;
   showLabel?: boolean;
 }) {
@@ -59,7 +59,7 @@ export function MatchBadge({
   card,
   className,
 }: {
-  card: Pick<Scholarship, "match" | "tone">;
+  card: { match: string; tone: MatchTone4 };
   className?: string;
 }) {
   return (
@@ -68,14 +68,16 @@ export function MatchBadge({
         "t-micro inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1",
         card.tone === "strong"
           ? "border-met/25 bg-met/8 text-met"
-          : "border-attention/25 bg-attention/8 text-attention-ink",
+          : card.tone === "none"
+            ? "border-negative/25 bg-negative/8 text-negative-deep"
+            : "border-attention/25 bg-attention/8 text-attention-ink",
         className
       )}
     >
       <span
         className={cn(
           "size-1.5 rounded-full",
-          card.tone === "strong" ? "bg-met" : "bg-attention"
+          card.tone === "strong" ? "bg-met" : card.tone === "none" ? "bg-negative" : "bg-attention"
         )}
         aria-hidden="true"
       />

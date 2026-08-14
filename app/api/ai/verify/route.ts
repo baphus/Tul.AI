@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { DATA } from "@/lib/scholarships";
-import { allowAiRequest, generateTulAIResponse } from "@/lib/logic/ai-config";
+import { allowAiRequest, canUseLiveResearch, generateTulAIResponse } from "@/lib/logic/ai-config";
 import { requestedLanguage } from "@/lib/logic/locale";
 
 export async function POST(request: Request) {
@@ -12,6 +12,9 @@ export async function POST(request: Request) {
     if (!card) return NextResponse.json({ error: "Scholarship not found." }, { status: 404 });
     const domains = card.sources.map((source) => { try { return new URL(source.url).hostname; } catch { return null; } }).filter((value): value is string => Boolean(value));
     const responseLanguage = requestedLanguage(language);
+    if (!canUseLiveResearch()) {
+      return NextResponse.json({ verified: card.verify, sources: card.sources, lastVerified: card.lastVerified, liveResearch: "unavailable" });
+    }
     const result = await generateTulAIResponse(
       `Verify only current, official information for ${card.provider} — ${card.title}. Existing record status: ${card.verification}; last checked: ${card.lastVerified}; listed deadline: ${card.deadline}. Summarize what an official source confirms and clearly say what cannot be confirmed. Do not say a source was checked unless it is cited.`,
       { liveResearch: true, officialDomains: domains, language: responseLanguage }
