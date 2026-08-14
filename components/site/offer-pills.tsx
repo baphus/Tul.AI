@@ -1,4 +1,7 @@
+"use client";
+
 import { ProviderCrest } from "@/components/scholarship/provider-logo";
+import { useLanguage } from "@/lib/logic/language";
 import { formatPeso } from "@/lib/logic/format";
 import type { Scholarship } from "@/lib/scholarships";
 import { cn } from "@/lib/utils";
@@ -42,6 +45,7 @@ const PART_STAGGER_SECONDS = { logo: 0, label: 0.14, amount: 0.28 } as const;
  * element on the page.
  */
 const LABELS = ["Offers", "Grants", "Awards", "Publishes", "Provides", "Funds"];
+const LABELS_FIL = ["Nag-aalok", "Nagbibigay", "Nagkakaloob", "Inilalathala", "Naglalaan", "Pinopondohan"];
 
 function HeroPillLogo({
   card,
@@ -80,6 +84,8 @@ export function OfferPills({
   cards: readonly Scholarship[];
   className?: string;
 }) {
+  const language = useLanguage();
+  const labels = language === "FIL" ? LABELS_FIL : LABELS;
   if (cards.length === 0) return null;
 
   /*
@@ -183,11 +189,11 @@ export function OfferPills({
               className="hero-pill-face t-body-strong absolute inset-0 text-left text-ink motion-reduce:hidden"
               style={{ animationDelay: `${slot * SLOT_SECONDS + PART_STAGGER_SECONDS.label}s` }}
             >
-              {LABELS[slot % LABELS.length]}
+              {labels[slot % labels.length]}
             </span>
           ))}
           <span className="t-body-strong absolute inset-0 hidden text-left text-ink motion-reduce:block">
-            {LABELS[0]}
+            {labels[0]}
           </span>
         </span>
 

@@ -22,14 +22,14 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { ROUTES } from "@/lib/logic/routes";
-import { setLanguage, type Language, useLanguage } from "@/lib/logic/language";
+import { setLanguage, type Language, useLanguage, useTranslation } from "@/lib/logic/language";
 import { cn } from "@/lib/utils";
 
 const NAV = [
-  { href: ROUTES.scholarships, label: "Scholarships" },
-  { href: ROUTES.howItWorks, label: "How it works" },
-  { href: ROUTES.roadmap, label: "Roadmap" },
-];
+  { href: ROUTES.scholarships, label: "scholarships" },
+  { href: ROUTES.howItWorks, label: "howItWorks" },
+  { href: ROUTES.roadmap, label: "roadmap" },
+] as const;
 
 function CountryFlag({ language }: { language: Language }) {
   return (
@@ -45,6 +45,7 @@ function CountryFlag({ language }: { language: Language }) {
 
 function LanguageSelector() {
   const language = useLanguage();
+  const { t } = useTranslation();
 
   function changeLanguage(value: string | null) {
     if (value !== "ENG" && value !== "FIL") return;
@@ -54,7 +55,7 @@ function LanguageSelector() {
   return (
     <Select value={language} onValueChange={changeLanguage}>
       <SelectTrigger
-        aria-label="Choose language"
+        aria-label={t("chooseLanguage")}
         className="ring-brand h-11 gap-2 rounded-full border-hairline bg-transparent py-1 pr-1 pl-2.5 text-ink hover:bg-canvas/40 focus-visible:ring-2 focus-visible:ring-brand/60 [&>svg:last-child]:hidden"
       >
         <CountryFlag language={language} />
@@ -113,6 +114,7 @@ export function SiteHeader({
 }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
   const onBrand = tone === "brand";
 
   return (
@@ -128,7 +130,7 @@ export function SiteHeader({
       <div className="mx-auto flex h-16 w-full max-w-[75rem] items-center gap-6 px-5 sm:h-20 sm:px-8">
         <BrandMark strong />
 
-        <nav className="ml-auto hidden items-center gap-8 md:flex" aria-label="Main">
+        <nav className="ml-auto hidden items-center gap-8 md:flex" aria-label={t("mainNavigation")}>
           {NAV.map((item) => {
             const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
             return (
@@ -146,7 +148,7 @@ export function SiteHeader({
                     : "text-ink hover:underline hover:decoration-hairline hover:underline-offset-[6px]"
                 )}
               >
-                {item.label}
+                {t(item.label)}
               </Link>
             );
           })}
@@ -159,7 +161,7 @@ export function SiteHeader({
             className="t-body-strong hidden h-12 px-6 text-base md:inline-flex"
             href={ROUTES.onboarding}
           >
-            Find my scholarships
+            {t("findScholarships")}
           </ButtonLink>
 
           <Sheet open={open} onOpenChange={setOpen}>
@@ -179,17 +181,17 @@ export function SiteHeader({
               side="right"
               className="gap-0 bg-canvas p-6 pt-5 text-ink data-[side=right]:sm:max-w-xs"
             >
-              <SheetTitle className="t-display-md">Menu</SheetTitle>
-              <SheetDescription className="sr-only">Site navigation</SheetDescription>
+              <SheetTitle className="t-display-md">{t("menu")}</SheetTitle>
+              <SheetDescription className="sr-only">{t("mainNavigation")}</SheetDescription>
               <nav className="mt-8 flex flex-col" aria-label="Mobile">
-                {[...NAV, { href: ROUTES.privacy, label: "Privacy" }].map((item) => (
+                {[...NAV, { href: ROUTES.privacy, label: "privacy" as const }].map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
                     onClick={() => setOpen(false)}
                     className="ring-brand t-body-lg border-b border-hairline py-4 text-ink"
                   >
-                    {item.label}
+                    {t(item.label)}
                   </Link>
                 ))}
               </nav>
@@ -197,10 +199,10 @@ export function SiteHeader({
                 className="t-body-strong mt-8 h-12 text-base"
                 href={ROUTES.onboarding} onClick={() => setOpen(false)}
               >
-                Find my scholarships
+                {t("findScholarships")}
               </ButtonLink>
               <p className="t-caption mt-4 text-ink-mute">
-                Free for students. No account needed to explore.
+                {t("freeForStudents")}
               </p>
             </SheetContent>
           </Sheet>

@@ -3,6 +3,7 @@
 import { useSyncExternalStore } from "react";
 
 import type { Language } from "@/lib/logic/locale";
+import { translations, type TranslationKey } from "@/lib/logic/translations";
 
 export type { Language } from "@/lib/logic/locale";
 
@@ -31,4 +32,12 @@ export function setLanguage(language: Language) {
   window.localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
   document.documentElement.lang = language === "FIL" ? "fil" : "en";
   window.dispatchEvent(new Event(LANGUAGE_CHANGE_EVENT));
+}
+
+export function useTranslation() {
+  const language = useLanguage();
+  return {
+    language,
+    t: (key: TranslationKey) => translations[language][key],
+  };
 }

@@ -11,6 +11,7 @@ import { usePrefersReducedMotion } from "@/hooks/use-media-query";
 import { useToday } from "@/hooks/use-today";
 import { useTulAi } from "@/hooks/use-tul-ai";
 import { isDeadlineOpen } from "@/lib/logic/deadlines";
+import { useTranslation } from "@/lib/logic/language";
 import { rankScholarships } from "@/lib/logic/matching";
 import { ROUTES } from "@/lib/logic/routes";
 import { cn } from "@/lib/utils";
@@ -19,6 +20,7 @@ import { cn } from "@/lib/utils";
 export function Deck({ detailOpen, onCardChange }: { detailOpen: boolean; onCardChange?: (id: string) => void }) {
   const router = useRouter();
   const { state, dispatch, cards } = useTulAi();
+  const { t } = useTranslation();
   const reduced = usePrefersReducedMotion();
   const today = useToday();
   const [position, setPosition] = useState(0);
@@ -126,7 +128,7 @@ export function Deck({ detailOpen, onCardChange }: { detailOpen: boolean; onCard
     <section className="relative mx-auto flex w-full max-w-[31rem] flex-1 flex-col px-5 pt-7 pb-8 sm:px-6 lg:[zoom:.64]" aria-labelledby="deck-heading">
       <div className="mb-6 flex flex-none items-end justify-between gap-4">
         <div>
-          <h1 id="deck-heading" className="t-display-lg">Your matched options</h1>
+          <h1 id="deck-heading" className="t-display-lg">{t("yourScholarships")}</h1>
           <p className="t-caption mt-1 text-ink-mute">Explore each published scholarship and its requirements.</p>
         </div>
         {deck.length > 0 && <p className="t-caption t-num whitespace-nowrap text-ink-mute">{position + 1} of {deck.length}</p>}
@@ -149,7 +151,7 @@ export function Deck({ detailOpen, onCardChange }: { detailOpen: boolean; onCard
       {card && (
         <div className="mt-6 grid flex-none grid-cols-[1fr_auto_1fr] items-center gap-3 lg:grid-cols-2">
           <Button variant="tertiary" className="h-12 w-full justify-center gap-2 px-4" onClick={() => move(-1)} disabled={!canGoBack || Boolean(exiting)}><ArrowLeftIcon />Previous</Button>
-          <Button variant="outline" className="h-12 gap-2 px-4 lg:hidden" onClick={openDetail}><SparklesIcon />Details</Button>
+          <Button variant="outline" className="h-12 gap-2 px-4 lg:hidden" onClick={openDetail}><SparklesIcon />{t("details")}</Button>
           <Button className="h-12 w-full justify-center gap-2 px-4" onClick={() => move(1)} disabled={!canGoForward || Boolean(exiting)}>Next<ArrowRightIcon /></Button>
         </div>
       )}

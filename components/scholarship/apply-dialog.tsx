@@ -11,6 +11,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import type { Scholarship } from "@/lib/scholarships";
+import { useTranslation } from "@/lib/logic/language";
 import { cn } from "@/lib/utils";
 
 /**
@@ -28,6 +29,8 @@ export function ApplyDialog({
   label?: string;
 }) {
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
+  const buttonLabel = label === "Continue to official application" ? t("continueOfficial") : label;
 
   return (
     <>
@@ -35,7 +38,7 @@ export function ApplyDialog({
         className={cn("h-12 rounded-md px-6", className)}
         onClick={() => setOpen(true)}
       >
-        {label}
+        {buttonLabel}
         <ExternalLinkIcon />
       </Button>
 
@@ -80,7 +83,7 @@ export function ApplyDialog({
             className="mt-2 h-11 w-full text-ink-mute"
             onClick={() => setOpen(false)}
           >
-            Not now
+            {t("notNow")}
           </Button>
         </SheetContent>
       </Sheet>
