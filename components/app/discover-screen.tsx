@@ -1,14 +1,12 @@
 "use client";
 
-import { XIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Deck } from "@/components/app/deck";
 import { MatchCelebration } from "@/components/app/match-celebration";
 import { AiMatchSummary } from "@/components/scholarship/ai-match-summary";
 import { ScholarshipDetail } from "@/components/scholarship/scholarship-detail";
-import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -16,7 +14,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { useTulAi } from "@/hooks/use-tul-ai";
-import { useIsDesktop } from "@/hooks/use-media-query";
+import { useIsDesktop, usePrefersReducedMotion } from "@/hooks/use-media-query";
 import { matchScholarship } from "@/lib/logic/matching";
 import { cardForId, ROUTES } from "@/lib/logic/routes";
 import { cn } from "@/lib/utils";
@@ -28,19 +26,29 @@ import { cn } from "@/lib/utils";
  */
 export function DiscoverScreen({ cardId }: { cardId: string | null }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { cards, state } = useTulAi();
   const desktop = useIsDesktop();
+  const reduced = usePrefersReducedMotion();
   const [desktopCardId, setDesktopCardId] = useState<string | null>(null);
+  const [sheetSizing, setSheetSizing] = useState<{ cardId: string | null; height: number | null }>({ cardId: null, height: null });
+  const [draggingSheet, setDraggingSheet] = useState(false);
   const detailPane = useRef<HTMLDivElement>(null);
+  const sheetDrag = useRef<{ originY: number; startHeight: number; height: number } | null>(null);
+  const ignoreSheetClick = useRef(false);
 
   const activeCardId = desktop
     ? desktopCardId ?? cardId ?? cards[0]?.id ?? null
     : cardId;
+  const panelExpanded = searchParams.get("panel") === "expanded";
+  const sheetHeight = sheetSizing.cardId === activeCardId ? sheetSizing.height : null;
+  const setSheetHeight = (height: number | null) => setSheetSizing({ cardId: activeCardId, height });
   const card = cardForId(cards, activeCardId, desktop ? cards[0] ?? null : null);
   const index = card ? cards.findIndex((item) => item.id === card.id) : 0;
   const result = card ? matchScholarship(card, state.profile) : undefined;
 
   const close = useCallback(() => {
+    setSheetSizing({ cardId: null, height: null });
     router.push(ROUTES.discover, { scroll: false });
   }, [router]);
 
@@ -56,6 +64,41 @@ export function DiscoverScreen({ cardId }: { cardId: string | null }) {
   useEffect(() => {
     detailPane.current?.scrollTo({ top: 0, behavior: "auto" });
   }, [activeCardId]);
+
+  const collapsedSheetHeight = () => Math.min(window.innerHeight * 0.62, 544);
+  const expandedSheetHeight = () => window.innerHeight - 8;
+
+  const startSheetDrag = (event: React.PointerEvent<HTMLButtonElement>) => {
+    const startHeight = sheetHeight ?? (panelExpanded ? expandedSheetHeight() : collapsedSheetHeight());
+    sheetDrag.current = { originY: event.clientY, startHeight, height: startHeight };
+    setDraggingSheet(true);
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+
+  const moveSheetDrag = (event: React.PointerEvent<HTMLButtonElement>) => {
+    if (!sheetDrag.current) return;
+    if (sheetDrag.current.startHeight > window.innerHeight * 0.78 && event.clientY - sheetDrag.current.originY > 96) {
+      sheetDrag.current = null;
+      setDraggingSheet(false);
+      close();
+      return;
+    }
+    const nextHeight = Math.max(
+      collapsedSheetHeight(),
+      Math.min(expandedSheetHeight(), sheetDrag.current.startHeight + sheetDrag.current.originY - event.clientY)
+    );
+    if (Math.abs(event.clientY - sheetDrag.current.originY) > 4) ignoreSheetClick.current = true;
+    sheetDrag.current.height = nextHeight;
+    setSheetHeight(nextHeight);
+  };
+
+  const endSheetDrag = () => {
+    if (!sheetDrag.current) return;
+    const shouldExpand = sheetDrag.current.height > window.innerHeight * 0.78;
+    setSheetHeight(shouldExpand ? expandedSheetHeight() : collapsedSheetHeight());
+    sheetDrag.current = null;
+    setDraggingSheet(false);
+  };
 
   const detail = card && (
     <ScholarshipDetail
@@ -88,7 +131,11 @@ export function DiscoverScreen({ cardId }: { cardId: string | null }) {
           <SheetContent
             side="bottom"
             showCloseButton={false}
-            className="h-[100dvh] max-h-[100dvh] gap-0 overflow-y-auto overscroll-contain bg-canvas p-0 pb-[env(safe-area-inset-bottom)] text-ink lg:inset-y-0 lg:right-0 lg:left-auto lg:h-full lg:w-[min(42rem,46vw)] lg:rounded-none lg:border-l lg:[animation:discover-detail-in_360ms_cubic-bezier(.16,1,.3,1)_both]"
+            className={cn(
+              "max-h-[calc(100dvh-0.5rem)] gap-0 overflow-hidden rounded-t-xl bg-canvas p-0 pb-[env(safe-area-inset-bottom)] text-ink transition-[height,box-shadow,transform] duration-[420ms] ease-[cubic-bezier(.16,1,.3,1)] data-starting-style:!opacity-100 data-ending-style:!opacity-100 data-[side=bottom]:data-starting-style:!translate-y-[calc(100%-3.25rem)] data-[side=bottom]:data-ending-style:!translate-y-[calc(100%-3.25rem)] motion-reduce:transition-none lg:inset-y-0 lg:right-0 lg:left-auto lg:h-full lg:w-[min(42rem,46vw)] lg:rounded-none lg:border-l lg:[animation:discover-detail-in_360ms_cubic-bezier(.16,1,.3,1)_both]",
+              draggingSheet && !reduced && "will-change-[height] transition-none"
+            )}
+            style={{ height: sheetHeight ? `${sheetHeight}px` : panelExpanded ? "calc(100dvh - 0.5rem)" : "min(62dvh, 34rem)" }}
           >
             <SheetTitle className="sr-only">
               {card.title} — {card.provider}
@@ -96,12 +143,29 @@ export function DiscoverScreen({ cardId }: { cardId: string | null }) {
             <SheetDescription className="sr-only">
               Published requirements, documents and official sources.
             </SheetDescription>
-            <div className="sticky top-0 z-10 flex h-14 flex-none items-center justify-end border-b border-hairline bg-canvas/95 px-5 backdrop-blur-sm sm:px-8 lg:hidden">
-              <Button variant="outline" size="icon-lg" className="border-hairline bg-canvas" aria-label="Close details" onClick={close}>
-                <XIcon />
-              </Button>
+            <div className="sticky top-0 z-10 flex h-14 flex-none items-center justify-center border-b border-hairline bg-canvas/95 backdrop-blur-sm lg:hidden">
+              <button
+                type="button"
+                aria-label="Drag down to close scholarship details"
+                aria-describedby="detail-sheet-instructions"
+                onPointerDown={startSheetDrag}
+                onPointerMove={moveSheetDrag}
+                onPointerUp={endSheetDrag}
+                onPointerCancel={endSheetDrag}
+                onClick={() => {
+                  if (ignoreSheetClick.current) {
+                    ignoreSheetClick.current = false;
+                    return;
+                  }
+                  close();
+                }}
+                className="ring-brand flex h-12 w-full touch-none items-center justify-center active:bg-canvas-soft"
+              >
+                <span className="h-1 w-12 rounded-full bg-ink/45" aria-hidden="true" />
+              </button>
+              <span id="detail-sheet-instructions" className="sr-only">Drag this bar down to close the scholarship details.</span>
             </div>
-            {detail}
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">{detail}</div>
           </SheetContent>
         )}
       </Sheet>

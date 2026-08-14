@@ -20,6 +20,7 @@ export const ROUTES = {
   matches: "/matches",
   discover: "/discover",
   discoverCard: (id: string) => `/discover?card=${encodeURIComponent(id)}`,
+  discoverCardExpanded: (id: string) => `/discover?card=${encodeURIComponent(id)}&panel=expanded`,
   review: "/review",
   saved: "/saved",
   profile: "/profile",

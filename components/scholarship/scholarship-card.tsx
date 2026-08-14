@@ -7,7 +7,6 @@ import { ProviderCrest, ProviderWatermark, providerTint } from "@/components/sch
 import { RequirementMark } from "@/components/scholarship/requirement-mark";
 import { VerificationBadge } from "@/components/scholarship/verification-badge";
 import { DeadlineCountdown } from "@/components/scholarship/deadline-chip";
-import { AiMatchSummary } from "@/components/scholarship/ai-match-summary";
 import { formatPeso } from "@/lib/logic/format";
 import { compactMatchReason } from "@/lib/logic/matching";
 import type { RankedMatch } from "@/lib/logic/matching";
@@ -40,9 +39,9 @@ function CountUp({
   return <span className="t-figure text-ink-deep">{format(Math.round(value * (reduced ? 1 : progress)))}</span>;
 }
 
-const faceClass = "absolute inset-0 flex flex-col overflow-x-hidden overflow-y-auto overscroll-contain rounded-xl border border-[color:var(--tint-border)] p-5 shadow-[0_8px_24px_rgba(14,15,12,0.1)] [backface-visibility:hidden] lg:p-6";
+const faceClass = "absolute inset-0 flex flex-col overflow-hidden rounded-xl border border-[color:var(--tint-border)] p-4 shadow-[0_8px_24px_rgba(14,15,12,0.1)] [backface-visibility:hidden] sm:p-5 lg:p-6";
 
-export function ScholarshipCard({ card, index, flipped, reduced, onFlip, result, showAiSummary = true }: { card: Scholarship; index: number; flipped: boolean; reduced: boolean; onFlip: () => void; result: RankedMatch; showAiSummary?: boolean }) {
+export function ScholarshipCard({ card, index, flipped, reduced, onFlip, result }: { card: Scholarship; index: number; flipped: boolean; reduced: boolean; onFlip: () => void; result: RankedMatch }) {
   return (
     <div className="tinted absolute inset-0 [perspective:1400px]" style={providerTint(index)}>
       <div className={cn("absolute inset-0 [transform-style:preserve-3d]", reduced ? "transition-none" : "transition-transform duration-500 ease-out")} style={{ transform: flipped ? "rotateY(180deg)" : undefined }}>
@@ -50,30 +49,28 @@ export function ScholarshipCard({ card, index, flipped, reduced, onFlip, result,
           <ProviderWatermark logo={card.logo} className="-right-14 top-28 size-54" />
           <FlipButton onClick={onFlip} label="Show published requirements" />
           <VerificationBadge status={card.verification} />
-          <p className="t-eyebrow mt-4 text-[color:var(--tint-ink)]">{card.provider}</p>
-          <h2 className="t-display-lg mt-1.5 mb-4 text-balance">{card.title}</h2>
-          <div className="mb-4 flex items-end justify-between border-y border-hairline py-4 text-ink-deep">
+          <p className="t-eyebrow mt-2.5 text-[color:var(--tint-ink)]">{card.provider}</p>
+          <h2 className="t-display-lg mt-1 mb-3 text-balance text-[clamp(1.85rem,7.5vw,2.4rem)] leading-[0.96]">{card.title}</h2>
+          <div className="mb-3 flex items-end justify-between border-y border-hairline py-3 text-ink-deep">
             <div><p className="t-micro text-ink-deep">Requirements matched</p><p className="mt-1">{result.percent === null ? <span className="t-figure">—</span> : <CountUp key={card.id} value={result.percent} reduced={reduced} format={(value) => `${value}%`} />}</p></div>
             <p className="t-caption max-w-[15ch] text-right text-ink-mute">{result.met} of {result.total} published requirements{result.unknown ? ` · ${result.unknown} to confirm` : ""}</p>
           </div>
           <p className="t-micro text-ink-deep">Potential grant</p>
-          <p className="mb-4 flex flex-wrap items-baseline gap-2"><CountUp key={card.id} value={card.amount} reduced={reduced} format={formatPeso} /><span className="t-caption text-ink-mute">{card.amountNote}</span></p>
-          <div className="mb-3.5 h-px bg-hairline" />
-          <div className="mb-auto border-t border-hairline pt-3.5">
-            <p className="t-micro text-ink-mute">Why this matched you</p>
-            <p className="t-caption mt-1 text-ink-mute text-pretty">{compactMatchReason(result)}</p>
-            {showAiSummary && <AiMatchSummary result={result} compact />}
-          </div>
-          <div className="mt-4 flex items-end justify-between border-t border-hairline pt-3.5"><div><p className="t-micro text-ink-mute">Deadline</p><p className="t-body-strong">{card.deadline}</p><DeadlineCountdown deadlineIso={card.deadlineIso} /></div><p className={cn("t-body-strong", card.tone === "strong" ? "text-met" : "text-attention-ink")}>{result.match}</p></div>
+          <p className="mb-auto flex flex-wrap items-baseline gap-2"><CountUp key={card.id} value={card.amount} reduced={reduced} format={formatPeso} /><span className="t-caption text-ink-mute">{card.amountNote}</span></p>
+          <div className="mt-3 flex items-end justify-between border-t border-hairline pt-3"><div><p className="t-micro text-ink-mute">Deadline</p><p className="t-body-strong">{card.deadline}</p><DeadlineCountdown deadlineIso={card.deadlineIso} /></div><p className={cn("t-body-strong", card.tone === "strong" ? "text-met" : "text-attention-ink")}>{result.match}</p></div>
         </article>
         <article className={cn(faceClass, "[transform:rotateY(180deg)]")} style={{ background: "var(--tint-face-back)" }} aria-hidden={!flipped}>
           <ProviderWatermark logo={card.logo} className="-right-10 bottom-16 size-42" />
           <FlipButton onClick={onFlip} label="Show match summary" />
-          <div className="mb-3 flex items-center gap-2.5"><ProviderCrest index={index} provider={card.provider} logo={card.logo} /><p className="t-eyebrow text-[color:var(--tint-ink)]">{card.provider}</p></div>
-          <h2 className="t-display-md mb-4 text-balance">{card.title}</h2>
-          <p className="t-eyebrow mb-2 text-ink-mute">Published requirements</p><div className="mb-3.5 h-px bg-hairline" />
-          <ul className="mb-auto flex flex-col gap-3">{result.checks.map((check) => <li key={check.label} className="flex gap-2.5"><RequirementMark state={check.state === "met" ? "ok" : check.state === "not-met" ? "warn" : "none"} /><div><p className="t-caption-strong text-ink">{check.label}</p><p className="t-micro mt-0.5 text-ink-mute">{check.detail}</p></div></li>)}</ul>
-          <div className="flex items-center justify-between border-t border-hairline pt-3.5"><p className="t-micro text-ink-mute">Tap to flip back</p><p className="t-micro text-ink-mute">Published requirements</p></div>
+          <div className="mb-2 flex items-center gap-2.5"><ProviderCrest index={index} provider={card.provider} logo={card.logo} /><p className="t-eyebrow text-[color:var(--tint-ink)]">{card.provider}</p></div>
+          <h2 className="t-display-md mb-3 text-balance">{card.title}</h2>
+          <p className="t-eyebrow mb-2 text-ink-mute">Published requirements</p><div className="mb-3 h-px bg-hairline" />
+          <ul className="flex flex-col gap-2.5">{result.checks.map((check) => <li key={check.label} className="flex gap-2.5"><RequirementMark state={check.state === "met" ? "ok" : check.state === "not-met" ? "warn" : "none"} /><div><p className="t-caption-strong text-ink">{check.label}</p><p className="t-micro mt-0.5 text-ink-mute">{check.detail}</p></div></li>)}</ul>
+          <div className="mt-auto border-t border-hairline pt-3">
+            <p className="t-micro text-ink-mute">Why this matched you</p>
+            <p className="t-caption mt-1 text-ink-mute text-pretty">{compactMatchReason(result)}</p>
+          </div>
+          <div className="mt-3 flex items-center justify-between border-t border-hairline pt-3"><p className="t-micro text-ink-mute">Tap to flip back</p><p className="t-micro text-ink-mute">Your match</p></div>
         </article>
       </div>
     </div>

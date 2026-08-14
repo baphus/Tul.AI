@@ -612,6 +612,8 @@ export default function LandingPage() {
             badges: there is no app to download, and a store badge that links
             nowhere is a claim we can't make. What's true is that the deck is
             built for a phone, so that is what this shows. */}
+        </>}
+
         <Section tone="soft" labelledBy="support-heading">
           <Container>
             <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-16">
@@ -700,6 +702,7 @@ export default function LandingPage() {
             Wise's "Wise works nearly everywhere" wall of flags. The claim is
             inverted: not that coverage is vast, but that it is small, complete
             and printed in full. */}
+        {false && <>
         <Section tone="ink" labelledBy="coverage-heading">
           <Container>
             <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
