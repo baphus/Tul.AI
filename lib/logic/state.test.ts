@@ -169,7 +169,6 @@ describe("deck sorting", () => {
     expect(flipped.flipped).toBe(true);
     const back = reducer(flipped, { type: "SET_FLIPPED", value: false });
     expect(back.flipped).toBe(false);
-    // no-op when already in the requested state
     expect(reducer(back, { type: "SET_FLIPPED", value: false })).toBe(back);
   });
 

@@ -2,7 +2,7 @@
 
 import { CheckIcon, SparklesIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo } from "react";
 
 import { DotGrid } from "@/components/site/dot-grid";
 import { ButtonLink } from "@/components/ui/button";
@@ -37,76 +37,45 @@ import { cn } from "@/lib/utils";
  * were unconnected to the computation they claimed to depict.
  */
 
-/** Minimum time a completed pass stays on screen before the next is revealed. */
-const MIN_PASS_MS = 420;
+/** A brief confirmation that the completed, deterministic result is ready. */
+const RESULT_PREVIEW_MS = 300;
 
 export function MatchingRun() {
   const router = useRouter();
   const { state, dispatch, cards, ready } = useTulAi();
   const reduced = usePrefersReducedMotion();
 
-  const [passes, setPasses] = useState<PassResult[]>([]);
-  const [totals, setTotals] = useState<RunTotals | null>(null);
-  const startedRef = useRef(false);
-  /* Media-query subscriptions may update just after the first client paint.
-     Keep the running sequence independent of that update: cancelling the effect
-     and then declining to restart it leaves the student at 0% forever. */
-  const cardsRef = useRef(cards);
-  const profileRef = useRef(state.profile);
-  const reducedRef = useRef(reduced);
-
   const profileReady = isProfileReady(state.profile);
+  /* The local engine is cheap and pure. Derive its finished output directly so
+     the screen cannot depend on an interruptible sequence of state updates. */
+  const pairs = useMemo(
+    () => (profileReady ? matchAll(cards, state.profile) : []),
+    [cards, profileReady, state.profile]
+  );
+  const passes = useMemo<PassResult[]>(
+    () => Array.from({ length: PASS_COUNT }, (_, index) => tallyPass(index, pairs)),
+    [pairs]
+  );
+  const totals = useMemo<RunTotals | null>(
+    () => (profileReady ? totalsOf(pairs) : null),
+    [pairs, profileReady]
+  );
 
   useEffect(() => {
-    cardsRef.current = cards;
-    profileRef.current = state.profile;
-    reducedRef.current = reduced;
-  }, [cards, reduced, state.profile]);
-
-  useEffect(() => {
-    if (!ready || !profileReady || startedRef.current) return;
-    startedRef.current = true;
+    if (!ready || !profileReady) return;
     dispatch({ type: "RESET_DECK" });
 
-    let cancelled = false;
-    const floor = reducedRef.current ? 0 : MIN_PASS_MS;
+    /* `replace`, so Back returns to the questions rather than re-running the
+       research the student has already seen. Reduced-motion users move on at once. */
+    const redirect = window.setTimeout(
+      () => router.replace(ROUTES.discover),
+      reduced ? 0 : RESULT_PREVIEW_MS
+    );
 
-    const run = async () => {
-      /* The real work: the deterministic engine over every record. Everything
-         the sequence reports afterwards is a tally of what this produced. */
-      const pairs = matchAll(cardsRef.current, profileRef.current);
-      const collected: PassResult[] = [];
-
-      for (let i = 0; i < PASS_COUNT; i++) {
-        const began = performance.now();
-        const result = tallyPass(i, pairs);
-
-        /* Real elapsed compute counts toward the floor, so faster work genuinely
-           means a shorter wait rather than a padded one. */
-        const elapsed = performance.now() - began;
-        const remaining = Math.max(0, floor - elapsed);
-        await new Promise<void>((resolve) => {
-          if (remaining > 0) window.setTimeout(resolve, remaining);
-          else requestAnimationFrame(() => resolve());
-        });
-
-        if (cancelled) return;
-        collected.push(result);
-        setPasses([...collected]);
-      }
-
-      if (cancelled) return;
-      setTotals(totalsOf(pairs));
-      /* `replace`, so Back returns to the questions rather than re-running the
-         research the student has already seen. */
-      router.replace(ROUTES.discover);
-    };
-
-    void run();
     return () => {
-      cancelled = true;
+      window.clearTimeout(redirect);
     };
-  }, [dispatch, profileReady, ready, router]);
+  }, [cards, dispatch, profileReady, ready, reduced, router, state.profile]);
 
   /* Someone landed here without the two answers that make matching possible at
      all — say so instead of animating over nothing. */

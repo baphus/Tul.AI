@@ -7,6 +7,7 @@ import {
   deadlineLabel,
   deadlineTone,
   formatIsoDate,
+  isDeadlineOpen,
   localIsoDate,
 } from "./deadlines";
 
@@ -39,6 +40,14 @@ describe("deadlineTone", () => {
 
   it("treats an unknown deadline as open rather than closed", () => {
     expect(deadlineTone(Number.NaN)).toBe("open");
+  });
+});
+
+describe("isDeadlineOpen", () => {
+  it("excludes only a dated window that has already passed", () => {
+    expect(isDeadlineOpen("2026-08-13", "2026-08-14")).toBe(false);
+    expect(isDeadlineOpen("2026-08-14", "2026-08-14")).toBe(true);
+    expect(isDeadlineOpen("9999-12-31", "2026-08-14")).toBe(true);
   });
 });
 

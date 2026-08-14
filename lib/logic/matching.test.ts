@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { DATA, type Scholarship } from "@/lib/scholarships";
 import { emptyProfile, type Profile } from "./state";
-import { countsOf, matchScholarship, rankScholarships } from "./matching";
+import { countsOf, matchLocation, matchScholarship, rankScholarships } from "./matching";
 
 const DEMO: Profile = {
   ...emptyProfile(),
@@ -20,6 +20,35 @@ function fixture(eligibility: Scholarship["eligibility"]): Scholarship {
 }
 
 describe("matchScholarship", () => {
+  it("keeps citizenship unknown until the student confirms it", () => {
+    const card = fixture({ citizenship: ["Filipino"] });
+    expect(matchScholarship(card, DEMO).checks[0].state).toBe("unknown");
+    expect(matchScholarship(card, { ...DEMO, citizenship: "Filipino" }).checks[0].state).toBe("met");
+  });
+
+  it("only marks citizenship not-met after an explicit conflicting answer", () => {
+    const result = matchScholarship(fixture({ citizenship: ["Filipino"] }), {
+      ...DEMO,
+      citizenship: "Not a Filipino citizen",
+    });
+    expect(result.checks[0].state).toBe("not-met");
+    expect(result.tone).toBe("none");
+  });
+
+  it("matches country-wide coverage to a Philippine onboarding location", () => {
+    const result = matchScholarship(fixture({ locations: ["Philippines"] }), DEMO);
+    expect(result.checks[0]).toMatchObject({ state: "met", label: "Location" });
+    expect(result.tone).toBe("strong");
+  });
+
+  it("matches a province-wide programme to a city in that province", () => {
+    expect(matchLocation(["Cebu Province"], "Cebu City")).toMatchObject({ state: "met" });
+  });
+
+  it("keeps an unrecognised free-text location unknown", () => {
+    expect(matchLocation(["Cebu Province"], "A town I typed")).toMatchObject({ state: "unknown" });
+  });
+
   it("marks a profile as a strong match when every published requirement is met", () => {
     const result = matchScholarship(
       fixture({ gwaMin: 85, courses: ["BS Information Systems"], courseMode: "published" }),

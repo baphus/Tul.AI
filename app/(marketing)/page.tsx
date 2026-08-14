@@ -23,7 +23,6 @@ import { OfferPills } from "@/components/site/offer-pills";
 import { SiteHeader } from "@/components/site/site-header";
 import { ButtonLink } from "@/components/ui/button";
 import { formatIsoDate } from "@/lib/logic/deadlines";
-import { formatPeso } from "@/lib/logic/format";
 import { ROUTES } from "@/lib/logic/routes";
 import { getScholarships } from "@/lib/scholarships";
 
@@ -183,42 +182,6 @@ export default async function LandingPage() {
     },
   ];
 
-  /* A range, not a total: these amounts are per year for some programmes and
-     per semester for others, so summing them would overstate what a student
-     could actually receive. */
-  const amounts = priced.map((card) => card.amount);
-  const lowest = amounts.length ? Math.min(...amounts) : 0;
-  const highest = amounts.length ? Math.max(...amounts) : 0;
-  const lastChecked = cards
-    .map((card) => card.lastVerified)
-    .sort()
-    .at(-1);
-  const verified = cards.filter((card) => card.verification === "Verified").length;
-
-  const stats: [
-    figure: string,
-    label: string,
-    body: string,
-  ][] = [
-    [
-      `${formatPeso(lowest)}–${formatPeso(highest)}`,
-      "Published per student",
-      `The figures ${priced.length} of these ${cards.length} providers print in their own notices — some per academic year, some per semester, and each record says which. The rest describe their benefit in words we don't reduce to a number.`,
-    ],
-    [
-      `${verified} of ${cards.length}`,
-      "Confirmed against an official source",
-      lastChecked
-        ? `Last checked ${formatIsoDate(lastChecked)}. The rest say “needs verification” and say why on their own page.`
-        : "The rest say “needs verification” and say why on their own page.",
-    ],
-    [
-      "Never",
-      "Applies on your behalf",
-      "Tul.AI takes you to the provider's official page and stops. The application, and the decision, stay entirely with them.",
-    ],
-  ];
-
   return (
     <>
       {/* `brand`, so the bar is the same lime as the hero and the two read as
@@ -261,9 +224,8 @@ export default async function LandingPage() {
                 `ink-mute`, which falls to roughly 3:1 on lime and would fail
                 WCAG 1.4.3 as body text. */}
             <p className="t-body-lg enter enter-d1 mx-auto mt-7 max-w-[54ch] text-ink-deep text-pretty">
-              {cards.length} scholarships from national agencies, LGUs, universities and
-              foundations — each shown with the published requirement behind it, the
-              official source, and the date we last checked it.
+              Finding support for school can feel overwhelming. Tul.AI helps you explore
+              opportunities with more clarity, one step at a time.
             </p>
 
             <div className="enter enter-d2 mt-9 flex justify-center">
@@ -333,22 +295,29 @@ export default async function LandingPage() {
           <Container>
             <h2
               id="stats-heading"
-              className="t-display-xl mx-auto max-w-[24ch] text-center text-balance uppercase"
+              className="t-display-xl mx-auto max-w-[25ch] text-center text-balance"
             >
-              Take the guesswork out of paying for school
+              You deserve a clearer path forward.
             </h2>
 
-            <dl className="mt-12 grid divide-y divide-hairline border-y border-hairline md:grid-cols-3 md:divide-x md:divide-y-0">
-              {stats.map(([figure, label, body]) => (
-                <div key={label} className="px-0 py-7 md:px-7 md:py-2 first:md:pl-0 last:md:pr-0">
-                  <dt className="t-figure text-ink">{figure}</dt>
-                  <dd>
-                    <p className="t-body-strong mt-2 text-ink">{label}</p>
-                    <p className="t-caption mt-2 max-w-[34ch] text-ink-mute text-pretty">{body}</p>
-                  </dd>
-                </div>
-              ))}
-            </dl>
+            <ul className="mt-12 grid gap-8 md:grid-cols-3 md:gap-10">
+              {[
+                [SearchCheckIcon, "Discover scholarship opportunities that may fit your path."],
+                [HeartHandshakeIcon, "Understand each opportunity in clear, simple language."],
+                [ExternalLinkIcon, "Move to the provider's official page when you are ready to apply."],
+              ].map(([Icon, text]) => {
+                const SupportIcon = Icon as typeof SearchCheckIcon;
+
+                return (
+                  <li key={text as string} className="flex items-start gap-4">
+                    <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-brand-pale text-ink">
+                      <SupportIcon className="size-5" strokeWidth={1.75} aria-hidden="true" />
+                    </span>
+                    <p className="t-body-strong pt-2 text-ink text-pretty">{text as string}</p>
+                  </li>
+                );
+              })}
+            </ul>
           </Container>
         </Section>
 

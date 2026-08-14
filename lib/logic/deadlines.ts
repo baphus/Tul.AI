@@ -21,6 +21,13 @@ export function daysUntil(deadlineIso: string, todayIso: string): number {
   return Math.round((deadline - today) / DAY_MS);
 }
 
+/** A record with no published date remains discoverable; a dated past window does not. */
+export function isDeadlineOpen(deadlineIso: string, todayIso: string): boolean {
+  if (deadlineIso === "9999-12-31") return true;
+  const days = daysUntil(deadlineIso, todayIso);
+  return Number.isNaN(days) || days >= 0;
+}
+
 export function deadlineTone(days: number): DeadlineTone {
   if (Number.isNaN(days)) return "open";
   if (days < 0) return "closed";

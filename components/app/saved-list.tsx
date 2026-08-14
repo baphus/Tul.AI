@@ -13,6 +13,7 @@ import { useToday } from "@/hooks/use-today";
 import { useTulAi } from "@/hooks/use-tul-ai";
 import { daysUntil, deadlineLabel, deadlineTone } from "@/lib/logic/deadlines";
 import { formatPeso } from "@/lib/logic/format";
+import { matchScholarship } from "@/lib/logic/matching";
 import { ROUTES } from "@/lib/logic/routes";
 import { checkedDocs, savedIndexes } from "@/lib/logic/state";
 import type { Scholarship } from "@/lib/scholarships";
@@ -105,6 +106,9 @@ function SavedCard({ card, index }: { card: Scholarship; index: number }) {
   const done = checkedDocs(state, card.id);
   const complete = done.length;
   const total = card.needs.length;
+  const unresolved = matchScholarship(card, state.profile).checks
+    .filter((check) => check.state === "unknown")
+    .map((check) => check.label);
 
   return (
     <article className="rounded-lg border border-hairline bg-canvas p-5 sm:p-6">
@@ -136,6 +140,19 @@ function SavedCard({ card, index }: { card: Scholarship; index: number }) {
       </div>
 
       <MatchMetric card={card} className="mt-4" />
+
+      {unresolved.length > 0 && (
+        <aside className="mt-5 rounded-lg border border-hairline bg-canvas-soft p-4" aria-label="Profile details that could clarify this match">
+          <p className="t-body-strong">Clarify this match</p>
+          <p className="t-caption mt-1 text-ink-mute text-pretty">
+            Add what you know about {unresolved.join(", ").toLowerCase()} to resolve the
+            provider&apos;s published requirements. Unknown is not a failed requirement.
+          </p>
+          <ButtonLink variant="outline" className="mt-3 h-10 border-hairline-dark px-4" href={ROUTES.profile}>
+            Update profile
+          </ButtonLink>
+        </aside>
+      )}
 
       {/* ── Application checklist ── */}
       <div className="mt-6 rounded-lg border border-hairline bg-canvas-soft p-4">

@@ -11,6 +11,8 @@ import { advisory, type Advice, type Decision } from "./advisory";
  */
 export interface Profile {
   name: string;
+  /** Optional confirmation for programmes that publish a citizenship requirement. */
+  citizenship: string;
   city: string;
   stage: string;
   school: string;
@@ -81,6 +83,7 @@ export type Action =
 export function emptyProfile(): Profile {
   return {
     name: "",
+    citizenship: "",
     city: "",
     stage: "",
     school: "",

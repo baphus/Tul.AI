@@ -33,6 +33,7 @@ import {
   CHIP_EXCLUSIVE,
   CHIP_NONE,
   CIRCUMSTANCE_CHIPS,
+  CITIZENSHIP_OPTIONS,
   COURSE_SUGGESTIONS,
   DEPENDENT_HINT,
   INCOMES,
@@ -248,7 +249,7 @@ export function OnboardingFlow({ step }: { step: number }) {
 
           Copy on lime is `ink-deep`, never `ink-mute` — the muted ink falls to
           roughly 3:1 on this surface and would fail WCAG 1.4.3 as body text. */}
-      <div className="relative -mx-5 overflow-hidden rounded-b-xl bg-brand px-5 pt-5 pb-9 sm:-mx-8 sm:px-8">
+      <div className="relative -mx-5 overflow-hidden rounded-b-xl bg-brand px-5 pt-5 pb-9 sm:-mx-8 sm:px-8 lg:pt-4 lg:pb-6">
         <DotGrid baseColor="#86d95a" activeColor="#163300" />
 
         <div className="relative">
@@ -271,7 +272,7 @@ export function OnboardingFlow({ step }: { step: number }) {
             ))}
           </div>
 
-          <div key={step} className="pt-8">
+          <div key={step} className="pt-8 lg:pt-5">
             <div className="flex items-start justify-between gap-6">
               <p className="t-eyebrow enter text-ink-deep/70">
                 Question {step} of {ONBOARDING_STEPS}
@@ -282,7 +283,7 @@ export function OnboardingFlow({ step }: { step: number }) {
                 </span>
               )}
             </div>
-            <h1 className="t-display-xl enter enter-d1 mt-3 max-w-[32rem] text-balance text-ink-deep">
+            <h1 className="t-display-xl enter enter-d1 mt-3 max-w-[32rem] text-balance text-ink-deep lg:t-display-lg">
               {meta.question}
             </h1>
             <p className="t-body enter enter-d2 mt-4 max-w-[34rem] text-ink-deep/80 text-pretty">
@@ -295,13 +296,13 @@ export function OnboardingFlow({ step }: { step: number }) {
       {/* ── The answering surface ────────────────────────── */}
       <div
         key={`answers-${step}`}
-        className="flex-1 pt-10 [animation:rise_360ms_cubic-bezier(.2,.8,.3,1)_both]"
+        className="flex-1 pt-10 lg:pt-6 [animation:rise_360ms_cubic-bezier(.2,.8,.3,1)_both]"
       >
         {/* ── 1 · Journey ── */}
         {step === 1 && (
           <fieldset>
             <legend className="sr-only">Where are you in your studies?</legend>
-            <div className="flex flex-col gap-2.5">
+            <div className="flex flex-col gap-2.5 lg:grid lg:grid-cols-2">
               {STAGE_OPTS.map((option, i) => (
                 <ChoiceCard
                   key={option}
@@ -337,6 +338,16 @@ export function OnboardingFlow({ step }: { step: number }) {
               </div>
             )}
 
+            <fieldset className="mt-6">
+              <legend className="t-body-strong">Citizenship <span className="t-micro text-ink-mute">— optional</span></legend>
+              <p className="t-caption mt-1 text-ink-mute text-pretty">Only used when a provider publishes a citizenship requirement. Leaving it blank stays unknown, never ineligible.</p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {CITIZENSHIP_OPTIONS.map((option) => (
+                  <ChoiceChip key={option} label={option} pressed={profile.citizenship === option} onToggle={() => setField("citizenship", profile.citizenship === option ? "" : option)} />
+                ))}
+              </div>
+            </fieldset>
+
             {planning && (
               <Aside>
                 Nothing after this will ask where you&apos;re enrolled. We&apos;ll match you
@@ -349,7 +360,7 @@ export function OnboardingFlow({ step }: { step: number }) {
 
         {/* ── 2 · Location ── */}
         {step === 2 && (
-          <div className="flex flex-col gap-7">
+          <div className="flex flex-col gap-7 lg:grid lg:grid-cols-2 lg:items-start lg:gap-12">
             <fieldset>
               <legend className="t-body-strong mb-3">Best covered</legend>
               <div className="flex flex-wrap gap-2">
@@ -388,7 +399,7 @@ export function OnboardingFlow({ step }: { step: number }) {
 
         {/* ── 3 · Studies ── */}
         {step === 3 && (
-          <div className="flex flex-col gap-9">
+          <div className="flex flex-col gap-9 lg:grid lg:grid-cols-2 lg:items-start lg:gap-12">
             <div className="grid gap-2.5">
               <Label htmlFor="course">Course or programme</Label>
               <SearchableGroupedField<CourseOption>
@@ -470,8 +481,8 @@ export function OnboardingFlow({ step }: { step: number }) {
 
         {/* ── 5 · Household ── */}
         {step === 5 && (
-          <div className="flex flex-col gap-9">
-            <fieldset>
+          <div className="flex flex-col gap-9 lg:grid lg:grid-cols-[minmax(0,1.15fr)_minmax(0,.85fr)] lg:items-start lg:gap-x-12 lg:gap-y-8">
+            <fieldset className="lg:col-start-1">
               <legend className="t-body-strong mb-3">
                 Estimated monthly household income
               </legend>
@@ -489,7 +500,7 @@ export function OnboardingFlow({ step }: { step: number }) {
               </div>
             </fieldset>
 
-            <div>
+            <div className="lg:col-start-1">
               <p className="t-body-strong mb-3">Household size</p>
               <BandPicker
                 name="Household size"
@@ -508,7 +519,7 @@ export function OnboardingFlow({ step }: { step: number }) {
               />
             </div>
 
-            <fieldset>
+            <fieldset className="lg:col-start-2 lg:row-span-2">
               <legend className="t-body-strong">Do any of these apply?</legend>
               <p className="t-caption mt-1 mb-3.5 text-ink-mute text-pretty">
                 Choose as many as you like — each one unlocks specific programmes. The two
@@ -674,7 +685,7 @@ export function OnboardingFlow({ step }: { step: number }) {
       </div>
 
       {/* ── Footer ── */}
-      <div className="sticky bottom-0 mt-12 border-t border-hairline bg-canvas/95 py-4 pb-[max(1rem,env(safe-area-inset-bottom))] backdrop-blur-md sm:py-5">
+      <div className="sticky bottom-0 mt-12 border-t border-hairline bg-canvas/95 py-4 pb-[max(1rem,env(safe-area-inset-bottom))] backdrop-blur-md sm:py-5 lg:mt-8 lg:py-3.5">
         <div className="flex flex-wrap items-center gap-3 sm:flex-nowrap">
           <Button
             variant="ghost"
