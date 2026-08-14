@@ -27,14 +27,14 @@ export function resolveOpenAiApiKey(env: NodeJS.ProcessEnv): string {
 }
 
 export function resolveOpenAiModel(env: NodeJS.ProcessEnv): string {
-  return env.OPENAI_MODEL ?? "gpt-4o-mini";
+  return env.OPENAI_MODEL ?? "gpt-5.6-luna";
 }
 
 export function resolveAiProvider(env: NodeJS.ProcessEnv): "gemini" | "openai" | "none" {
   const provider = env.AI_PROVIDER?.toLowerCase();
   if (provider === "gemini" || provider === "openai") return provider;
-  if (env.GEMINI_API_KEY) return "gemini";
   if (env.OPENAI_API_KEY) return "openai";
+  if (env.GEMINI_API_KEY) return "gemini";
   return "none";
 }
 
@@ -107,7 +107,13 @@ function citationsFrom(value: unknown): AiCitation[] {
 
 export async function generateTulAIResponse(
   prompt: string,
-  options: { liveResearch?: boolean; officialDomains?: string[]; language?: Language; maxTokens?: number } = {}
+  options: {
+    liveResearch?: boolean;
+    officialDomains?: string[];
+    language?: Language;
+    maxTokens?: number;
+    systemInstruction?: string;
+  } = {}
 ): Promise<AiTextResult> {
   const provider = resolveAiProvider(process.env);
 
@@ -120,7 +126,7 @@ export async function generateTulAIResponse(
     const model = resolveGeminiModel(process.env);
     const ai = new GoogleGenAI({ apiKey });
     const liveResearch = Boolean(options.liveResearch);
-    const systemInstruction = `${TUL_AI_SYSTEM_INSTRUCTION}\n\n${responseLanguageInstruction(options.language ?? "ENG")}`;
+    const systemInstruction = `${options.systemInstruction ?? TUL_AI_SYSTEM_INSTRUCTION}\n\n${responseLanguageInstruction(options.language ?? "ENG")}`;
 
     const callGemini = async (withSearch: boolean): Promise<AiTextResult> => {
       const controller = new AbortController();
@@ -170,7 +176,7 @@ export async function generateTulAIResponse(
 
     const model = resolveOpenAiModel(process.env);
     const liveResearch = Boolean(options.liveResearch);
-    const systemInstruction = `${TUL_AI_SYSTEM_INSTRUCTION}\n\n${responseLanguageInstruction(options.language ?? "ENG")}`;
+    const systemInstruction = `${options.systemInstruction ?? TUL_AI_SYSTEM_INSTRUCTION}\n\n${responseLanguageInstruction(options.language ?? "ENG")}`;
 
     try {
       const response = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -235,7 +241,10 @@ export async function generateTulAIJson<T>(
     }
   }
 
-  const result = await generateTulAIResponse(`${prompt}\nReturn valid JSON only.`, { liveResearch: false });
+  const result = await generateTulAIResponse(`${prompt}\nReturn valid JSON only.`, {
+    liveResearch: false,
+    systemInstruction,
+  });
   if (!result.success || !result.text) return { success: false, error: result.error };
   try {
     return { success: true, data: JSON.parse(result.text.replace(/^```json\s*/i, "").replace(/\s*```$/i, "")) as T };

@@ -258,10 +258,11 @@ export function Deck({ detailOpen }: { detailOpen: boolean }) {
           </Button>
           <Button
             variant="outline"
-            className="h-12 px-4"
+            className="h-12 gap-2 px-4"
             onClick={openDetail}
             disabled={exiting}
           >
+            <SparklesIcon />
             Details
           </Button>
           <Button className="h-12 gap-2 px-4" onClick={() => fling(1)} disabled={exiting}>

@@ -7,6 +7,7 @@ import { useCallback, useEffect } from "react";
 
 import { Deck } from "@/components/app/deck";
 import { MatchCelebration } from "@/components/app/match-celebration";
+import { AiMatchSummary } from "@/components/scholarship/ai-match-summary";
 import { ScholarshipDetail } from "@/components/scholarship/scholarship-detail";
 import { Button } from "@/components/ui/button";
 import {
@@ -72,6 +73,7 @@ export function DiscoverScreen({ cardId }: { cardId: string | null }) {
               card={card}
               index={index}
               result={result}
+              matchExplanation={<AiMatchSummary result={result} />}
               topSlot={
                 <div className="flex items-center justify-between gap-3">
                   <Link

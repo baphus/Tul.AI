@@ -30,6 +30,8 @@ export function ScholarshipDetail({
   index,
   topSlot,
   className,
+  result,
+  matchExplanation,
 }: {
   card: Scholarship;
   index: number;
@@ -37,7 +39,10 @@ export function ScholarshipDetail({
   className?: string;
   /** The live deterministic result when a student is viewing this record in-app. */
   result?: RankedMatch;
+  /** Advisory AI prose that is grounded in the live deterministic result. */
+  matchExplanation?: ReactNode;
 }) {
+  const personalized = Boolean(result);
   const rows = result ? detailRequirements(result) : card.rows;
   const match = result ?? card;
   const unknowns = rows.filter((r) => r.state === "none").length;
@@ -57,7 +62,7 @@ export function ScholarshipDetail({
         </div>
         <h1 className="t-display-xl mt-4 text-balance">{card.title}</h1>
         <div className="mt-5 flex flex-wrap items-center gap-2">
-          <MatchBadge card={match} />
+          {personalized && <MatchBadge card={match} />}
           <DeadlineChip deadline={card.deadline} deadlineIso={card.deadlineIso} />
           <VerificationBadge status={card.verification} />
         </div>
@@ -94,14 +99,16 @@ export function ScholarshipDetail({
         {/* ── Why this matched ── */}
         <section className="mt-12" aria-labelledby="why">
           <h2 id="why" className="t-display-lg">
-            Why this matched you
+            {personalized ? "Why this matched you" : "Published requirements"}
           </h2>
           <p className="t-body mt-2 text-ink-mute text-pretty">
-            Matching compares your profile against each published requirement. Open a row
-            to read the requirement behind it.
+            {personalized
+              ? "Matching compares your profile against each published requirement. Open a row to read the requirement behind it."
+              : "This public page lists provider-published requirements. Start matching to compare them with your own profile."}
           </p>
 
-          <MatchMetric card={match} className="mt-5" />
+          {matchExplanation}
+          {personalized && <MatchMetric card={match} className="mt-5" />}
 
           <ul className="mt-5 overflow-hidden rounded-lg border border-hairline bg-canvas">
             {rows.map((row, i) => (
@@ -123,7 +130,7 @@ export function ScholarshipDetail({
             ))}
           </ul>
 
-          {(unknowns > 0 || attention > 0) && (
+          {personalized && (unknowns > 0 || attention > 0) && (
             <p className="t-caption mt-4 rounded-md border border-hairline bg-canvas-soft p-4 text-ink-mute text-pretty">
               {unknowns > 0 && (
                 <>

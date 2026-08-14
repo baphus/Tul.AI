@@ -13,11 +13,15 @@ export async function POST(request: Request) {
     const { rankedMatches, language } = (await request.json()) as { rankedMatches?: RankedMatch[]; language?: unknown };
     if (!Array.isArray(rankedMatches)) return NextResponse.json({ error: "Missing ranked matches." }, { status: 400 });
     const matches = rankedMatches.slice(0, 5);
-    if (!allowAiRequest(request)) return NextResponse.json({ reRanked: rankedMatches, explanations: fallback(matches), limited: true });
+    if (!allowAiRequest(request)) return NextResponse.json({ reRanked: rankedMatches, explanations: fallback(matches), generated: false, limited: true });
     const result = await generateTulAIJson<{ explanations?: AiExplanation[] }>(`Create one concise, warm explanation per item from this deterministic match summary. Do not add facts, scores, or promises. Explain unknown requirements as information to confirm. ${responseLanguageInstruction(requestedLanguage(language))}\n${JSON.stringify(matches.map(({ id, match, met, total, unknown, checks }) => ({ id, match, met, total, unknown, checks })))}`);
     const permitted = new Set(matches.map((match) => match.id));
     const explanations = result.data?.explanations?.filter((item) => permitted.has(item.id) && typeof item.reason === "string").map((item) => ({ id: item.id, reason: item.reason.slice(0, 320) }));
-    return NextResponse.json({ reRanked: rankedMatches, explanations: explanations?.length ? explanations : fallback(matches) });
+    return NextResponse.json({
+      reRanked: rankedMatches,
+      explanations: explanations?.length ? explanations : fallback(matches),
+      generated: Boolean(explanations?.length),
+    });
   } catch {
     return NextResponse.json({ error: "Unable to explain matches right now." }, { status: 500 });
   }
