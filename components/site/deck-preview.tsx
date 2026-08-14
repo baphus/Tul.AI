@@ -3,7 +3,6 @@ import { ArrowUpIcon, CheckIcon, ShieldCheckIcon, XIcon } from "lucide-react";
 import { MatchMetric } from "@/components/scholarship/match-metric";
 import { ProviderCrest, providerTint } from "@/components/scholarship/provider-logo";
 import { RequirementMark } from "@/components/scholarship/requirement-mark";
-import { formatIsoDate } from "@/lib/logic/deadlines";
 import { formatPeso } from "@/lib/logic/format";
 import type { Scholarship } from "@/lib/scholarships";
 import { cn } from "@/lib/utils";
@@ -39,9 +38,6 @@ export function DeckPreview({
             <span className="t-micro inline-flex items-center gap-1.5 rounded-full border border-met/25 bg-met/8 px-2.5 py-1 text-met">
               <ShieldCheckIcon className="size-3" />
               {card.verification}
-            </span>
-            <span className="t-micro t-num text-right text-ink-mute">
-              Checked {formatIsoDate(card.lastVerified)}
             </span>
           </div>
 

@@ -1,7 +1,6 @@
 import { ArrowUpRightIcon } from "lucide-react";
 import Link from "next/link";
 
-import { formatIsoDate } from "@/lib/logic/deadlines";
 import { formatPeso } from "@/lib/logic/format";
 import { ROUTES } from "@/lib/logic/routes";
 import type { Scholarship } from "@/lib/scholarships";
@@ -11,9 +10,8 @@ import { cn } from "@/lib/utils";
  * The whole data set, in public.
  *
  * Most scholarship sites claim coverage and show you a search box. Ours is small
- * enough to print in full, so we print it in full — every programme, its state
- * and the date it was last checked. The transparency *is* the section; there is
- * no version of this that a summary statistic would do better.
+ * enough to print in full, so we print every programme and its verification
+ * state. Source links on each record provide the useful path to confirmation.
  */
 export function VerificationLedger({ cards }: { cards: Scholarship[] }) {
   const stateTone = (card: Scholarship) =>
@@ -24,12 +22,11 @@ export function VerificationLedger({ cards }: { cards: Scholarship[] }) {
       {/* Desktop: a real table, so the figures line up as columns. */}
       <table className="hidden w-full border-collapse text-left md:table">
         <caption className="sr-only">
-          Every scholarship in Tul.AI, with its verification state and the date it was
-          last checked.
+          Every scholarship in Tul.AI, with its verification state.
         </caption>
         <thead>
           <tr className="border-b border-hairline-dark/25">
-            {["Provider", "Programme", "Support", "Closes", "State", "Last checked"].map(
+            {["Provider", "Programme", "Support", "Closes", "State"].map(
               (heading) => (
                 <th
                   key={heading}
@@ -69,9 +66,6 @@ export function VerificationLedger({ cards }: { cards: Scholarship[] }) {
               <td className={cn("t-caption py-5 pr-6 align-top whitespace-nowrap", stateTone(card))}>
                 {card.verification}
               </td>
-              <td className="t-caption t-num py-5 align-top whitespace-nowrap text-ink-mute">
-                <time dateTime={card.lastVerified}>{formatIsoDate(card.lastVerified)}</time>
-              </td>
             </tr>
           ))}
         </tbody>
@@ -104,12 +98,6 @@ export function VerificationLedger({ cards }: { cards: Scholarship[] }) {
               <div>
                 <dt className="t-micro text-ink-mute">State</dt>
                 <dd className={cn("t-caption", stateTone(card))}>{card.verification}</dd>
-              </div>
-              <div>
-                <dt className="t-micro text-ink-mute">Last checked</dt>
-                <dd className="t-caption t-num">
-                  <time dateTime={card.lastVerified}>{formatIsoDate(card.lastVerified)}</time>
-                </dd>
               </div>
             </dl>
           </li>

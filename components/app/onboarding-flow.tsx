@@ -127,6 +127,12 @@ export function OnboardingFlow({ step }: { step: number }) {
   const meta = metaFor(step, planning);
   const ready = canAdvance(step, profile);
   const isLast = step === ONBOARDING_STEPS;
+  /*
+   * The first five questions collect core matching inputs with reviewed
+   * controls. AI is only a catch-all when it could fill an optional detail the
+   * student skipped, rather than a second way to answer the same questions.
+   */
+  const canUseAiProfileHelper = !profile.gwa.trim() || profile.chips.length === 0;
 
   const setField = useCallback(
     (field: keyof Omit<Profile, "chips">, value: string) =>
@@ -619,7 +625,12 @@ export function OnboardingFlow({ step }: { step: number }) {
               />
             </div>
 
-            <div className="flex flex-col gap-3">
+            {canUseAiProfileHelper && (
+              <div className="flex flex-col gap-3">
+                <p className="t-micro max-w-[58ch] text-ink-mute text-pretty">
+                  Mentioned a GWA or household circumstance you skipped earlier? We can pull out
+                  just those optional details.
+                </p>
               <Button
                 type="button"
                 variant="outline"
@@ -635,7 +646,7 @@ export function OnboardingFlow({ step }: { step: number }) {
                 ) : (
                   <>
                     <SparklesIcon className="size-4 text-brand" />
-                      Extract profile details with AI
+                    Check optional details with AI
                   </>
                 )}
               </Button>
@@ -649,7 +660,7 @@ export function OnboardingFlow({ step }: { step: number }) {
                     <CheckIcon className="size-3" strokeWidth={3} />
                   </span>
                   <div>
-                    <p className="t-caption-strong text-ink">Extracted by AI</p>
+                    <p className="t-caption-strong text-ink">Optional details proposed</p>
                     <p className="t-caption mt-0.5 text-ink-mute text-pretty">
                       {extractionResult}
                     </p>
@@ -660,12 +671,12 @@ export function OnboardingFlow({ step }: { step: number }) {
                   </div>
                 </div>
               )}
-            </div>
-
-            <label className="flex items-start gap-2.5">
-              <input type="checkbox" checked={extractConsent} onChange={(event) => setExtractConsent(event.target.checked)} className="mt-1 size-4 accent-ink" />
-              <span className="t-micro max-w-[58ch] text-ink-mute">I agree to send this text to OpenAI to propose editable profile fields. Tul.AI will not use it to decide eligibility.</span>
-            </label>
+              <label className="flex items-start gap-2.5">
+                <input type="checkbox" checked={extractConsent} onChange={(event) => setExtractConsent(event.target.checked)} className="mt-1 size-4 accent-ink" />
+                <span className="t-micro max-w-[58ch] text-ink-mute">I agree to send this text to OpenAI to propose editable optional profile fields. Tul.AI will not use it to decide eligibility.</span>
+              </label>
+              </div>
+            )}
 
             <div className="flex gap-3.5 rounded-lg border border-hairline bg-canvas-soft p-4">
               <span

@@ -11,7 +11,7 @@ import { getScholarships } from "@/lib/scholarships";
 export const metadata: Metadata = {
   title: "All scholarships",
   description:
-    "Browse every verified scholarship in Tul.AI: benefit, deadline, published requirements, official source and when it was last checked.",
+    "Browse every scholarship in Tul.AI: benefit, deadline, published requirements, official source and verification state.",
 };
 
 export default async function ScholarshipsPage() {

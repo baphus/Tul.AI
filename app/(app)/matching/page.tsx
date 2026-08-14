@@ -4,9 +4,9 @@ import { OnboardingHeader } from "@/components/app/app-header";
 import { MatchingRun } from "@/components/app/matching-run";
 
 export const metadata: Metadata = {
-  title: "Finding your scholarships",
+  title: "Matching your profile",
   description:
-    "Tul.AI compares your profile against the published requirements of every verified programme.",
+    "Tul.AI compares your profile against published opportunity requirements.",
 };
 
 export default function MatchingPage() {

@@ -498,6 +498,15 @@
   0%, 70%, 100% { transform: translateX(0); opacity: 0.55; }
   80% { transform: translateX(4px); opacity: 1; }
 }
+@keyframes match-confetti {
+  0% { opacity: 0; transform: translate3d(0, -1rem, 0) rotate(0deg); }
+  8% { opacity: 1; }
+  100% { opacity: 0; transform: translate3d(var(--confetti-drift), 105dvh, 0) rotate(540deg); }
+}
+
+.match-confetti-piece {
+  animation: match-confetti 1.65s cubic-bezier(0.18, 0.68, 0.3, 1) both;
+}
 
 @media (prefers-reduced-motion: reduce) {
   *,

@@ -44,7 +44,7 @@ Run lint, typecheck, test and build before opening a PR.
 | --- | --- |
 | `/` | Landing: the problem, how it works, explainability, verification, FAQ |
 | `/how-it-works` | Matching pipeline, the three requirement states, source tiers, boundaries |
-| `/for-institutions` | Universities, LGUs and providers |
+| `/roadmap` | Scholarship matching today and the opportunity categories Tul.AI is exploring next |
 | `/privacy` | Every field, why it's collected, and how to delete it |
 | `/scholarships` | Directory with search, filter and sort |
 | `/scholarships/[id]` | The full record — server-rendered and shareable |
@@ -95,4 +95,4 @@ These are enforced in review, not preference (see `AGENTS.md` §3):
 
 A working prototype of the student experience on demo data. There is no account system and
 no server-side database: profile, shortlist and checklists live in the browser's local
-storage. Institutional features are described on `/for-institutions` but not implemented.
+storage. Future opportunity categories are described on `/roadmap` but not implemented.

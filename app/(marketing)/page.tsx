@@ -1,7 +1,9 @@
 import {
   ArrowRightIcon,
   ExternalLinkIcon,
+  GraduationCapIcon,
   HeartHandshakeIcon,
+  LandmarkIcon,
   PlusIcon,
   SearchCheckIcon,
 } from "lucide-react";
@@ -12,7 +14,6 @@ import { MatchMetric } from "@/components/scholarship/match-metric";
 import { ProviderCrest } from "@/components/scholarship/provider-logo";
 import { RequirementMark } from "@/components/scholarship/requirement-mark";
 import { ClosingCta } from "@/components/site/closing-cta";
-import { DeckPreview } from "@/components/site/deck-preview";
 import { DotGrid } from "@/components/site/dot-grid";
 import {
   InstitutionList,
@@ -22,7 +23,6 @@ import { Container, RuledRow, Section, SectionHead } from "@/components/site/lay
 import { OfferPills } from "@/components/site/offer-pills";
 import { SiteHeader } from "@/components/site/site-header";
 import { ButtonLink } from "@/components/ui/button";
-import { formatIsoDate } from "@/lib/logic/deadlines";
 import { ROUTES } from "@/lib/logic/routes";
 import { getScholarships } from "@/lib/scholarships";
 
@@ -120,7 +120,7 @@ const FAQ: [string, string][] = [
   ],
   [
     "How current is the information?",
-    "Every record carries a verification state and the date it was last checked against the provider's own source. You can ask Tul.AI to re-read a source while you're looking at a programme, and anything we can't confirm is labelled rather than smoothed over.",
+    "Every record carries a verification state based on the provider's own source. You can ask Tul.AI to re-read a source while you're looking at a programme, and anything we can't confirm is labelled rather than smoothed over.",
   ],
   [
     "What happens to what I tell you?",
@@ -149,9 +149,6 @@ export default async function LandingPage() {
      come from `priced`. Falling back to the raw list keeps the page rendering
      if a future data set has no parseable amounts at all. */
   const hero = priced[0] ?? cards[0];
-  const featured = priced[1] ?? priced[0] ?? cards[0];
-  const sourceType = (card: (typeof cards)[number]) =>
-    card.back.facts.find(([label]) => label === "Provider type")?.[1].toLowerCase() ?? "";
   const scholarshipSources = [
     {
       label: "Government",
@@ -160,7 +157,7 @@ export default async function LandingPage() {
       image: "/scholarship-sources/government.jpg",
       imageAlt: "Historic public building in Manila",
       imageClassName: "object-[center_38%]",
-      records: cards.filter((card) => /government|agency|local/.test(sourceType(card))),
+      Icon: LandmarkIcon,
     },
     {
       label: "Schools",
@@ -169,7 +166,7 @@ export default async function LandingPage() {
       image: "/scholarship-sources/schools.jpg",
       imageAlt: "Three Filipino students studying together",
       imageClassName: "object-center",
-      records: cards.filter((card) => /school|university/.test(sourceType(card))),
+      Icon: GraduationCapIcon,
     },
     {
       label: "Foundations",
@@ -178,7 +175,7 @@ export default async function LandingPage() {
       image: "/scholarship-sources/foundations.jpg",
       imageAlt: "Filipino children walking to school",
       imageClassName: "object-[center_45%]",
-      records: cards.filter((card) => !/government|agency|local|school|university/.test(sourceType(card))),
+      Icon: HeartHandshakeIcon,
     },
   ];
 
@@ -335,8 +332,17 @@ export default async function LandingPage() {
 
             <div className="mt-12 grid gap-5 md:grid-cols-3">
               {scholarshipSources.map((source) => {
+                const SourceIcon = source.Icon;
+
                 return (
                   <article key={source.label} className="flex min-h-[30rem] flex-col rounded-xl bg-canvas p-5 sm:p-6">
+                    <div className="mb-5 inline-flex w-fit self-center items-center gap-2 rounded-full bg-brand-pale py-1 pl-1 pr-4 text-ink">
+                      <span className="flex size-8 items-center justify-center rounded-full bg-canvas">
+                        <SourceIcon className="size-4" strokeWidth={1.75} aria-hidden="true" />
+                      </span>
+                      <span className="t-body-strong">{source.label}</span>
+                    </div>
+
                     <div className="relative min-h-52 overflow-hidden rounded-lg bg-canvas-soft">
                       <Image
                         src={source.image}
@@ -345,17 +351,11 @@ export default async function LandingPage() {
                         sizes="(min-width: 768px) 33vw, 100vw"
                         className={`object-cover ${source.imageClassName}`}
                       />
-                      <p className="t-caption-strong absolute top-4 left-4 inline-flex w-fit rounded-full bg-canvas px-3 py-1 text-ink">
-                        {source.label}
-                      </p>
                     </div>
 
                     <div className="mt-6 flex flex-1 flex-col">
                       <h3 className="t-display-md text-balance">{source.title}</h3>
                       <p className="t-body mt-3 text-ink-mute text-pretty">{source.body}</p>
-                      <p className="t-caption mt-5 text-ink-mute">
-                        {source.records.length} {source.records.length === 1 ? "record" : "records"} in the directory
-                      </p>
                       <Link
                         href={ROUTES.scholarships}
                         className="ring-brand t-caption-strong mt-6 inline-flex items-center gap-2 rounded-xs text-ink underline decoration-hairline underline-offset-4 hover:decoration-ink"
@@ -407,7 +407,7 @@ export default async function LandingPage() {
                 <h3 className="t-display-lg text-ink">Every record carries its source</h3>
                 <p className="t-body mt-4 flex-1 text-ink-mute text-pretty">
                   The official page it was read from, the tier of that source, and the day
-                  it was last checked. You can ask Tul.AI to re-read it while you look.
+                  it was verified. You can ask Tul.AI to re-read it while you look.
                 </p>
                 <p className="t-figure mt-8 text-ink">
                   {cards.length} of {cards.length}
@@ -569,10 +569,7 @@ export default async function LandingPage() {
                     {card.back.about}
                   </p>
                   <p className="t-caption mt-6 border-t border-hairline pt-5 text-ink-mute">
-                    {card.sources[0]?.name} · Tier {card.sourceTier} source · checked{" "}
-                    <time dateTime={card.lastVerified}>
-                      {formatIsoDate(card.lastVerified)}
-                    </time>
+                    {card.sources[0]?.name} · Tier {card.sourceTier} source
                   </p>
                 </li>
               ))}
@@ -614,8 +611,72 @@ export default async function LandingPage() {
             badges: there is no app to download, and a store badge that links
             nowhere is a claim we can't make. What's true is that the deck is
             built for a phone, so that is what this shows. */}
-        <Section tone="soft" labelledBy="phone-heading">
+        <Section tone="soft" labelledBy="support-heading">
           <Container>
+            <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-16">
+              <div className="relative aspect-[4/5] overflow-hidden rounded-xl bg-canvas lg:col-span-5">
+                <Image
+                  src="/student-opportunity-moment.png"
+                  alt="A student compares scholarship opportunities on Tul.AI while taking notes in a notebook."
+                  fill
+                  sizes="(min-width: 1024px) 42vw, 100vw"
+                  className="object-cover object-[center_38%]"
+                />
+              </div>
+
+              <div className="lg:col-span-7 lg:pl-4">
+                <h2 id="support-heading" className="t-display-xl max-w-[18ch] text-balance">
+                  You don&apos;t have to figure it all out alone.
+                </h2>
+                <p className="t-body-lg mt-6 max-w-[50ch] text-ink-mute text-pretty">
+                  Looking for support can bring a lot of questions at once. Tul.AI gives
+                  you one clear place to explore what&apos;s out there, understand the
+                  details, and decide what feels worth pursuing.
+                </p>
+
+                <ul className="mt-10 border-t border-hairline">
+                  {[
+                    [
+                      "Find opportunities that fit your path",
+                      "Start with what you know about yourself, your studies and the support you are looking for.",
+                    ],
+                    [
+                      "Understand why each one appears",
+                      "See the published requirements alongside what your profile can confirm and what still needs checking.",
+                    ],
+                    [
+                      "Keep official information close",
+                      "Read the source and its verification state before you rely on it.",
+                    ],
+                    [
+                      "Move forward at your own pace",
+                      "Save opportunities for later, then go to the provider&apos;s official page whenever you are ready to apply.",
+                    ],
+                  ].map(([title, body], index) => (
+                    <li
+                      key={title}
+                      className="grid gap-3 border-b border-hairline py-5 sm:grid-cols-[2rem_minmax(0,1fr)] sm:gap-5"
+                    >
+                      <span className="t-caption-strong flex size-8 items-center justify-center rounded-full bg-brand-pale text-ink">
+                        {index + 1}
+                      </span>
+                      <div>
+                        <h3 className="t-body-strong text-ink">{title}</h3>
+                        <p className="t-body mt-1.5 max-w-[52ch] text-ink-mute text-pretty">{body}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="mt-9">
+                  <ButtonLink className="t-body-strong h-12 px-6 text-base" href={ROUTES.onboarding}>
+                    Find my starting point
+                  </ButtonLink>
+                </div>
+              </div>
+            </div>
+            {/* Former phone-demo content, retained temporarily for a clean source-level replacement. */}
+            {/*
             <div className="grid items-center gap-14 lg:grid-cols-12 lg:gap-16">
               <div className="lg:col-span-6">
                 <SectionHead
@@ -649,6 +710,7 @@ export default async function LandingPage() {
                 <DeckPreview card={featured} index={1} controls />
               </div>
             </div>
+            */}
           </Container>
         </Section>
 
@@ -760,8 +822,7 @@ export default async function LandingPage() {
                         <p className="t-caption mt-1 text-ink-mute text-pretty">{card.title}</p>
                       </Link>
                       <p className="t-caption text-ink-mute md:text-right">
-                        Tier {card.sourceTier} source · checked{" "}
-                        <time dateTime={card.lastVerified}>{formatIsoDate(card.lastVerified)}</time>
+                        Tier {card.sourceTier} source
                       </p>
                     </RuledRow>
                   </li>

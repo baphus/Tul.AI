@@ -24,11 +24,10 @@ const COLUMNS: { title: string; links: { href: string; label: string }[] }[] = [
     ],
   },
   {
-    title: "Institutions",
+    title: "Roadmap",
     links: [
-      { href: `${ROUTES.institutions}#universities`, label: "Universities" },
-      { href: `${ROUTES.institutions}#lgus`, label: "LGUs" },
-      { href: `${ROUTES.institutions}#providers`, label: "Scholarship providers" },
+      { href: ROUTES.roadmap, label: "What’s next" },
+      { href: "mailto:hello@tul.ai?subject=Publish%20an%20opportunity%20with%20Tul.AI", label: "For providers" },
     ],
   },
   {

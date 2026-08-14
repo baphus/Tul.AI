@@ -13,7 +13,6 @@ import {
   verificationHelp,
 } from "@/components/scholarship/verification-badge";
 import { VerifyDialog } from "@/components/scholarship/verify-dialog";
-import { formatIsoDate } from "@/lib/logic/deadlines";
 import { formatPeso } from "@/lib/logic/format";
 import type { Scholarship } from "@/lib/scholarships";
 import { cn } from "@/lib/utils";
@@ -54,7 +53,7 @@ export function ScholarshipDetail({
         <div className="mt-5 flex flex-wrap items-center gap-2">
           <MatchBadge card={card} />
           <DeadlineChip deadline={card.deadline} deadlineIso={card.deadlineIso} />
-          <VerificationBadge status={card.verification} lastVerified={card.lastVerified} />
+          <VerificationBadge status={card.verification} />
         </div>
       </header>
 
@@ -185,9 +184,8 @@ export function ScholarshipDetail({
           </ul>
 
           <p className="t-caption mt-4 text-ink-mute">
-            Record last verified{" "}
-            <time dateTime={card.lastVerified}>{formatIsoDate(card.lastVerified)}</time>.
-            Provider pages can change at any time.
+            Provider pages can change at any time. Always confirm details with the official
+            source before you apply.
           </p>
 
           <div className="mt-5">

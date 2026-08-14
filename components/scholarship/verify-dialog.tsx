@@ -11,7 +11,6 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { usePrefersReducedMotion } from "@/hooks/use-media-query";
-import { formatIsoDate } from "@/lib/logic/deadlines";
 import { useLanguage } from "@/lib/logic/language";
 import { VERIFY_LABELS, type Scholarship } from "@/lib/scholarships";
 import { cn } from "@/lib/utils";
@@ -167,8 +166,7 @@ export function VerifyDialog({ card }: { card: Scholarship }) {
               </ul>
               <p className="t-micro mt-3 text-ink-mute">
                 {card.sources.length} official{" "}
-                {card.sources.length === 1 ? "source" : "sources"} checked · record last
-                verified <time dateTime={card.lastVerified}>{formatIsoDate(card.lastVerified)}</time>
+                {card.sources.length === 1 ? "source" : "sources"} available to review
               </p>
 
               <Button

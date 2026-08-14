@@ -39,7 +39,7 @@ export function ScholarshipCard({ card, index, flipped, reduced, onFlip, result 
         <article className={faceClass} style={{ background: "var(--tint-face)" }} aria-hidden={flipped}>
           <ProviderWatermark index={index} className="-right-14 top-28 size-54" />
           <FlipButton onClick={onFlip} label="Show published requirements" />
-          <VerificationBadge status={card.verification} lastVerified={card.lastVerified} showDate={false} />
+          <VerificationBadge status={card.verification} />
           <p className="t-eyebrow mt-4 text-[color:var(--tint-ink)]">{card.provider}</p>
           <h2 className="t-display-lg mt-1.5 mb-4 text-balance">{card.title}</h2>
           <div className="mb-4 flex items-end justify-between border-y border-hairline py-3.5">

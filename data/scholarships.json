@@ -2179,6 +2179,219 @@
     "verificationStatus": "Expired"
   },
   {
+    "id": "owwa-congressional-migrant-workers-scholarship-program-cmwsp-41",
+    "name": "OWWA Congressional Migrant Workers Scholarship Program (CMWSP)",
+    "provider": {
+      "name": "Overseas Workers Welfare Administration (OWWA)",
+      "type": "government",
+      "website": "https://scholarship.owwa.gov.ph/"
+    },
+    "description": "OWWA scholarship support for eligible migrant workers and their immediate dependents taking priority science and technology fields in a Philippine four- or five-year baccalaureate programme. The official portal does not publish a current intake deadline; confirm the active call before applying.",
+    "benefits": [
+      "Up to ₱60,000 per school year",
+      "Support may continue through a four- or five-year Philippine degree, subject to the current OWWA call"
+    ],
+    "deadline": null,
+    "applicationUrl": "https://scholarship.owwa.gov.ph/",
+    "eligibility": {
+      "citizenship": [
+        "Filipino"
+      ],
+      "educationLevel": [
+        "Incoming College",
+        "College Student"
+      ],
+      "courses": [
+        "Priority science and technology fields"
+      ],
+      "locations": [
+        "Philippines"
+      ],
+      "specialCategories": [
+        "OFW parent"
+      ]
+    },
+    "requirements": [
+      "Migrant worker or immediate dependent of a migrant worker",
+      "Priority science and technology field",
+      "Four- or five-year Philippine baccalaureate programme"
+    ],
+    "requiredDocuments": [
+      "Confirm the current CMWSP documentary checklist with OWWA before applying"
+    ],
+    "tags": [
+      "government",
+      "national",
+      "ofw"
+    ],
+    "lastVerified": "2026-08-14",
+    "verificationSource": "official",
+    "verificationStatus": "Needs Verification"
+  },
+  {
+    "id": "owwa-education-and-livelihood-assistance-program-elap-college-42",
+    "name": "OWWA Education and Livelihood Assistance Program (ELAP) — College Support",
+    "provider": {
+      "name": "Overseas Workers Welfare Administration (OWWA)",
+      "type": "government",
+      "website": "https://owwa.gov.ph/education-and-livelihood-assistance-program-elap-2/"
+    },
+    "description": "OWWA's ELAP offers education assistance to qualifying dependents of deceased or incarcerated OFWs. The provider publishes the benefit but not a current intake deadline or full application checklist; confirm with the responsible OWWA Regional Welfare Office before applying.",
+    "benefits": [
+      "Up to ₱10,000 per school year for an eligible college dependent"
+    ],
+    "deadline": null,
+    "applicationUrl": null,
+    "eligibility": {
+      "educationLevel": [
+        "College Student"
+      ],
+      "locations": [
+        "Philippines"
+      ],
+      "specialCategories": [
+        "OFW parent"
+      ]
+    },
+    "requirements": [
+      "Dependent of an OFW who was an active OWWA member at death, or",
+      "Dependent of an OFW incarcerated or convicted abroad and given the death penalty, with at least one OWWA contribution"
+    ],
+    "requiredDocuments": [
+      "Confirm the current ELAP college-support checklist with the responsible OWWA Regional Welfare Office"
+    ],
+    "tags": [
+      "government",
+      "national",
+      "ofw"
+    ],
+    "lastVerified": "2026-08-14",
+    "verificationSource": "official",
+    "verificationStatus": "Needs Verification"
+  },
+  {
+    "id": "cebu-technological-university-internally-funded-scholarships-43",
+    "name": "Cebu Technological University Internally Funded Academic Scholarships",
+    "provider": {
+      "name": "Cebu Technological University (CTU)",
+      "type": "university",
+      "website": "https://www.ctu.edu.ph/main/academics/scholarships/"
+    },
+    "description": "CTU publishes internally funded academic scholarships and financial-assistance awards. Benefits and requirements vary by the governing resolution; the university describes applications and supporting financial documents but does not publish a current deadline.",
+    "benefits": [
+      "Published awards include 50% tuition discounts for eligible CTU students",
+      "Some published awards cover tuition and miscellaneous fees; eligibility varies by award"
+    ],
+    "deadline": null,
+    "applicationUrl": "https://www.ctu.edu.ph/main/academics/scholarships/",
+    "eligibility": {
+      "educationLevel": [
+        "College Student"
+      ],
+      "school": "Cebu Technological University (CTU)",
+      "locations": [
+        "Cebu"
+      ]
+    },
+    "requirements": [
+      "CTU student",
+      "Must meet the qualifications for the specific academic scholarship or assistance award"
+    ],
+    "requiredDocuments": [
+      "Scholarship application form",
+      "ITR, barangay certificate of indigency or low-income evidence when required",
+      "Award-specific supporting documents as required by CTU"
+    ],
+    "tags": [
+      "university",
+      "cebu"
+    ],
+    "lastVerified": "2026-08-14",
+    "verificationSource": "official",
+    "verificationStatus": "Needs Verification"
+  },
+  {
+    "id": "ctu-cebu-city-deped-graduate-scholarship-teachers-school-heads-44",
+    "name": "CTU–Cebu City–DepEd Graduate Scholarship for Teachers and School Heads",
+    "provider": {
+      "name": "Cebu Technological University (CTU), Cebu City Government, and DepEd Cebu City",
+      "type": "university",
+      "website": "https://www.ctu.edu.ph/2026/07/cebu-city-deped-ctu-launch-graduate-scholarship-program-for-teachers/"
+    },
+    "description": "A CTU, Cebu City Government, and DepEd Cebu City partnership announced on 20 July 2026 to provide graduate scholarship grants for teachers and school heads. The announcement does not publish intake mechanics, benefit amounts, or a deadline.",
+    "benefits": [
+      "Graduate scholarship grants for master's and doctoral education; exact financial coverage to be confirmed"
+    ],
+    "deadline": null,
+    "applicationUrl": null,
+    "eligibility": {
+      "educationLevel": [
+        "Graduate Student"
+      ],
+      "locations": [
+        "Cebu City"
+      ]
+    },
+    "requirements": [
+      "Teacher or school head in the DepEd Division of Cebu City",
+      "Pursuing graduate education"
+    ],
+    "requiredDocuments": [
+      "Confirm current intake and documentary requirements with CTU or DepEd Cebu City"
+    ],
+    "tags": [
+      "university",
+      "lgu",
+      "cebu",
+      "graduate"
+    ],
+    "lastVerified": "2026-08-14",
+    "verificationSource": "official",
+    "verificationStatus": "Needs Verification"
+  },
+  {
+    "id": "cebu-capitol-medical-scholarship-cnu-vsmmc-2026-45",
+    "name": "Cebu Capitol Medical Scholarship (CNU–VSMMC College of Medicine) — 2026 Intake",
+    "provider": {
+      "name": "Province of Cebu",
+      "type": "lgu",
+      "website": "https://www.cebu.gov.ph/10394/cebu-launches-practice-based-residency-program-to-retain-capitol-doctors/"
+    },
+    "description": "The Province of Cebu's medical scholarship pathway for qualifying CNU–VSMMC College of Medicine applicants includes a return-of-service component. The published 2026 application window ran from February through June, so this record is retained as a closed-cycle reference until a new call is published.",
+    "benefits": [
+      "Published CNU–VSMMC tuition support: ₱74,000 in first year and ₱76,500 in second year",
+      "Published support of at least ₱78,000 in third and fourth years"
+    ],
+    "deadline": "2026-06-30",
+    "applicationUrl": null,
+    "eligibility": {
+      "educationLevel": [
+        "Graduate Student"
+      ],
+      "locations": [
+        "Cebu Province"
+      ]
+    },
+    "requirements": [
+      "Four-year degree",
+      "Cebu Province residency",
+      "Qualifying GWA, NMAT, interview, and entrance examination",
+      "Return-of-service pathway"
+    ],
+    "requiredDocuments": [
+      "Confirm the next intake's academic, residency, NMAT, and medical-school application requirements with the Province of Cebu"
+    ],
+    "tags": [
+      "lgu",
+      "cebu",
+      "medical",
+      "graduate"
+    ],
+    "lastVerified": "2026-08-14",
+    "verificationSource": "official",
+    "verificationStatus": "Expired"
+  },
+  {
     "id": "cebu-province-cp-gifts-tertiary-education-grant-2026-season-40",
     "name": "Cebu Province CP-GIFTS Tertiary Education Grant — 2026 Season",
     "provider": {

@@ -8,7 +8,7 @@ import { DATA } from "@/lib/scholarships";
 export const ROUTES = {
   home: "/",
   howItWorks: "/how-it-works",
-  institutions: "/for-institutions",
+  roadmap: "/roadmap",
   privacy: "/privacy",
   scholarships: "/scholarships",
   scholarship: (id: string) => `/scholarships/${id}`,

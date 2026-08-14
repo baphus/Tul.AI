@@ -26,7 +26,7 @@ export async function generateMetadata({
 
   return {
     title: `${card.title} · ${card.provider}`,
-    description: `${card.provider} — up to ${formatPeso(card.amount)} ${card.amountNote}. Deadline ${card.deadline}. Published requirements, documents and official source, last verified ${card.lastVerified}.`,
+    description: `${card.provider} — up to ${formatPeso(card.amount)} ${card.amountNote}. Deadline ${card.deadline}. Published requirements, documents, official source, and verification state.`,
     openGraph: {
       title: `${card.title} — ${card.provider}`,
       description: card.back.about,

@@ -8,6 +8,8 @@ import { Input } from "@/components/ui/input";
 import { CHAT_SUGGESTIONS, chatFor } from "@/lib/logic/chat";
 import type { Answer } from "@/lib/logic/answerFor";
 import { useLanguage } from "@/lib/logic/language";
+import type { RankedMatch } from "@/lib/logic/matching";
+import type { Scholarship } from "@/lib/scholarships";
 import { useTulAi } from "@/hooks/use-tul-ai";
 
 interface Entry {
@@ -25,16 +27,28 @@ interface Entry {
  * voice; without a key the deterministic answer is returned unchanged — so the
  * widget works everywhere, even with no env vars at all.
  */
-export function TulAiChat() {
-  const { state, cards } = useTulAi();
+export function TulAiChat({
+  complete,
+  matches,
+  matchedCards,
+}: {
+  complete: boolean;
+  matches: RankedMatch[];
+  matchedCards: Scholarship[];
+}) {
+  const { state } = useTulAi();
   const language = useLanguage();
   const [open, setOpen] = useState(false);
   const [thread, setThread] = useState<Entry[]>([]);
   const [input, setInput] = useState("");
   const [pending, setPending] = useState(false);
+  const [seenMatchGreeting, setSeenMatchGreeting] = useState(
+    () => typeof window !== "undefined" && window.sessionStorage.getItem("tul-ai:chat-match-seen") === "1"
+  );
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const profile = state.profile;
+  const matchGreeting = completionGreeting(matches);
 
   /* Keep the latest exchange in view. */
   useEffect(() => {
@@ -57,35 +71,53 @@ export function TulAiChat() {
       })
         .then((r) => r.json())
         .then((json) => {
-          const ans = (json?.answer as Answer | null) ?? chatFor(q, profile, cards);
+          const ans = (json?.answer as Answer | null) ?? chatFor(q, profile, matchedCards);
           setThread((current) =>
             current.map((entry, i) => (i === current.length - 1 ? { ...entry, a: ans } : entry))
           );
         })
         .catch(() => {
-          const ans = chatFor(q, profile, cards);
+          const ans = chatFor(q, profile, matchedCards);
           setThread((current) =>
             current.map((entry, i) => (i === current.length - 1 ? { ...entry, a: ans } : entry))
           );
         })
         .finally(() => setPending(false));
     },
-    [cards, language, pending, profile]
+    [language, matchedCards, pending, profile]
   );
+
+  if (!complete) return null;
+
+  const toggle = () => {
+    const next = !open;
+    setOpen(next);
+    if (next && !seenMatchGreeting) {
+      window.sessionStorage.setItem("tul-ai:chat-match-seen", "1");
+      setSeenMatchGreeting(true);
+    }
+  };
 
   return (
     <>
       {/* Launcher */}
-      <Button
-        type="button"
-        size="icon-lg"
-        aria-label={open ? "Close Ask Tul.AI" : "Ask Tul.AI a question"}
-        aria-expanded={open}
-        onClick={() => setOpen((value) => !value)}
-        className="fixed right-5 bottom-5 z-50 size-13 rounded-full shadow-[0_10px_30px_-8px_rgba(14,15,12,0.35)] sm:right-8 sm:bottom-8"
-      >
-        {open ? <XIcon /> : <MessageCircleIcon />}
-      </Button>
+      <div className="fixed right-5 bottom-5 z-50 flex items-center gap-2 sm:right-8 sm:bottom-8">
+        {!seenMatchGreeting && !open && (
+          <span className="t-caption-strong max-w-48 rounded-xl border border-hairline bg-canvas px-3 py-2 text-ink shadow-[0_10px_30px_-8px_rgba(14,15,12,0.22)]">
+            You&apos;ve found your matches
+          </span>
+        )}
+        <Button
+          type="button"
+          size="icon-lg"
+          aria-label={open ? "Close Ask Tul.AI" : "Ask Tul.AI about your matches"}
+          aria-expanded={open}
+          onClick={toggle}
+          className="size-13 rounded-full shadow-[0_10px_30px_-8px_rgba(14,15,12,0.35)]"
+        >
+          {open ? <XIcon /> : <MessageCircleIcon />}
+        </Button>
+      </div>
 
       {/* Panel */}
       {open && (
@@ -107,7 +139,7 @@ export function TulAiChat() {
           <div ref={scrollRef} className="sc flex-1 space-y-4 overflow-y-auto px-4 py-4">
             {thread.length === 0 && (
               <div className="t-caption max-w-[90%] self-start rounded-lg rounded-bl-xs border border-hairline bg-canvas px-3.5 py-2.5 text-ink [animation:rise_260ms_cubic-bezier(.2,.8,.3,1)_both]">
-                <p>{chatFor("hello", profile, cards).text}</p>
+                <p>{matchGreeting}</p>
               </div>
             )}
             {thread.map((entry, i) => (
@@ -198,4 +230,22 @@ export function TulAiChat() {
       )}
     </>
   );
+}
+
+function completionGreeting(matches: RankedMatch[]): string {
+  const strong = matches.filter((match) => match.tone === "strong").length;
+  const good = matches.filter((match) => match.tone === "good").length;
+  const possible = matches.filter((match) => match.tone === "possible").length;
+  const total = matches.length;
+
+  if (total === 0) {
+    return "You’ve finished your current list. No eligible or possible matches appeared in this verified set yet. I can help you review your profile or research broader opportunities—without treating a search result as a confirmed match.";
+  }
+
+  const buckets = [
+    strong ? `${strong} strong` : null,
+    good ? `${good} good` : null,
+    possible ? `${possible} possible` : null,
+  ].filter(Boolean);
+  return `You’ve found ${total} match${total === 1 ? "" : "es"}: ${buckets.join(", ")}. Ask me to clarify any match or research scholarship questions. Provider sources still decide eligibility, deadlines, and applications.`;
 }

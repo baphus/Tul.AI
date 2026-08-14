@@ -28,7 +28,7 @@ import { cn } from "@/lib/utils";
 const NAV = [
   { href: ROUTES.scholarships, label: "Scholarships" },
   { href: ROUTES.howItWorks, label: "How it works" },
-  { href: ROUTES.institutions, label: "For institutions" },
+  { href: ROUTES.roadmap, label: "Roadmap" },
 ];
 
 function CountryFlag({ language }: { language: Language }) {

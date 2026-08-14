@@ -26,7 +26,7 @@ const PIPELINE: [string, string][] = [
   ],
   [
     "Structured requirements",
-    "Each programme is stored as a record: eligibility, documents, deadline, application URL, official source, verification state, last verified. Not a page of prose to re-read every time.",
+    "Each programme is stored as a record: eligibility, documents, deadline, application URL, official source, and verification state. Not a page of prose to re-read every time.",
   ],
   [
     "The eligibility engine",

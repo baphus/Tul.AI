@@ -132,11 +132,7 @@ function SavedCard({ card, index }: { card: Scholarship; index: number }) {
 
       <div className="mt-4 flex flex-wrap items-center gap-2">
         <DeadlineChip deadline={card.deadline} deadlineIso={card.deadlineIso} />
-        <VerificationBadge
-          status={card.verification}
-          lastVerified={card.lastVerified}
-          showDate={false}
-        />
+        <VerificationBadge status={card.verification} />
       </div>
 
       <MatchMetric card={card} className="mt-4" />

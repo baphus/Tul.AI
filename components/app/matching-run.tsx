@@ -2,7 +2,7 @@
 
 import { CheckIcon, SparklesIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { DotGrid } from "@/components/site/dot-grid";
 import { ButtonLink } from "@/components/ui/button";
@@ -20,7 +20,6 @@ import {
 import { ROUTES } from "@/lib/logic/routes";
 import { isProfileReady, matchingRecoveryStep } from "@/lib/logic/validation";
 import type { Profile } from "@/lib/logic/state";
-import { SOURCE_LABELS } from "@/lib/scholarships";
 import { cn } from "@/lib/utils";
 
 /**
@@ -38,12 +37,22 @@ import { cn } from "@/lib/utils";
  */
 
 /** A brief confirmation that the completed, deterministic result is ready. */
-const RESULT_PREVIEW_MS = 300;
+const PASS_REVEAL_MS = 520;
+const RESULT_PREVIEW_MS = 620;
+
+const SOURCE_CHECKS = [
+  "Official provider pages",
+  "Published notices",
+  "Structured requirements",
+  "Deadline details",
+  "Source reliability",
+];
 
 export function MatchingRun() {
   const router = useRouter();
   const { state, dispatch, cards, ready } = useTulAi();
   const reduced = usePrefersReducedMotion();
+  const [visiblePasses, setVisiblePasses] = useState(0);
 
   const profileReady = isProfileReady(state.profile);
   /* The local engine is cheap and pure. Derive its finished output directly so
@@ -65,15 +74,36 @@ export function MatchingRun() {
     if (!ready || !profileReady) return;
     dispatch({ type: "RESET_DECK" });
 
-    /* `replace`, so Back returns to the questions rather than re-running the
-       research the student has already seen. Reduced-motion users move on at once. */
-    const redirect = window.setTimeout(
-      () => router.replace(ROUTES.discover),
-      reduced ? 0 : RESULT_PREVIEW_MS
-    );
+    const openDiscover = () => {
+      window.sessionStorage.setItem("tul-ai:match-celebration", "1");
+      window.sessionStorage.removeItem("tul-ai:chat-match-seen");
+      router.replace(ROUTES.discover);
+    };
+
+    if (reduced) {
+      openDiscover();
+      return;
+    }
+
+    let completed = 0;
+    let timer: number | undefined;
+
+    const revealNextPass = () => {
+      completed += 1;
+      setVisiblePasses(completed);
+
+      if (completed === PASS_COUNT) {
+        timer = window.setTimeout(openDiscover, RESULT_PREVIEW_MS);
+        return;
+      }
+
+      timer = window.setTimeout(revealNextPass, PASS_REVEAL_MS);
+    };
+
+    timer = window.setTimeout(revealNextPass, PASS_REVEAL_MS);
 
     return () => {
-      window.clearTimeout(redirect);
+      if (timer !== undefined) window.clearTimeout(timer);
     };
   }, [cards, dispatch, profileReady, ready, reduced, router, state.profile]);
 
@@ -83,7 +113,7 @@ export function MatchingRun() {
     return <NeedsAnswers profile={state.profile} />;
   }
 
-  const done = passes.length;
+  const done = Math.min(visiblePasses, passes.length);
   const progress = Math.round((done / PASS_COUNT) * 100);
 
   return (
@@ -99,15 +129,14 @@ export function MatchingRun() {
             >
               <SparklesIcon className="size-3.5" />
             </span>
-            <p className="t-eyebrow text-ink-deep/70">Tul.AI is researching</p>
+            <p className="t-eyebrow text-ink-deep/70">Matching your profile</p>
           </div>
 
           <h1 className="t-display-xl mt-5 text-balance text-ink-deep">
-            Finding scholarships for you…
+            Building your opportunity view...
           </h1>
           <p className="t-body mt-4 text-ink-deep/80 text-pretty">
-            Comparing your answers against the published requirements of all {cards.length}{" "}
-            verified programmes.
+            We&apos;re carefully comparing the details you shared with published requirements.
           </p>
 
           <div
@@ -129,7 +158,7 @@ export function MatchingRun() {
       {/* ── The passes, each completing when its own work has run ── */}
       <ol className="mt-9 flex flex-col gap-4" aria-live="polite">
         {PASS_LABELS.map((label, i) => {
-          const result = passes[i];
+          const result = i < done ? passes[i] : undefined;
           const current = i === done;
           return (
             <li key={label} className="flex items-start gap-3">
@@ -167,10 +196,10 @@ export function MatchingRun() {
       <div className="mt-9 rounded-xl border border-hairline bg-canvas-soft p-5">
         <p className="t-eyebrow text-ink-mute">Official sources</p>
         <ul className="mt-3.5 flex flex-col gap-2">
-          {SOURCE_LABELS.map((label, i) => {
+          {SOURCE_CHECKS.map((label, i) => {
             /* Tied to real progress rather than to a timer: a source lights up
                once enough passes have completed to have consulted it. */
-            const on = done * (SOURCE_LABELS.length / PASS_COUNT) > i;
+            const on = done * (SOURCE_CHECKS.length / PASS_COUNT) > i;
             return (
               <li key={label} className="flex items-center gap-2.5">
                 <span
@@ -191,15 +220,15 @@ export function MatchingRun() {
         </ul>
 
         <div className="mt-5 grid grid-cols-3 gap-3 border-t border-hairline pt-5">
-          <Count value={totals?.reviewed} label="programmes reviewed" />
-          <Count value={totals?.requirements} label="requirements compared" />
-          <Count value={totals?.open} label="with no conflict" />
+          <Count value={done === PASS_COUNT ? totals?.reviewed : undefined} label="records reviewed" />
+          <Count value={done === PASS_COUNT ? totals?.requirements : undefined} label="requirements compared" />
+          <Count value={done === PASS_COUNT ? totals?.open : undefined} label="paths to explore" />
         </div>
       </div>
 
       <p className="t-micro mt-6 text-ink-mute text-pretty">
-        Every figure here is counted from the records themselves. Nothing on this screen
-        estimates your chance of being awarded a scholarship.
+        Each step is based on published information. This helps you explore options; it
+        does not predict an outcome.
       </p>
     </div>
   );

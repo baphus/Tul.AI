@@ -2,9 +2,10 @@
 
 import { CheckIcon, SparklesIcon, Undo2Icon, XIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { ScholarshipCard } from "@/components/scholarship/scholarship-card";
+import { TulAiChat } from "@/components/app/tul-ai-chat";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { usePrefersReducedMotion } from "@/hooks/use-media-query";
 import { useToday } from "@/hooks/use-today";
@@ -39,18 +40,23 @@ export function Deck({ detailOpen }: { detailOpen: boolean }) {
   const reduced = usePrefersReducedMotion();
   const today = useToday();
 
-  const deck = rankScholarships(cards, state.profile)
-    .filter((result) => result.tone !== "none")
-    .map((result) => ({
-      card: cards.find((item) => item.id === result.id)!,
-      result,
-      rawIndex: cards.findIndex((item) => item.id === result.id),
-    }))
-    .filter(({ card }) =>
-      card.verification !== "Expired" && (!today || isDeadlineOpen(card.deadlineIso, today))
-    );
+  const deck = useMemo(
+    () =>
+      rankScholarships(cards, state.profile)
+        .filter((result) => result.tone !== "none")
+        .map((result) => ({
+          card: cards.find((item) => item.id === result.id)!,
+          result,
+          rawIndex: cards.findIndex((item) => item.id === result.id),
+        }))
+        .filter(({ card }) =>
+          card.verification !== "Expired" && (!today || isDeadlineOpen(card.deadlineIso, today))
+        ),
+    [cards, state.profile, today]
+  );
   const current = deck[state.idx];
   const card = current?.card ?? null;
+  const complete = state.idx >= deck.length;
 
   const [dragging, setDragging] = useState(false);
   const [exiting, setExiting] = useState(false);
@@ -299,6 +305,12 @@ export function Deck({ detailOpen }: { detailOpen: boolean }) {
           </div>
         </div>
       )}
+
+      <TulAiChat
+        complete={complete}
+        matches={deck.map(({ result }) => result)}
+        matchedCards={deck.map(({ card: matchedCard }) => matchedCard)}
+      />
     </section>
   );
 }

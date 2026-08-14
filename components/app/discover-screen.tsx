@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect } from "react";
 
 import { Deck } from "@/components/app/deck";
+import { MatchCelebration } from "@/components/app/match-celebration";
 import { ScholarshipDetail } from "@/components/scholarship/scholarship-detail";
 import { Button } from "@/components/ui/button";
 import {
@@ -44,6 +45,7 @@ export function DiscoverScreen({ cardId }: { cardId: string | null }) {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
+      <MatchCelebration />
       <Deck detailOpen={Boolean(card)} />
 
       <Sheet

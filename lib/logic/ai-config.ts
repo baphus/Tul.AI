@@ -50,7 +50,7 @@ export function allowAiRequest(request: Request): boolean {
 }
 
 export function shouldUseLiveResearch(question: string): boolean {
-  return /\b(today|current|currently|latest|recent|open|opening|deadline|apply|application|requirements?|documents?|available|availability|verify|verified)\b/i.test(question);
+  return /\b(today|current|currently|latest|recent|open|opening|deadline|apply|application|requirements?|documents?|available|availability|verify|verified|search|find|look up|research|other scholarships?|elsewhere|more opportunities)\b/i.test(question);
 }
 
 function bounded(value: string, max = 1_600): string {

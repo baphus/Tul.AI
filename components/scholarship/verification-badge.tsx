@@ -1,6 +1,5 @@
 import { CircleAlertIcon, CircleHelpIcon, CircleSlashIcon, RefreshCwIcon, ShieldCheckIcon } from "lucide-react";
 
-import { formatIsoDate } from "@/lib/logic/deadlines";
 import type { VerificationStatus } from "@/lib/scholarships";
 import { cn } from "@/lib/utils";
 
@@ -18,7 +17,7 @@ const STYLE: Record<VerificationStatus, { class: string; Icon: typeof ShieldChec
   Updated: {
     class: "border-ink/20 bg-ink/6 text-ink",
     Icon: RefreshCwIcon,
-    help: "The published information changed since we last checked.",
+    help: "The provider's published information changed.",
   },
   Expired: {
     class: "border-hairline bg-canvas-soft text-ink-mute",
@@ -33,19 +32,15 @@ const STYLE: Record<VerificationStatus, { class: string; Icon: typeof ShieldChec
 };
 
 /**
- * Verification state + the date it was last checked (PRD §31). Both are always
- * shown together — a state without a timestamp is not a trust signal.
+ * Verification state is the student-facing trust signal. The underlying check
+ * timestamp remains in the record for audit and operations, not UI clutter.
  */
 export function VerificationBadge({
   status,
-  lastVerified,
   className,
-  showDate = true,
 }: {
   status: VerificationStatus;
-  lastVerified: string;
   className?: string;
-  showDate?: boolean;
 }) {
   const { class: tone, Icon } = STYLE[status];
 
@@ -57,12 +52,6 @@ export function VerificationBadge({
         <Icon className="size-3" aria-hidden="true" />
         {status}
       </span>
-      {showDate && (
-        <span className="t-micro text-ink-mute">
-          Last verified{" "}
-          <time dateTime={lastVerified}>{formatIsoDate(lastVerified)}</time>
-        </span>
-      )}
     </span>
   );
 }
