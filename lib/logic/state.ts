@@ -49,7 +49,6 @@ export interface AppState {
   idx: number;
   decisions: Decision[];
   history: DeckSnapshot[];
-  flipped: boolean;
   advice: Advice | null;
   shownAdvice: Record<string, boolean>;
 
@@ -71,8 +70,6 @@ export type Action =
   | { type: "FLING"; dir: 1 | -1; index?: number }
   | { type: "COMMIT_FLING"; index?: number }
   | { type: "UNDO" }
-  | { type: "TAP_CARD" }
-  | { type: "SET_FLIPPED"; value: boolean }
   | { type: "DISMISS_ADVICE" }
   | { type: "MOVE"; index: number }
   | { type: "TOGGLE_DOC"; id: string; doc: string }
@@ -103,7 +100,6 @@ export function createInitialState(): AppState {
     idx: 0,
     decisions: Array(DATA.length).fill(undefined) as Decision[],
     history: [],
-    flipped: false,
     advice: null,
     shownAdvice: {},
     stageN: 0,
@@ -210,7 +206,6 @@ export function reducer(state: AppState, action: Action): AppState {
         idx: 0,
         decisions: Array(DATA.length).fill(undefined) as Decision[],
         history: [],
-        flipped: false,
         advice: null,
         shownAdvice: {},
       };
@@ -241,7 +236,7 @@ export function reducer(state: AppState, action: Action): AppState {
         shownAdvice = { ...shownAdvice, [advised.id]: true };
         advice = advised;
       }
-      return { ...state, idx: next, advice, shownAdvice, flipped: false };
+      return { ...state, idx: next, advice, shownAdvice };
     }
 
     case "UNDO": {
@@ -252,16 +247,9 @@ export function reducer(state: AppState, action: Action): AppState {
         history: state.history.slice(0, -1),
         idx: previous.idx,
         decisions: cloneDecisions(previous.decisions),
-        flipped: false,
         advice: null,
       };
     }
-
-    case "TAP_CARD":
-      return { ...state, flipped: !state.flipped };
-
-    case "SET_FLIPPED":
-      return state.flipped === action.value ? state : { ...state, flipped: action.value };
 
     case "DISMISS_ADVICE":
       return { ...state, advice: null };

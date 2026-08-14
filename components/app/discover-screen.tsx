@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect } from "react";
 
 import { Deck } from "@/components/app/deck";
-import { ShortlistPanel } from "@/components/app/shortlist-panel";
 import { ScholarshipDetail } from "@/components/scholarship/scholarship-detail";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,11 +18,9 @@ import { useTulAi } from "@/hooks/use-tul-ai";
 import { cardIndexOf, ROUTES } from "@/lib/logic/routes";
 
 /**
- * Discover = the deck plus one companion column. Opening a record never moves
- * the deck: the full record rises as a centred popup over the page, so the
- * shortlist column stays put and closing the popup restores the exact layout.
- * The open record lives in the URL (`?card=`), so it is shareable and Back
- * closes it.
+ * Discover keeps one opportunity in focus. Details rise beside it on desktop
+ * and from the bottom on phones, so closing the record returns to the same
+ * decision without reorienting the student.
  */
 export function DiscoverScreen({ cardId }: { cardId: string | null }) {
   const router = useRouter();
@@ -36,26 +33,18 @@ export function DiscoverScreen({ cardId }: { cardId: string | null }) {
     router.push(ROUTES.discover, { scroll: false });
   }, [router]);
 
-  /* Escape closes the popup — the dialog handles its own focus and backdrop. */
   useEffect(() => {
     if (!card) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") close();
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") close();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [card, close]);
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col lg:grid lg:grid-cols-[minmax(0,1fr)_28rem] xl:grid-cols-[minmax(0,1fr)_32rem]">
-      <div className="flex min-h-0 flex-1 flex-col">
-        <Deck detailOpen={Boolean(card)} />
-      </div>
-
-      {/* The shortlist never moves — the popup overlays it when a card opens. */}
-      <aside className="hidden min-h-0 border-l border-hairline lg:block lg:overflow-y-auto">
-        <ShortlistPanel />
-      </aside>
+    <div className="flex min-h-0 flex-1 flex-col">
+      <Deck detailOpen={Boolean(card)} />
 
       <Sheet
         open={Boolean(card)}
@@ -65,9 +54,9 @@ export function DiscoverScreen({ cardId }: { cardId: string | null }) {
       >
         {card && (
           <SheetContent
-            side="center"
+            side="bottom"
             showCloseButton={false}
-            className="gap-0 overflow-y-auto rounded-2xl bg-canvas p-0 text-ink"
+            className="h-[min(88dvh,52rem)] gap-0 overflow-y-auto rounded-t-2xl bg-canvas p-0 text-ink lg:inset-y-0 lg:right-0 lg:left-auto lg:h-full lg:w-[min(42rem,46vw)] lg:rounded-none lg:border-l"
           >
             <SheetTitle className="sr-only">
               {card.title} — {card.provider}
@@ -89,7 +78,7 @@ export function DiscoverScreen({ cardId }: { cardId: string | null }) {
                   <Button
                     variant="outline"
                     size="icon-lg"
-                    className="size-9 rounded-md border-hairline bg-canvas/70"
+                    className="border-hairline bg-canvas"
                     aria-label="Close details"
                     onClick={close}
                   >
