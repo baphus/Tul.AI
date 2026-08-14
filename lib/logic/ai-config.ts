@@ -64,10 +64,22 @@ export function allowAiRequest(request: Request): boolean {
 }
 
 export function shouldUseLiveResearch(question: string): boolean {
-  return /\b(today|current|currently|latest|recent|open|opening|deadline|apply|application|requirements?|documents?|available|availability|verify|verified)\b/i.test(question);
+  // Only use live research for questions that are genuinely time-sensitive
+  // (deadline changed? still accepting? current status?). Generic questions
+  // about requirements, documents, and how to apply are answered from the
+  // published record — forcing a web search on every question burns quota
+  // and slows responses significantly.
+  return /\b(today|still open|is it open|currently open|is it still|latest|recent update|changed|updated recently|current status|currently accepting)\b/i.test(question);
 }
 
-function bounded(value: string, max = 1_600): string {
+/**
+ * Truncates a prompt to `max` characters before sending to the AI.
+ * The default is 12,000 — enough for a full scholarship-context prompt.
+ * User-provided question text is validated to 1,600 chars at the API route
+ * level before it reaches here, so this cap is a safety backstop, not the
+ * primary input gate.
+ */
+function bounded(value: string, max = 12_000): string {
   return value.trim().slice(0, max);
 }
 
@@ -96,7 +108,7 @@ function citationsFrom(value: unknown): AiCitation[] {
 
 export async function generateTulAIResponse(
   prompt: string,
-  options: { liveResearch?: boolean; officialDomains?: string[]; language?: Language } = {}
+  options: { liveResearch?: boolean; officialDomains?: string[]; language?: Language; maxTokens?: number } = {}
 ): Promise<AiTextResult> {
   const provider = resolveAiProvider(process.env);
 
@@ -111,23 +123,45 @@ export async function generateTulAIResponse(
     const liveResearch = Boolean(options.liveResearch);
     const systemInstruction = `${TUL_AI_SYSTEM_INSTRUCTION}\n\n${responseLanguageInstruction(options.language ?? "ENG")}`;
 
-    try {
-      const response = await ai.models.generateContent({
-        model,
-        contents: bounded(prompt),
-        config: {
-          systemInstruction,
-          ...(liveResearch ? { tools: [{ googleSearch: {} }] } : {}),
-        },
-      });
+    const callGemini = async (withSearch: boolean): Promise<AiTextResult> => {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 25_000);
+      try {
+        const response = await ai.models.generateContent({
+          model,
+          contents: bounded(prompt),
+          config: {
+            systemInstruction,
+            ...(withSearch ? { tools: [{ googleSearch: {} }] } : {}),
+          },
+        });
+        clearTimeout(timeout);
+        const text = response.text?.trim() ?? "";
+        const citations = citationsFrom(response);
+        return { success: Boolean(text), text, citations, searched: withSearch };
+      } catch (err) {
+        clearTimeout(timeout);
+        const msg = err instanceof Error ? err.message : String(err);
+        console.error(`[ai-config] Gemini generateContent failed (search=${withSearch}):`, msg);
+        return { success: false, citations: [], searched: withSearch, error: `Gemini: ${msg}` };
+      }
+    };
 
-      const text = response.text?.trim() ?? "";
-      const citations = citationsFrom(response);
-      return { success: Boolean(text), text, citations, searched: liveResearch };
-    } catch {
-      return { success: false, citations: [], searched: liveResearch, error: "Gemini request failed." };
+    // First attempt — with live search if requested.
+    const first = await callGemini(liveResearch);
+    if (first.success) return first;
+
+    // If live-search was on and it failed, retry without it (tool may be unavailable
+    // on this key tier; a plain text answer is better than nothing).
+    if (liveResearch) {
+      console.warn("[ai-config] Live-search attempt failed; retrying without googleSearch.");
+      const retry = await callGemini(false);
+      if (retry.success) return { ...retry, searched: false };
     }
+
+    return first; // propagate the original failure
   }
+
 
   if (provider === "openai") {
     const apiKey = resolveOpenAiApiKey(process.env);
@@ -149,7 +183,7 @@ export async function generateTulAIResponse(
             { role: "system", content: systemInstruction },
             { role: "user", content: bounded(prompt) },
           ],
-          max_tokens: 500,
+          max_tokens: options.maxTokens ?? 500,
           temperature: 0.2,
         }),
         signal: AbortSignal.timeout(20_000),

@@ -24,7 +24,7 @@ describe("answerFor", () => {
 
   it("refuses to estimate chances (no confidence score)", () => {
     const a = answerFor("What are my chances?", CHED);
-    expect(a.text).toContain("can’t estimate your chances");
+    expect(a.text).toContain("can't estimate your chances");
     expect(a.src).toBeNull();
   });
 
@@ -57,10 +57,21 @@ describe("answerFor", () => {
     expect(a.text).toContain(CHED.host);
   });
 
+  it("answers evaluation questions like 'is this a good scholarship?'", () => {
+    const a = answerFor("is this a good scholarship?", CHED);
+    expect(a.text).toContain("is a scholarship offering");
+    expect(a.src).toBe(CHED.sources[0].name);
+  });
+
+  it("answers eligibility questions like 'is this for OFW parents only?'", () => {
+    const a = answerFor("is this for OFW parents only?", CHED);
+    expect(a.text).toContain("Published eligibility criteria");
+    expect(a.src).toBe(CHED.sources[0].name);
+  });
+
   it("defers to the provider when it cannot ground the answer", () => {
     const a = answerFor("Can I apply in Tagalog?", CHED);
-    expect(a.text).toContain("couldn’t find that");
+    expect(a.text).toContain("doesn't cover that specifically");
     expect(a.src).toBeNull();
   });
 });
-

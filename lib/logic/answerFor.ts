@@ -77,11 +77,55 @@ export function answerFor(q: string, card: Scholarship): Answer {
     };
   }
 
+  // ── Evaluation / Overview / "What is this about?" ──
+  if (
+    k.includes("good scholarship") ||
+    k.includes("is this good") ||
+    k.includes("is it good") ||
+    k.includes("worth") ||
+    k.includes("recommend") ||
+    k.includes("overview") ||
+    k.includes("summary") ||
+    k.includes("tell me about") ||
+    k.includes("details") ||
+    k.includes("all about") ||
+    k.includes("what is this") ||
+    k.includes("what's this") ||
+    k.includes("about this scholarship") ||
+    k.includes("scholarship about") ||
+    k.includes("explain") ||
+    k.includes("describe") ||
+    k.includes("what can you tell") ||
+    k.includes("more about") ||
+    k.includes("give me info") ||
+    k.includes("give me details") ||
+    k.includes("information about")
+  ) {
+    return {
+      text:
+        card.provider +
+        " " +
+        card.title +
+        " is a scholarship offering " +
+        (card.amount > 0 ? formatPeso(card.amount) + " (" + card.amountNote + ")" : card.amountNote) +
+        ". " +
+        card.back.about +
+        " Applications close on " +
+        card.deadline +
+        ". There are " +
+        card.rows.length +
+        " published requirement" +
+        (card.rows.length === 1 ? "" : "s") +
+        " you can check in the eligibility section.",
+      src: card.sources[0].name,
+    };
+  }
+
   // ── Chances (never estimated — AGENTS.md §3) ──
   if (k.includes("chance") || k.includes("likely") || k.includes("odds")) {
     return {
       text:
-        "I can’t estimate your chances — the provider does not publish slot counts or applicant numbers. What I can say is that you currently meet " +
+        "I can't estimate your chances — the provider does not publish slot counts or applicant numbers. What I can say is that you currently meet " +
         card.matchShort.toLowerCase() +
         ", which is the part you control.",
       src: null,
@@ -90,7 +134,23 @@ export function answerFor(q: string, card: Scholarship): Answer {
 
   // ── Facts published on the card (coverage, renewal, selection, who it's for) ──
   const FACT_KEYS: [string, string[]][] = [
-    ["Who it’s for", ["who is it for", "who’s it for", "who can get", "who qualifies"]],
+    [
+      "Who it's for",
+      [
+        "who is it for",
+        "who's it for",
+        "who can get",
+        "who qualifies",
+        "who is this for",
+        "what's it for",
+        "what is it for",
+        "this for who",
+        "for who",
+        "who benefits",
+        "who is eligible",
+        "intended for",
+      ],
+    ],
     ["Coverage", ["what does it cover", "what is covered", "what do i get", "coverage", "what's covered"]],
     ["Renewal", ["renew", "renewal", "renewable", "maintain", "continue"]],
     ["Selection", ["selected", "selection", "chosen", "ranked", "allocated"]],
@@ -107,18 +167,68 @@ export function answerFor(q: string, card: Scholarship): Answer {
     }
   }
 
-  // ── Eligibility summary ──
-  if (k.includes("who can apply") || k.includes("who is eligible") || k.includes("eligib") || k.includes("qualify") || k.includes("requirement")) {
-    const list = card.rows.slice(0, 3).map((r) => r.label).join(", ");
-    const tail = card.rows.length > 3 ? " and " + card.rows[card.rows.length - 1].label : "";
+  // ── Eligibility summary — catches "is this for OFW parents only?", "am I eligible?" etc. ──
+  if (
+    k.includes("who can apply") ||
+    k.includes("who is eligible") ||
+    k.includes("eligib") ||
+    k.includes("qualify") ||
+    k.includes("requirement") ||
+    // "is this for X" / "is this only for" phrasing
+    k.includes("is this for") ||
+    k.includes("is it for") ||
+    k.includes("only for") ||
+    k.includes("this only") ||
+    k.includes("for ofw") ||
+    k.includes("ofw only") ||
+    k.includes("for students") ||
+    k.includes("for college") ||
+    k.includes("for dependents") ||
+    k.includes("this scholarship for") ||
+    k.includes("who can take") ||
+    k.includes("who can use") ||
+    // "am I" / "can I" eligibility phrasing
+    k.includes("am i eligible") ||
+    k.includes("can i apply for this") ||
+    k.includes("can i qualify") ||
+    k.includes("eligible for this")
+  ) {
+    // Build a richer eligibility summary from the structured criteria.
+    const parts: string[] = [];
+    const { eligibility } = card;
+    if (eligibility.special?.length)
+      parts.push("special categories: " + eligibility.special.join(", "));
+    if (eligibility.stages?.length)
+      parts.push("student stage: " + eligibility.stages.join(" or "));
+    if (eligibility.years?.length)
+      parts.push("year levels: " + eligibility.years.join(", "));
+    if (eligibility.courses?.length)
+      parts.push(
+        "courses: " +
+          eligibility.courses.slice(0, 4).join(", ") +
+          (eligibility.courses.length > 4 ? " and more" : "")
+      );
+    if (eligibility.locations?.length)
+      parts.push("location: " + eligibility.locations.join(", "));
+    if (eligibility.gwaMin !== undefined)
+      parts.push("minimum GWA: " + eligibility.gwaMin + "%");
+    if (eligibility.incomeMax !== undefined)
+      parts.push("household income ceiling: ₱" + eligibility.incomeMax.toLocaleString("en-PH") + " / month");
+
+    const criteriaText = parts.length
+      ? "Published eligibility criteria include " + parts.join("; ") + "."
+      : "The published record lists " +
+        card.rows.length +
+        " requirement" +
+        (card.rows.length === 1 ? "" : "s") +
+        " — see the eligibility section for full details.";
+
     return {
       text:
-        "The published requirements are " +
-        list +
-        tail +
-        ". " +
+        criteriaText +
+        " " +
         card.matchShort +
-        " on the published record — unknown details stay unknown, never a failure.",
+        " on the published record. Unknown details stay unknown — they are never counted as a failure.",
       src: card.sources[0].name,
     };
   }
@@ -137,7 +247,7 @@ export function answerFor(q: string, card: Scholarship): Answer {
         card.provider +
         " — Tul.AI never files for you. Start from the official application on " +
         card.host +
-        ". You’ll need " +
+        ". You'll need " +
         card.needs[0] +
         (card.needs[1] ? " and " + card.needs[1] : "") +
         " to get going.",
@@ -154,8 +264,7 @@ export function answerFor(q: string, card: Scholarship): Answer {
     k.includes("reliable") ||
     k.includes("up to date")
   ) {
-    const confirmed =
-      card.verification === "Verified" || card.verification === "Updated";
+    const confirmed = card.verification === "Verified" || card.verification === "Updated";
     return {
       text:
         "This record is marked " +
@@ -164,7 +273,7 @@ export function answerFor(q: string, card: Scholarship): Answer {
         card.lastVerified +
         ". " +
         (confirmed
-          ? "It has been checked against the provider’s own published information."
+          ? "It has been checked against the provider's own published information."
           : "Some part could not be confirmed against a current source — check the provider directly.") +
         " Tul.AI is not the official portal.",
       src: card.sources[0].name,
@@ -185,7 +294,7 @@ export function answerFor(q: string, card: Scholarship): Answer {
         card.provider +
         ". Their official site is " +
         card.host +
-        " — the safest answers for anything this page can’t confirm come from the provider directly.",
+        " — the safest answers for anything this page can't confirm come from the provider directly.",
       src: card.sources[0].name,
     };
   }
@@ -203,10 +312,14 @@ export function answerFor(q: string, card: Scholarship): Answer {
 
   return {
     text:
-      "I couldn’t find that in the published information for " +
+      "The published record for " +
       card.provider +
-      ". The safest answer will come from the provider directly — their notice was last updated " +
-      card.sources[0].date.replace("Verified ", "") +
+      " — " +
+      card.title +
+      " doesn't cover that specifically. The safest answer will come from the provider directly at " +
+      card.host +
+      " — their information was last checked " +
+      card.sources[0].date.replace("Verified ", "").replace("Checked ", "") +
       ".",
     src: null,
   };
