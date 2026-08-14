@@ -39,49 +39,24 @@ const PROFILE_LABELS: [keyof Profile, string][] = [
 
 /** Colloquial ways students name each programme, beside its provider/title. */
 const CARD_ALIASES: Record<string, string[]> = {
-  "ched-merit-scholarship": ["ched merit", "cmsp"],
+  "ched-merit-scholarship": ["ched", "merit"],
   "dost-sei-undergraduate-scholarship": ["dost", "sei"],
   "owwa-education-for-dependents": ["owwa", "ofw"],
   "cebu-city-higher-education-assistance": ["cebu city"],
   "ctu-academic-excellence-grant": ["ctu", "technological university"],
   "province-of-cebu-provincial-scholarship": ["province", "provincial"],
-  "39": ["ched merit", "cmsp", "ched-merit"],
-  "27": ["dost", "sei", "undergraduate s&t", "dost-sei"],
-  "24": ["owwa", "edsp"],
-  "25": ["odsp"],
-  "40": ["cebu", "cebu city", "cebu province", "province", "provincial", "cp-gifts"],
-  "17": ["tes", "tertiary education subsidy", "unifast"],
-  "18": ["tulong dunong", "tdp"],
-  "5": ["jlss", "junior level science scholarship"],
-  "20": ["security bank", "sbfi"],
-  "3": ["sm foundation", "sm"],
 };
 
 function cardFor(question: string, cards: Scholarship[]): Scholarship | null {
   const k = " " + question.trim().toLowerCase() + " ";
-
-  // 1. Direct check of explicit alias terms for each card
   for (const card of cards) {
-    const aliases = CARD_ALIASES[card.id] ?? [];
-    if (aliases.some((alias) => k.includes(alias))) return card;
+    const terms = [
+      card.provider.toLowerCase(),
+      card.title.toLowerCase(),
+      ...(CARD_ALIASES[card.id] ?? []),
+    ];
+    if (terms.some((term) => k.includes(term))) return card;
   }
-
-  // 2. Direct substring match on provider or title
-  for (const card of cards) {
-    const providerLower = card.provider.toLowerCase();
-    const titleLower = card.title.toLowerCase();
-    if (k.includes(providerLower) || k.includes(titleLower)) return card;
-  }
-
-  // 3. Fallback keyword matching against combined text
-  for (const card of cards) {
-    const combined = (card.provider + " " + card.title).toLowerCase();
-    if (k.includes("dost") && combined.includes("dost")) return card;
-    if (k.includes("owwa") && combined.includes("owwa")) return card;
-    if (k.includes("ched") && combined.includes("ched")) return card;
-    if ((k.includes("cebu city") || k.includes("cebu")) && combined.includes("cebu")) return card;
-  }
-
   return null;
 }
 

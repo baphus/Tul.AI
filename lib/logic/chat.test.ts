@@ -15,42 +15,47 @@ const DEMO: Profile = {
   gwa: "94.5",
 };
 
+const OFW: Profile = {
+  ...DEMO,
+  chips: ["OFW parent"],
+};
+
 describe("chatFor — named programme eligibility", () => {
-  it("reports a match from the eligibility engine", () => {
+  it("reports a strong match from the eligibility engine", () => {
     const reply = chatFor("Am I eligible for DOST?", DEMO, DATA);
     expect(reply.text).toContain("DOST-SEI");
-    expect(reply.text).toContain("Undergraduate");
+    expect(reply.text).toContain("Undergraduate S&T Scholarship");
+    expect(reply.text).toContain("strong match");
   });
 
   it("names the hard conflicts instead of guessing", () => {
-    const reply = chatFor("Am I eligible for CHED Merit?", { ...DEMO, gwa: "80" }, DATA);
+    const reply = chatFor("Am I eligible for the CTU grant?", { ...DEMO, gwa: "80" }, DATA);
     expect(reply.text).toContain("GWA");
     expect(reply.text).toContain("published requirement");
   });
 
   it("points at unknowns, never counts them as failures", () => {
-    const shsStudent: Profile = { ...DEMO, stage: "Grade 12", year: "Grade 12" };
-    const reply = chatFor("Am I eligible for OWWA?", shsStudent, DATA);
+    const reply = chatFor("Am I eligible for OWWA?", DEMO, DATA);
     expect(reply.text).toContain("unknown");
     expect(reply.text).not.toContain("not eligible");
   });
 
   it("matches a colloquial name for a programme", () => {
-    const reply = chatFor("Can I apply for the Cebu scholarship?", DEMO, DATA);
-    expect(reply.text).toContain("Cebu");
+    const reply = chatFor("Can I apply for the Cebu City scholarship?", DEMO, DATA);
+    expect(reply.text).toContain("Higher Education Assistance");
   });
 
   it("routes factual questions through the per-card rule set", () => {
     const reply = chatFor("When does DOST close?", DEMO, DATA);
-    expect(reply.text).toContain("Sep 17, 2026");
+    expect(reply.text).toContain("Sept. 15, 2026");
   });
 });
 
 describe("chatFor — profile-wide questions", () => {
   it("lists the top matches ranked from the profile", () => {
     const reply = chatFor("What can I apply for?", DEMO, DATA);
-    expect(reply.text).toContain("CHED");
-    expect(reply.text).toContain("match");
+    expect(reply.text).toContain("CHED Merit Scholarship Program");
+    expect(reply.text).toContain("Strong match");
   });
 
   it("asks for onboarding answers before matching", () => {
@@ -60,14 +65,14 @@ describe("chatFor — profile-wide questions", () => {
 
   it("reports the soonest deadlines among open programmes", () => {
     const reply = chatFor("Which scholarship closes soonest?", DEMO, DATA);
-    expect(reply.text).toContain("Inquirer Foundation");
-    expect(reply.text).toContain("Jul 31, 2026");
+    expect(reply.text).toContain("Cebu City Government");
+    expect(reply.text).toContain("Aug. 22, 2026");
   });
 
   it("never estimates chances", () => {
     const reply = chatFor("What are my chances?", DEMO, DATA);
     expect(reply.text).toContain("can't estimate");
-    expect(reply.text).toContain("programmes");
+    expect(reply.text).toContain("3 of 6");
   });
 
   it("echoes the profile answers for verification", () => {
@@ -84,10 +89,8 @@ describe("chatFor — manners and edge cases", () => {
   });
 
   it("improves with an OFW chip in the profile", () => {
-    const shsStudent: Profile = { ...DEMO, stage: "Grade 12", year: "Grade 12" };
-    const shsOfw: Profile = { ...shsStudent, chips: ["OFW parent"] };
-    const before = chatFor("Am I eligible for OWWA?", shsStudent, DATA);
-    const after = chatFor("Am I eligible for OWWA?", shsOfw, DATA);
+    const before = chatFor("Am I eligible for OWWA?", DEMO, DATA);
+    const after = chatFor("Am I eligible for OWWA?", OFW, DATA);
     expect(after.text).toContain("strong match");
     expect(after.text).not.toBe(before.text);
   });

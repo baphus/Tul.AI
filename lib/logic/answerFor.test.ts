@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { DATA } from "@/lib/scholarships";
 import { answerFor } from "./answerFor";
 
-const CHED = DATA.find((c) => c.id === "40") ?? DATA[0];
+const CHED = DATA[0];
 
 describe("answerFor", () => {
   it("answers about holding two scholarships", () => {
@@ -35,26 +35,37 @@ describe("answerFor", () => {
 
   it("answers about the amount", () => {
     const a = answerFor("How much is the assistance?", CHED);
-    expect(a.text).toContain("₱");
+    expect(a.text).toContain("₱60,000");
     expect(a.src).toBe(CHED.sources[0].name);
   });
 
-  it("answers about how to apply", () => {
+  it("answers about what the programme covers", () => {
+    const a = answerFor("What does it cover?", CHED);
+    expect(a.text).toBe("Tuition support plus a book and living allowance");
+    expect(a.src).toBe(CHED.sources[0].name);
+  });
+
+  it("answers about renewal", () => {
+    const a = answerFor("Is this renewable?", CHED);
+    expect(a.text).toBe("Reviewed every semester against your grades");
+  });
+
+  it("answers how to apply", () => {
     const a = answerFor("How do I apply?", CHED);
-    expect(a.text).toContain(CHED.host);
-    expect(a.text).toContain(CHED.needs[0]);
+    expect(a.text).toContain("ched.gov.ph");
+    expect(a.text).toContain("PSA birth certificate");
   });
 
   it("answers whether the record is verified", () => {
     const a = answerFor("Is this verified?", CHED);
-    expect(a.text).toContain(CHED.verification);
+    expect(a.text).toContain("Verified");
     expect(a.text).toContain(CHED.lastVerified);
   });
 
   it("answers who the provider is", () => {
     const a = answerFor("Who offers this?", CHED);
-    expect(a.text).toContain(CHED.provider);
-    expect(a.text).toContain(CHED.host);
+    expect(a.text).toContain("CHED");
+    expect(a.text).toContain("ched.gov.ph");
   });
 
   it("defers to the provider when it cannot ground the answer", () => {
@@ -63,4 +74,3 @@ describe("answerFor", () => {
     expect(a.src).toBeNull();
   });
 });
-
