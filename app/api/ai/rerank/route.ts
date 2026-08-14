@@ -1,12 +1,9 @@
 import { NextResponse } from "next/server";
-import { generateObject } from "ai";
-import { createOpenAI } from "@ai-sdk/openai";
 import { z } from "zod";
 
 import {
   allowAiRequest,
-  resolveOpenAiApiKey,
-  resolveOpenAiModel,
+  generateTulAIJson,
   TUL_AI_SYSTEM_INSTRUCTION,
 } from "@/lib/logic/ai-config";
 import type { RankedMatch } from "@/lib/logic/matching";
@@ -32,20 +29,16 @@ export async function POST(request: Request) {
     if (!Array.isArray(rankedMatches)) return NextResponse.json({ error: "Missing ranked matches." }, { status: 400 });
     const matches = rankedMatches.slice(0, 5);
     if (!allowAiRequest(request)) return NextResponse.json({ reRanked: rankedMatches, explanations: fallback(matches), generated: false, limited: true });
-    const apiKey = resolveOpenAiApiKey(process.env);
-    if (!apiKey) {
+    const generated = await generateTulAIJson<z.infer<typeof explanationSchema>>(
+      `Create one concise, warm explanation per item from this deterministic match summary. Do not add facts, scores, or promises. Explain unknown requirements as information to confirm.\n${JSON.stringify(matches.map(({ id, match, met, total, unknown, checks }) => ({ id, match, met, total, unknown, checks })))}`,
+      `${TUL_AI_SYSTEM_INSTRUCTION}\n\n${responseLanguageInstruction(requestedLanguage(language))}`
+    );
+    const parsed = explanationSchema.safeParse(generated.data);
+    if (!generated.success || !parsed.success) {
       return NextResponse.json({ reRanked: rankedMatches, explanations: fallback(matches), generated: false });
     }
-
-    const openai = createOpenAI({ apiKey });
-    const { object } = await generateObject({
-      model: openai(resolveOpenAiModel(process.env)),
-      schema: explanationSchema,
-      system: `${TUL_AI_SYSTEM_INSTRUCTION}\n\n${responseLanguageInstruction(requestedLanguage(language))}`,
-      prompt: `Create one concise, warm explanation per item from this deterministic match summary. Do not add facts, scores, or promises. Explain unknown requirements as information to confirm.\n${JSON.stringify(matches.map(({ id, match, met, total, unknown, checks }) => ({ id, match, met, total, unknown, checks })))}`,
-    });
     const permitted = new Set(matches.map((match) => match.id));
-    const explanations = object.explanations
+    const explanations = parsed.data.explanations
       .filter((item) => permitted.has(item.id))
       .map((item): AiExplanation => ({ id: item.id, reason: item.reason }));
     return NextResponse.json({

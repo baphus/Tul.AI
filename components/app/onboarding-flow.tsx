@@ -86,6 +86,14 @@ const schoolKindLabels: Record<SchoolKind, string> = {
   sectarian: "Sectarian institution",
 };
 
+type ExtractionProposal = {
+  city?: string;
+  course?: string;
+  gwa?: string;
+  chips?: string[];
+  summary?: string;
+};
+
 function SchoolKindIcon({ kind }: { kind: SchoolKind }) {
   const Icon =
     kind === "state"
@@ -152,6 +160,7 @@ export function OnboardingFlow({ step }: { step: number }) {
 
   const [extracting, setExtracting] = useState(false);
   const [extractionResult, setExtractionResult] = useState<string | null>(null);
+  const [extractionProposal, setExtractionProposal] = useState<ExtractionProposal | null>(null);
   const [extractConsent, setExtractConsent] = useState(false);
 
   const planning = isPlanning(profile);
@@ -182,6 +191,7 @@ export function OnboardingFlow({ step }: { step: number }) {
     if (!profile.notes.trim() || extracting) return;
     setExtracting(true);
     setExtractionResult(null);
+    setExtractionProposal(null);
     try {
       const res = await fetch("/api/ai/extract", {
         method: "POST",
@@ -190,20 +200,9 @@ export function OnboardingFlow({ step }: { step: number }) {
       });
       const json = await res.json();
       if (json?.extracted) {
-        const ext = json.extracted;
-        if (ext.course && !profile.course) setField("course", ext.course);
-        if (ext.city && !profile.city) setField("city", ext.city);
-        if (ext.gwa && !profile.gwa) setField("gwa", ext.gwa);
-        if (ext.chips && Array.isArray(ext.chips)) {
-          ext.chips.forEach((c: string) => {
-            if (!profile.chips.includes(c)) {
-              dispatch({ type: "TOGGLE_CHIP", value: c });
-            }
-          });
-        }
-        setExtractionResult(
-          ext.summary || "AI extracted structured details into your profile."
-        );
+        const ext = json.extracted as ExtractionProposal;
+        setExtractionProposal(ext);
+        setExtractionResult(ext.summary || "Review each suggestion before adding it to your profile.");
       }
     } catch (err) {
       console.error("AI extraction error:", err);
@@ -692,7 +691,7 @@ export function OnboardingFlow({ step }: { step: number }) {
                 {extracting ? (
                   <>
                     <Loader2Icon className="size-4 animate-spin" />
-                    Parsing with OpenAI…
+                    Parsing with AI…
                   </>
                 ) : (
                   <>
@@ -716,15 +715,44 @@ export function OnboardingFlow({ step }: { step: number }) {
                       {extractionResult}
                     </p>
                     <p className="t-micro mt-2 text-ink-mute text-pretty">
-                      These are proposals, not decisions — step back through the questions to
-                      correct anything it got wrong before we match you.
+                      These are proposals, not decisions. Nothing changes in your profile until
+                      you choose to add a suggestion.
                     </p>
+                    {extractionProposal && (
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {extractionProposal.course && !profile.course && (
+                          <Button type="button" size="sm" variant="outline" onClick={() => setField("course", extractionProposal.course!)}>
+                            Add course: {extractionProposal.course}
+                          </Button>
+                        )}
+                        {extractionProposal.city && !profile.city && (
+                          <Button type="button" size="sm" variant="outline" onClick={() => setField("city", extractionProposal.city!)}>
+                            Add location: {extractionProposal.city}
+                          </Button>
+                        )}
+                        {extractionProposal.gwa && !profile.gwa && (
+                          <Button type="button" size="sm" variant="outline" onClick={() => setField("gwa", extractionProposal.gwa!)}>
+                            Add GWA: {extractionProposal.gwa}
+                          </Button>
+                        )}
+                        {extractionProposal.chips?.filter((chip) => !profile.chips.includes(chip)).length ? (
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="outline"
+                            onClick={() => extractionProposal.chips?.filter((chip) => !profile.chips.includes(chip)).forEach((value) => dispatch({ type: "TOGGLE_CHIP", value }))}
+                          >
+                            Add circumstances: {extractionProposal.chips.filter((chip) => !profile.chips.includes(chip)).join(", ")}
+                          </Button>
+                        ) : null}
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
               <label className="flex items-start gap-2.5">
                 <input type="checkbox" checked={extractConsent} onChange={(event) => setExtractConsent(event.target.checked)} className="mt-1 size-4 accent-ink" />
-                <span className="t-micro max-w-[58ch] text-ink-mute">I agree to send this text to OpenAI to propose editable optional profile fields. Tul.AI will not use it to decide eligibility.</span>
+                <span className="t-micro max-w-[58ch] text-ink-mute">I agree to send this text to Tul.AI&apos;s configured AI provider to propose editable optional profile fields. Tul.AI will not use it to decide eligibility.</span>
               </label>
               </div>
             )}

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { generateTulAIJson, resolveAiProvider, resolveOpenAiModel } from "./ai-config";
+import { canUseLiveResearch, generateTulAIJson, resolveAiProvider, resolveOpenAiModel } from "./ai-config";
 
 describe("OpenAI configuration", () => {
   it("uses OpenAI when it is the configured local provider", () => {
@@ -15,6 +15,11 @@ describe("OpenAI configuration", () => {
 
   it("uses the documented cost-sensitive OpenAI model by default", () => {
     expect(resolveOpenAiModel({})).toBe("gpt-5.6-luna");
+  });
+
+  it("enables live research only for a configured Gemini provider", () => {
+    expect(canUseLiveResearch({ AI_PROVIDER: "gemini", GEMINI_API_KEY: "gemini-key" })).toBe(true);
+    expect(canUseLiveResearch({ AI_PROVIDER: "openai", OPENAI_API_KEY: "openai-key" })).toBe(false);
   });
 
   it("uses JSON-object output for structured OpenAI requests", async () => {

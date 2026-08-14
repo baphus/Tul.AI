@@ -105,6 +105,23 @@ function citationsFrom(value: unknown): AiCitation[] {
   return found.slice(0, 6);
 }
 
+function isOfficialCitation(citation: AiCitation, officialDomains: string[]): boolean {
+  try {
+    const host = new URL(citation.url).hostname.toLowerCase();
+    return officialDomains.some((domain) => {
+      const allowed = domain.toLowerCase();
+      return host === allowed || host.endsWith(`.${allowed}`);
+    });
+  } catch {
+    return false;
+  }
+}
+
+/** Web research is currently available only through Gemini's Google Search tool. */
+export function canUseLiveResearch(env: NodeJS.ProcessEnv = process.env): boolean {
+  return resolveAiProvider(env) === "gemini" && Boolean(resolveGeminiApiKey(env));
+}
+
 export async function generateTulAIResponse(
   prompt: string,
   options: {
@@ -117,6 +134,19 @@ export async function generateTulAIResponse(
   } = {}
 ): Promise<AiTextResult> {
   const provider = resolveAiProvider(process.env);
+  const liveResearch = Boolean(options.liveResearch) && canUseLiveResearch();
+  const officialDomains = options.officialDomains ?? [];
+
+  const trustedResearchResult = (result: AiTextResult): AiTextResult => {
+    if (!liveResearch) return result;
+    const citations = result.citations.filter((citation) => isOfficialCitation(citation, officialDomains));
+    // Current facts must have an official, displayable source. A model response
+    // without one must never be presented as research or verification.
+    if (!result.success || citations.length === 0 || citations.length !== result.citations.length) {
+      return { success: false, citations: [], searched: false, error: "No official source was found for live research." };
+    }
+    return { ...result, citations, searched: true };
+  };
 
   if (provider === "gemini") {
     const apiKey = resolveGeminiApiKey(process.env);
@@ -126,7 +156,6 @@ export async function generateTulAIResponse(
 
     const model = resolveGeminiModel(process.env);
     const ai = new GoogleGenAI({ apiKey });
-    const liveResearch = Boolean(options.liveResearch);
     const systemInstruction = `${options.systemInstruction ?? TUL_AI_SYSTEM_INSTRUCTION}\n\n${responseLanguageInstruction(options.language ?? "ENG")}`;
 
     const callGemini = async (withSearch: boolean): Promise<AiTextResult> => {
@@ -155,14 +184,14 @@ export async function generateTulAIResponse(
 
     // First attempt — with live search if requested.
     const first = await callGemini(liveResearch);
-    if (first.success) return first;
+    if (first.success) return trustedResearchResult(first);
 
     // If live-search was on and it failed, retry without it (tool may be unavailable
     // on this key tier; a plain text answer is better than nothing).
     if (liveResearch) {
       console.warn("[ai-config] Live-search attempt failed; retrying without googleSearch.");
       const retry = await callGemini(false);
-      if (retry.success) return { ...retry, searched: false };
+      if (retry.success) return trustedResearchResult({ ...retry, searched: false });
     }
 
     return first; // propagate the original failure
@@ -176,7 +205,6 @@ export async function generateTulAIResponse(
     }
 
     const model = resolveOpenAiModel(process.env);
-    const liveResearch = Boolean(options.liveResearch);
     const systemInstruction = `${options.systemInstruction ?? TUL_AI_SYSTEM_INSTRUCTION}\n\n${responseLanguageInstruction(options.language ?? "ENG")}`;
 
     try {
@@ -202,7 +230,7 @@ export async function generateTulAIResponse(
 
       const data = (await response.json()) as { choices?: { message?: { content?: string } }[] };
       const text = data.choices?.[0]?.message?.content?.trim() ?? "";
-      return { success: Boolean(text), text, citations: citationsFrom(data), searched: liveResearch };
+      return { success: Boolean(text), text, citations: citationsFrom(data), searched: false };
     } catch {
       return { success: false, citations: [], searched: liveResearch, error: "OpenAI request failed." };
     }
