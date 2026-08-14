@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CHAT_SUGGESTIONS, chatFor } from "@/lib/logic/chat";
 import type { Answer } from "@/lib/logic/answerFor";
+import { useLanguage } from "@/lib/logic/language";
 import { useTulAi } from "@/hooks/use-tul-ai";
 
 interface Entry {
@@ -26,6 +27,7 @@ interface Entry {
  */
 export function TulAiChat() {
   const { state, cards } = useTulAi();
+  const language = useLanguage();
   const [open, setOpen] = useState(false);
   const [thread, setThread] = useState<Entry[]>([]);
   const [input, setInput] = useState("");
@@ -51,7 +53,7 @@ export function TulAiChat() {
       fetch("/api/ai/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: q, profile }),
+        body: JSON.stringify({ question: q, profile, language }),
       })
         .then((r) => r.json())
         .then((json) => {
@@ -68,7 +70,7 @@ export function TulAiChat() {
         })
         .finally(() => setPending(false));
     },
-    [cards, pending, profile]
+    [cards, language, pending, profile]
   );
 
   return (
@@ -98,7 +100,7 @@ export function TulAiChat() {
             </span>
             <div className="min-w-0">
               <p className="t-caption-strong text-ink">Ask Tul.AI</p>
-              <p className="t-micro text-ink-mute">Answers from your profile + published records</p>
+              <p className="t-micro text-ink-mute">Published records, with cited live research when needed</p>
             </div>
           </header>
 
@@ -123,6 +125,15 @@ export function TulAiChat() {
                         Source: {entry.a.src}
                       </p>
                     )}
+                    {entry.a.citations?.length ? (
+                      <ul className="t-micro mt-2 space-y-1 text-ink-mute">
+                        {entry.a.citations.map((citation) => (
+                          <li key={citation.url}>
+                            <a className="ring-brand underline underline-offset-2 hover:text-ink" href={citation.url} target="_blank" rel="noreferrer">{citation.title}</a>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : null}
                   </div>
                 )}
               </div>

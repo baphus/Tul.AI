@@ -65,6 +65,7 @@ export function ShortlistPanel() {
                   <ProviderCrest
                     index={i}
                     provider={card.provider}
+                    logo={card.logo}
                     className="size-9"
                   />
                   <span className="min-w-0 flex-1">

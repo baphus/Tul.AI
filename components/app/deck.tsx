@@ -17,8 +17,9 @@ import { Button, ButtonLink } from "@/components/ui/button";
 import { usePrefersReducedMotion } from "@/hooks/use-media-query";
 import { useTulAi } from "@/hooks/use-tul-ai";
 import { clamp01 } from "@/lib/logic/format";
+import { rankScholarships } from "@/lib/logic/matching";
 import { ROUTES } from "@/lib/logic/routes";
-import { isDeckDone, savedCount } from "@/lib/logic/state";
+import { savedCount } from "@/lib/logic/state";
 import { cn } from "@/lib/utils";
 
 /** Horizontal travel (px) that commits a swipe. */
@@ -51,8 +52,12 @@ export function Deck({ detailOpen }: { detailOpen: boolean }) {
   const reduced = usePrefersReducedMotion();
 
   const idx = state.idx;
-  const done = isDeckDone(state);
-  const card = done ? null : cards[idx];
+  const deck = rankScholarships(cards, state.profile)
+    .filter((result) => result.tone !== "none")
+    .map((result) => ({ card: cards.find((item) => item.id === result.id)!, result, rawIndex: cards.findIndex((item) => item.id === result.id) }))
+    .filter(({ card }) => card.verification !== "Expired");
+  const current = deck[idx];
+  const card = current?.card ?? null;
 
   const [dragging, setDragging] = useState(false);
   const [exiting, setExiting] = useState(false);
@@ -90,19 +95,19 @@ export function Deck({ detailOpen }: { detailOpen: boolean }) {
   const fling = useCallback(
     (dir: 1 | -1) => {
       if (!card || exiting) return;
-      dispatch({ type: "FLING", dir });
+      dispatch({ type: "FLING", dir, index: current?.rawIndex });
       setExiting(true);
       paint(dir * 520, 40, 0);
       timer.current = window.setTimeout(
         () => {
-          dispatch({ type: "COMMIT_FLING" });
+          dispatch({ type: "COMMIT_FLING", index: current?.rawIndex });
           setExiting(false);
           paint(0, 0, 1);
         },
         reduced ? 160 : 300
       );
     },
-    [card, dispatch, exiting, paint, reduced]
+    [card, current?.rawIndex, dispatch, exiting, paint, reduced]
   );
 
   /* ── Pointer gesture ── */
@@ -193,12 +198,12 @@ export function Deck({ detailOpen }: { detailOpen: boolean }) {
             Your scholarships
           </h1>
           <p className="t-caption mt-1 text-ink-mute">
-            {cards.length} programmes matched to your profile
+            {deck.length} programmes ready to explore
           </p>
         </div>
         <div className="flex flex-none flex-col items-end gap-2">
           <p className="t-micro t-num whitespace-nowrap text-ink-mute">
-            {Math.min(idx + 1, cards.length)} of {cards.length}
+            {Math.min(idx + 1, deck.length)} of {deck.length}
           </p>
           {state.history.length > 0 && (
             <Button
@@ -245,10 +250,11 @@ export function Deck({ detailOpen }: { detailOpen: boolean }) {
             >
               <ScholarshipCard
                 card={card}
-                index={idx}
+                index={current.rawIndex}
                 flipped={state.flipped}
                 reduced={reduced}
                 onFlip={() => dispatch({ type: "TAP_CARD" })}
+                result={current.result}
               />
               <div
                 ref={like}

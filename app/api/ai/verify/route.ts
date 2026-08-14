@@ -1,55 +1,26 @@
 import { NextResponse } from "next/server";
 import { DATA } from "@/lib/scholarships";
-import { generateTulAIResponse, resolveGeminiApiKey } from "@/lib/logic/ai-config";
+import { allowAiRequest, generateTulAIResponse } from "@/lib/logic/ai-config";
+import { requestedLanguage } from "@/lib/logic/locale";
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    const { cardId } = body as { cardId?: string };
-
-    if (!cardId) {
-      return NextResponse.json({ error: "Missing cardId" }, { status: 400 });
+    const { cardId, language } = (await request.json()) as { cardId?: string; language?: unknown };
+    if (!cardId) return NextResponse.json({ error: "Missing scholarship." }, { status: 400 });
+    if (!allowAiRequest(request)) return NextResponse.json({ error: "Please try again shortly." }, { status: 429 });
+    const card = DATA.find((item) => item.id === cardId);
+    if (!card) return NextResponse.json({ error: "Scholarship not found." }, { status: 404 });
+    const domains = card.sources.map((source) => { try { return new URL(source.url).hostname; } catch { return null; } }).filter((value): value is string => Boolean(value));
+    const responseLanguage = requestedLanguage(language);
+    const result = await generateTulAIResponse(
+      `Verify only current, official information for ${card.provider} — ${card.title}. Existing record status: ${card.verification}; last checked: ${card.lastVerified}; listed deadline: ${card.deadline}. Summarize what an official source confirms and clearly say what cannot be confirmed. Do not say a source was checked unless it is cited.`,
+      { liveResearch: true, officialDomains: domains, language: responseLanguage }
+    );
+    if (!result.success || !result.text || result.citations.length === 0) {
+      return NextResponse.json({ verified: card.verify, sources: card.sources, lastVerified: card.lastVerified, liveResearch: "unavailable" });
     }
-
-    const card = DATA.find((c) => c.id === cardId);
-    if (!card) {
-      return NextResponse.json({ error: "Scholarship not found" }, { status: 404 });
-    }
-
-    const apiKey = resolveGeminiApiKey(process.env);
-    if (!apiKey) {
-      return NextResponse.json({
-        verified: card.verify,
-        sources: card.sources,
-        lastVerified: card.lastVerified,
-      });
-    }
-
-    const prompt = `Scholarship: ${card.provider} - ${card.title}
-Official Sources: ${JSON.stringify(card.sources)}
-Last Verified Date: ${card.lastVerified}
-Published Verification Summary: "${card.verify}"
-
-Instructions:
-Provide a concise 2-sentence AI verification summary confirming that official provider sources were checked. Reassure the student about the official sources and application deadline (${card.deadline}).`;
-
-    const res = await generateTulAIResponse(prompt);
-
-    if (res.success && typeof res.text === "string" && res.text.trim()) {
-      return NextResponse.json({
-        verified: res.text.trim(),
-        sources: card.sources,
-        lastVerified: card.lastVerified,
-      });
-    }
-
-    return NextResponse.json({
-      verified: card.verify,
-      sources: card.sources,
-      lastVerified: card.lastVerified,
-    });
-  } catch (error) {
-    console.error("Error in /api/ai/verify:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json({ verified: result.text, sources: card.sources, citations: result.citations, lastVerified: card.lastVerified, liveResearch: "used" });
+  } catch {
+    return NextResponse.json({ error: "Unable to verify this record right now." }, { status: 500 });
   }
 }

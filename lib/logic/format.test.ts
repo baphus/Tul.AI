@@ -23,8 +23,10 @@ describe("requirementMetric", () => {
   });
 
   it("guards against a zero total", () => {
-    expect(requirementMetric({ met: 0, total: 0, tone: "possible" }).total).toBe(1);
-    expect(requirementMetric({ met: 0, total: 0, tone: "possible" }).pct).toBe(0);
+    // A provider that publishes nothing checkable has not been failed, it has
+    // not been measured — so the percentage is absent, not zero (spec §2.1).
+    expect(requirementMetric({ met: 0, total: 0, tone: "possible" }).total).toBe(0);
+    expect(requirementMetric({ met: 0, total: 0, tone: "possible" }).pct).toBeNull();
   });
 
   it("works for every demo scholarship", () => {

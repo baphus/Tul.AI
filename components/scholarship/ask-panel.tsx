@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { answerFor, SUGGESTIONS, type Answer } from "@/lib/logic/answerFor";
 import { useTulAiOptional } from "@/hooks/use-tul-ai";
+import { useLanguage } from "@/lib/logic/language";
 import type { Scholarship } from "@/lib/scholarships";
 
 interface Entry {
@@ -25,8 +26,8 @@ export function AskPanel({ card }: { card: Scholarship }) {
   const [thread, setThread] = useState<Entry[]>([]);
   const [input, setInput] = useState("");
   const [pending, setPending] = useState(false);
-  const ctx = useTulAiOptional();
-  const profile = ctx?.state.profile;
+  const language = useLanguage();
+  useTulAiOptional();
 
   const ask = useCallback(
     (question: string) => {
@@ -41,7 +42,7 @@ export function AskPanel({ card }: { card: Scholarship }) {
       fetch("/api/ai/answer", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: q, cardId: card.id, profile }),
+        body: JSON.stringify({ question: q, cardId: card.id, language }),
       })
         .then((r) => r.json())
         .then((json) => {
@@ -58,7 +59,7 @@ export function AskPanel({ card }: { card: Scholarship }) {
         })
         .finally(() => setPending(false));
     },
-    [card, pending, profile]
+    [card, language, pending]
   );
 
   return (
@@ -67,8 +68,8 @@ export function AskPanel({ card }: { card: Scholarship }) {
         Ask about this one
       </h2>
       <p className="t-body mt-2 text-ink-mute text-pretty">
-        Answers come from the published information on this page. Anything Tul.AI
-        can&apos;t confirm, it says so.
+        Answers use the published record. For current facts, Tul.AI may research the
+        provider&apos;s official sources and show citations; anything it can&apos;t confirm stays unknown.
       </p>
 
       {thread.length > 0 && (
@@ -91,6 +92,13 @@ export function AskPanel({ card }: { card: Scholarship }) {
                       Not stated in the published information.
                     </p>
                   )}
+                  {entry.a.citations?.length ? (
+                    <ul className="t-micro mt-2 space-y-1 text-ink-mute">
+                      {entry.a.citations.map((citation) => (
+                        <li key={citation.url}><a className="ring-brand underline underline-offset-2 hover:text-ink" href={citation.url} target="_blank" rel="noreferrer">{citation.title}</a></li>
+                      ))}
+                    </ul>
+                  ) : null}
                 </div>
               )}
             </div>

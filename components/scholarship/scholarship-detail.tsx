@@ -47,7 +47,7 @@ export function ScholarshipDetail({
       >
         {topSlot}
         <div className="mt-4 flex items-center gap-3">
-          <ProviderCrest index={index} provider={card.provider} />
+          <ProviderCrest index={index} provider={card.provider} logo={card.logo} />
           <p className="t-eyebrow text-[color:var(--tint-ink)]">{card.provider}</p>
         </div>
         <h1 className="t-display-xl mt-4 text-balance">{card.title}</h1>
@@ -173,12 +173,12 @@ export function ScholarshipDetail({
 
           <ul className="mt-5 flex flex-col gap-2.5">
             {card.sources.map((source) => (
-              <li key={source.name} className="rounded-lg border border-hairline bg-canvas p-4">
+              <li key={source.url || source.name} className="rounded-lg border border-hairline bg-canvas p-4">
                 <p className="t-micro flex items-center gap-2 text-met">
                   <span className="size-1.5 rounded-full bg-met" aria-hidden="true" />
                   Official source
                 </p>
-                <p className="t-body-strong mt-1.5">{source.name}</p>
+                {source.url ? <a className="ring-brand t-body-strong mt-1.5 block underline underline-offset-2" href={source.url} target="_blank" rel="noreferrer">{source.name}</a> : <p className="t-body-strong mt-1.5">{source.name}</p>}
                 <p className="t-caption mt-0.5 text-ink-mute">{source.date}</p>
               </li>
             ))}

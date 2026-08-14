@@ -92,7 +92,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${inter.variable} ${manrope.variable} ${hero.variable} ${mono.variable} h-full`}
     >
-      <body className="t-body min-h-full">{children}</body>
+      <body className="t-body min-h-full" suppressHydrationWarning>
+        {children}
+      </body>
     </html>
   );
 }

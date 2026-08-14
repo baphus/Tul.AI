@@ -44,6 +44,7 @@ export function ScholarshipSummaryCard({
         <ProviderCrest
           index={index}
           provider={card.provider}
+          logo={card.logo}
           className={cn(muted && "opacity-70")}
         />
         <div className="min-w-0 flex-1">

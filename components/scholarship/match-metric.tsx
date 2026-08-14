@@ -19,6 +19,17 @@ export function MatchMetric({
 }) {
   const { met, total, pct, tone } = requirementMetric(card);
   const fill = tone === "strong" ? "bg-met" : "bg-attention";
+
+  /* No published criteria is not a zero score — say which it is rather than
+     drawing an empty meter that reads as a rejection (AGENTS.md §3, spec §2.1). */
+  if (pct === null) {
+    return (
+      <p className={cn("t-micro text-ink-mute text-pretty", className)}>
+        This provider publishes no requirements we can check automatically.
+      </p>
+    );
+  }
+
   const label = `${met} of ${total} requirements met · ${pct}%`;
 
   return (

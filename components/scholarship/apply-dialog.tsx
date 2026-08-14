@@ -65,16 +65,16 @@ export function ApplyDialog({
             requirements can change after our last check.
           </p>
 
-          <ButtonLink
+          {card.applicationUrl ? <ButtonLink
             className="mt-6 h-12 w-full rounded-md"
-            href={`https://${card.host}`}
+            href={card.applicationUrl}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => setOpen(false)}
           >
             Continue to {card.host}
             <ExternalLinkIcon />
-          </ButtonLink>
+          </ButtonLink> : <p className="t-caption mt-6 rounded-md border border-hairline bg-canvas-soft p-4 text-ink-mute">The provider has not published a direct application link. Use its official source to check the current process.</p>}
           <Button
             variant="ghost"
             className="mt-2 h-11 w-full text-ink-mute"

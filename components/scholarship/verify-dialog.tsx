@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/sheet";
 import { usePrefersReducedMotion } from "@/hooks/use-media-query";
 import { formatIsoDate } from "@/lib/logic/deadlines";
+import { useLanguage } from "@/lib/logic/language";
 import { VERIFY_LABELS, type Scholarship } from "@/lib/scholarships";
 import { cn } from "@/lib/utils";
 
@@ -24,8 +25,10 @@ export function VerifyDialog({ card }: { card: Scholarship }) {
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(0);
   const [aiVerifiedText, setAiVerifiedText] = useState<string | null>(null);
+  const [citations, setCitations] = useState<{ title: string; url: string }[]>([]);
   const timers = useRef<number[]>([]);
   const reduced = usePrefersReducedMotion();
+  const language = useLanguage();
 
   const clear = useCallback(() => {
     timers.current.forEach(window.clearTimeout);
@@ -38,6 +41,7 @@ export function VerifyDialog({ card }: { card: Scholarship }) {
     clear();
     setStep(0);
     setAiVerifiedText(null);
+    setCitations([]);
     setOpen(true);
     const gap = reduced ? 260 : 620;
     VERIFY_LABELS.forEach((_, i) => {
@@ -47,13 +51,14 @@ export function VerifyDialog({ card }: { card: Scholarship }) {
     fetch("/api/ai/verify", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ cardId: card.id }),
+      body: JSON.stringify({ cardId: card.id, language }),
     })
       .then((r) => r.json())
       .then((data) => {
         if (data?.verified) {
           setAiVerifiedText(data.verified);
         }
+        if (Array.isArray(data?.citations)) setCitations(data.citations);
       })
       .catch(() => {
         // Fallback silently
@@ -105,7 +110,7 @@ export function VerifyDialog({ card }: { card: Scholarship }) {
               <SparklesIcon className="size-3.5" />
             </span>
             <SheetTitle className="t-display-md">
-              {done ? "Checked just now" : "Checking official sources…"}
+              {done ? "Research complete" : "Checking official sources…"}
             </SheetTitle>
           </div>
           <SheetDescription className="sr-only">
@@ -140,6 +145,14 @@ export function VerifyDialog({ card }: { card: Scholarship }) {
               <h3 className="t-display-md mt-5">What Tul.AI found</h3>
               <p className="t-body mt-2 text-ink-mute text-pretty">{aiVerifiedText || card.verify}</p>
 
+              {citations.length > 0 && (
+                <ul className="mt-4 flex flex-col gap-2">
+                  {citations.map((citation) => (
+                    <li key={citation.url}><a className="ring-brand t-caption underline underline-offset-2 hover:text-ink" href={citation.url} target="_blank" rel="noreferrer">{citation.title}</a></li>
+                  ))}
+                </ul>
+              )}
+
               <ul className="mt-5 flex flex-col gap-2">
                 {card.sources.map((source) => (
                   <li
@@ -147,7 +160,7 @@ export function VerifyDialog({ card }: { card: Scholarship }) {
                     className="flex items-center gap-2.5 rounded-md border border-hairline bg-canvas px-3 py-2.5"
                   >
                     <span className="size-1.5 rounded-full bg-met" aria-hidden="true" />
-                    <span className="t-caption flex-1">{source.name}</span>
+                    {source.url ? <a className="ring-brand t-caption flex-1 underline underline-offset-2" href={source.url} target="_blank" rel="noreferrer">{source.name}</a> : <span className="t-caption flex-1">{source.name}</span>}
                     <span className="t-micro text-ink-mute">{source.short}</span>
                   </li>
                 ))}

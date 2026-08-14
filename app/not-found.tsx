@@ -9,7 +9,7 @@ export default function NotFound() {
     <div className="flex min-h-dvh flex-col bg-canvas">
       <header className="border-b border-hairline">
         <Container className="flex h-16 items-center sm:h-18">
-          <BrandMark />
+          <BrandMark strong />
         </Container>
       </header>
 

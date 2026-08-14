@@ -1,62 +1,32 @@
 import type { RankedMatch } from "./matching";
 import type { Profile } from "./state";
-
-export type AiConfidence = "High" | "Medium" | "Low";
+import type { Language } from "./locale";
 
 export interface AiExplanation {
   id: string;
   reason: string;
-  confidence: AiConfidence;
-  sources?: string[];
 }
 
 export interface AiReRankResult {
+  /** Kept for compatibility; the server never changes deterministic ordering. */
   reRanked: RankedMatch[];
   explanations: AiExplanation[];
 }
 
-/** Feature gate — enabled by default when running. */
-export function aiEnabled(): boolean {
-  return true;
-}
+export function aiEnabled(): boolean { return true; }
 
-/**
- * Re-ranker adapter. Uses /api/ai/rerank endpoint when available, with fallback
- * to deterministic fact-based explanations.
- */
-export async function aiReRank(
-  ranked: RankedMatch[],
-  profile: Profile
-): Promise<AiReRankResult> {
-  const fallbackExplanations: AiExplanation[] = ranked.map((r) => ({
-    id: r.id,
-    reason: `${r.match} — ${r.met}/${r.total} published requirements met.`,
-    confidence: r.tone === "strong" ? "High" : r.tone === "good" ? "Medium" : "Low",
+export async function aiReRank(ranked: RankedMatch[], _profile?: Profile, language: Language = "ENG"): Promise<AiReRankResult> {
+  void _profile;
+  const fallback = ranked.map((match) => ({
+    id: match.id,
+    reason: `${match.match} — ${match.met} of ${match.total} published requirements matched${match.unknown ? `; ${match.unknown} to confirm` : ""}.`,
   }));
-
-  if (typeof window !== "undefined") {
-    try {
-      const res = await fetch("/api/ai/rerank", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ profile, rankedMatches: ranked }),
-      });
-      if (res.ok) {
-        const json = (await res.json()) as AiReRankResult;
-        if (json.explanations && Array.isArray(json.explanations)) {
-          return {
-            reRanked: json.reRanked ?? ranked,
-            explanations: json.explanations,
-          };
-        }
-      }
-    } catch {
-      // Fallback on network or runtime error
+  try {
+    const res = await fetch("/api/ai/rerank", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ rankedMatches: ranked, language }) });
+    if (res.ok) {
+      const json = (await res.json()) as AiReRankResult;
+      if (Array.isArray(json.explanations)) return { reRanked: ranked, explanations: json.explanations };
     }
-  }
-
-  return { reRanked: ranked.slice(), explanations: fallbackExplanations };
+  } catch { /* deterministic fallback */ }
+  return { reRanked: ranked, explanations: fallback };
 }
-
-export default aiReRank;
-

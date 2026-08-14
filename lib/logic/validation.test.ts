@@ -6,7 +6,9 @@ import {
   dependentsError,
   firstIncompleteStep,
   gwaError,
+  isPlanning,
   isProfileReady,
+  matchingRecoveryStep,
   profileCompleteness,
 } from "./validation";
 
@@ -55,42 +57,64 @@ describe("dependentsError", () => {
 });
 
 describe("canAdvance", () => {
-  it("requires where the student studies on step 1", () => {
+  it("requires where the student is in their studies on step 1", () => {
     expect(canAdvance(1, emptyProfile())).toBe(false);
     expect(canAdvance(1, answered())).toBe(true);
   });
 
-  it("requires what they study on step 2", () => {
-    expect(canAdvance(2, answered({ course: "" }))).toBe(false);
+  it("requires where they're based on step 2", () => {
+    expect(canAdvance(2, answered({ city: "" }))).toBe(false);
     expect(canAdvance(2, answered())).toBe(true);
   });
 
-  it("requires a stage on step 3 and blocks an invalid GWA", () => {
-    expect(canAdvance(3, answered({ stage: "" }))).toBe(false);
+  it("requires what they study on step 3", () => {
+    expect(canAdvance(3, answered({ course: "" }))).toBe(false);
     expect(canAdvance(3, answered())).toBe(true);
-    expect(canAdvance(3, answered({ gwa: "120" }))).toBe(false);
-    // a blank GWA is unknown, not invalid
-    expect(canAdvance(3, answered({ gwa: "" }))).toBe(true);
   });
 
-  it("never blocks the optional money and background step", () => {
+  it("never blocks the academic step, but rejects an impossible GWA", () => {
     expect(canAdvance(4, emptyProfile())).toBe(true);
-    expect(canAdvance(4, answered({ dependents: "4" }))).toBe(true);
-    // …except when the number itself is impossible
-    expect(canAdvance(4, answered({ dependents: "-2" }))).toBe(false);
+    expect(canAdvance(4, answered({ gwaBand: "90–94" }))).toBe(true);
+    // a blank GWA is unknown, not invalid
+    expect(canAdvance(4, answered({ gwa: "" }))).toBe(true);
+    expect(canAdvance(4, answered({ gwa: "120" }))).toBe(false);
+  });
+
+  it("never blocks the household step, but rejects an impossible size", () => {
+    expect(canAdvance(5, emptyProfile())).toBe(true);
+    expect(canAdvance(5, answered({ householdBand: "5–6" }))).toBe(true);
+    expect(canAdvance(5, answered({ dependents: "-2" }))).toBe(false);
   });
 
   it("never blocks the free-text step", () => {
-    expect(canAdvance(5, emptyProfile())).toBe(true);
+    expect(canAdvance(6, emptyProfile())).toBe(true);
+  });
+
+  it("never asks a student still planning for a school", () => {
+    // The whole point of the "Still planning" path: they can finish onboarding
+    // without ever naming a campus.
+    const planning = answered({ stage: "Still planning to study", school: "" });
+    for (let step = 1; step <= 6; step++) {
+      expect(canAdvance(step, planning)).toBe(true);
+    }
   });
 });
 
 describe("firstIncompleteStep", () => {
   it("resumes at the first unanswered question", () => {
     expect(firstIncompleteStep(emptyProfile())).toBe(1);
-    expect(firstIncompleteStep(answered({ course: "" }))).toBe(2);
-    expect(firstIncompleteStep(answered({ stage: "" }))).toBe(3);
-    expect(firstIncompleteStep(answered())).toBe(5);
+    expect(firstIncompleteStep(answered({ stage: "" }))).toBe(1);
+    expect(firstIncompleteStep(answered({ city: "" }))).toBe(2);
+    expect(firstIncompleteStep(answered({ course: "" }))).toBe(3);
+    expect(firstIncompleteStep(answered())).toBe(6);
+  });
+});
+
+describe("matchingRecoveryStep", () => {
+  it("returns to the first answer that prevents matching", () => {
+    expect(matchingRecoveryStep(emptyProfile())).toBe(1);
+    expect(matchingRecoveryStep(answered({ city: "" }))).toBe(2);
+    expect(matchingRecoveryStep(answered({ course: "" }))).toBe(3);
   });
 });
 
@@ -109,6 +133,14 @@ describe("isProfileReady", () => {
   });
 });
 
+describe("isPlanning", () => {
+  it("recognises the student who has not committed to a school", () => {
+    expect(isPlanning(answered({ stage: "Still planning to study" }))).toBe(true);
+    expect(isPlanning(answered({ stage: "College Student" }))).toBe(false);
+    expect(isPlanning(emptyProfile())).toBe(false);
+  });
+});
+
 describe("profileCompleteness", () => {
   it("counts filled fields out of the full set", () => {
     expect(profileCompleteness(emptyProfile())).toEqual({ filled: 0, total: 10 });
@@ -116,5 +148,17 @@ describe("profileCompleteness", () => {
     expect(
       profileCompleteness(answered({ chips: ["OFW parent"], income: "Below ₱10,000" })).filled
     ).toBe(5);
+  });
+
+  it("counts a band and its exact counterpart once between them", () => {
+    // Answering the band *is* answering the question; showing an unfilled
+    // segment for declining the exact figure would push disclosure the privacy
+    // model does not want (AGENTS.md §9).
+    const band = profileCompleteness(answered({ gwaBand: "90–94" })).filled;
+    const both = profileCompleteness(answered({ gwaBand: "90–94", gwa: "92" })).filled;
+    expect(both).toBe(band);
+
+    const exactOnly = profileCompleteness(answered({ gwa: "92" })).filled;
+    expect(exactOnly).toBe(band);
   });
 });

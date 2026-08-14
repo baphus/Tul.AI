@@ -3,10 +3,17 @@
 import { MenuIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import ReactCountryFlag from "react-country-flag";
 import { useState } from "react";
 
 import { BrandMark } from "@/components/site/brand";
 import { Button, ButtonLink } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+} from "@/components/ui/select";
 import {
   Sheet,
   SheetContent,
@@ -15,6 +22,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { ROUTES } from "@/lib/logic/routes";
+import { setLanguage, type Language, useLanguage } from "@/lib/logic/language";
 import { cn } from "@/lib/utils";
 
 const NAV = [
@@ -22,6 +30,53 @@ const NAV = [
   { href: ROUTES.howItWorks, label: "How it works" },
   { href: ROUTES.institutions, label: "For institutions" },
 ];
+
+function CountryFlag({ language }: { language: Language }) {
+  return (
+    <ReactCountryFlag
+      aria-hidden="true"
+      svg
+      countryCode={language === "ENG" ? "GB" : "PH"}
+      style={{ width: "1.25rem", height: "1.25rem", borderRadius: "9999px" }}
+      title={language === "ENG" ? "United Kingdom" : "Philippines"}
+    />
+  );
+}
+
+function LanguageSelector() {
+  const language = useLanguage();
+
+  function changeLanguage(value: string | null) {
+    if (value !== "ENG" && value !== "FIL") return;
+    setLanguage(value);
+  }
+
+  return (
+    <Select value={language} onValueChange={changeLanguage}>
+      <SelectTrigger
+        aria-label="Choose language"
+        className="ring-brand h-11 gap-2 rounded-full border-hairline bg-transparent py-1 pr-1 pl-2.5 text-ink hover:bg-canvas/40 focus-visible:ring-2 focus-visible:ring-brand/60 [&>svg:last-child]:hidden"
+      >
+        <CountryFlag language={language} />
+        <span className="sr-only">Language: </span>
+        <span className="t-caption-strong pr-1 text-ink">
+          {language}
+        </span>
+      </SelectTrigger>
+      <SelectContent
+        align="end"
+        className="w-40 rounded-xl bg-canvas p-1.5 text-ink shadow-lg ring-1 ring-ink/10"
+      >
+        <SelectItem value="ENG" className="t-body-sm rounded-lg px-2.5 py-2 focus:bg-canvas-soft">
+          English
+        </SelectItem>
+        <SelectItem value="FIL" className="t-body-sm rounded-lg px-2.5 py-2 focus:bg-canvas-soft">
+          Filipino
+        </SelectItem>
+      </SelectContent>
+    </Select>
+  );
+}
 
 /**
  * DESIGN.md `nav-bar`: a sticky bar in ink on a light surface, links set in
@@ -71,7 +126,7 @@ export function SiteHeader({
       )}
     >
       <div className="mx-auto flex h-16 w-full max-w-[75rem] items-center gap-6 px-5 sm:h-20 sm:px-8">
-        <BrandMark />
+        <BrandMark strong />
 
         <nav className="ml-auto hidden items-center gap-8 md:flex" aria-label="Main">
           {NAV.map((item) => {
@@ -97,13 +152,8 @@ export function SiteHeader({
           })}
         </nav>
 
-        <div className="ml-auto flex items-center gap-2 md:ml-8">
-          <Link
-            href={ROUTES.scholarships}
-            className="ring-brand t-caption-strong hidden rounded-xs text-ink lg:inline-flex"
-          >
-            Browse all
-          </Link>
+        <div className="flex items-center gap-2 md:ml-8">
+          <LanguageSelector />
           <ButtonLink
             variant={onBrand ? "onBrand" : "default"}
             className="t-body-strong hidden h-12 px-6 text-base md:inline-flex"

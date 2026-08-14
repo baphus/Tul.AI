@@ -14,7 +14,10 @@ export const ROUTES = {
   scholarship: (id: string) => `/scholarships/${id}`,
   onboarding: "/onboarding",
   onboardingStep: (step: number) => `/onboarding?step=${clampStep(step)}`,
+  /** The research moment — an animation over real work, and nothing else. */
   matching: "/matching",
+  /** Where that research lands: the ranked list, on its own screen. */
+  matches: "/matches",
   discover: "/discover",
   discoverCard: (id: string) => `/discover?card=${encodeURIComponent(id)}`,
   review: "/review",
@@ -22,8 +25,11 @@ export const ROUTES = {
   profile: "/profile",
 } as const;
 
-/** The conversational onboarding is five questions long. */
-export const ONBOARDING_STEPS = 5;
+/**
+ * The conversational onboarding is six questions long: journey, location,
+ * studies, academic standing, household, free text (spec §3.3).
+ */
+export const ONBOARDING_STEPS = 6;
 
 export function clampStep(step: number): number {
   if (!Number.isFinite(step)) return 1;

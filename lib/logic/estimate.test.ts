@@ -38,6 +38,38 @@ describe("summariseSupport", () => {
     expect(summary.lastVerified).toBe("2026-08-01");
   });
 
+  /*
+   * The data adapter sets `amount: 0` when a provider states its benefit in
+   * prose it cannot parse into a figure — 12 of the 32 records in the current
+   * data set. Those zeros must not enter the range: a group holding a ₱0 record
+   * alongside a ₱177,000 one published "₱0 – ₱177,000" on the landing page,
+   * which reads as a programme that pays nothing rather than one whose figure we
+   * could not extract.
+   */
+  it("excludes unparseable (zero) amounts from the range but still counts them", () => {
+    const summary = summariseSupport(
+      [
+        card({ amount: 0 }),
+        card({ amount: 20_000 }),
+        card({ amount: 0 }),
+        card({ amount: 177_000 }),
+      ],
+      "all"
+    );
+
+    expect(summary.count).toBe(4);
+    expect(summary.lowest).toBe(20_000);
+    expect(summary.highest).toBe(177_000);
+  });
+
+  it("reports a null range when no record in the group publishes a figure", () => {
+    const summary = summariseSupport([card({ amount: 0 }), card({ amount: 0 })], "all");
+
+    expect(summary.count).toBe(2);
+    expect(summary.lowest).toBeNull();
+    expect(summary.highest).toBeNull();
+  });
+
   it("narrows to a single provider kind", () => {
     const summary = summariseSupport(
       [card({ kind: "national", amount: 90_000 }), card({ kind: "university", amount: 5_000 })],

@@ -1,9 +1,9 @@
 import {
   ArrowRightIcon,
-  BanknoteIcon,
   ExternalLinkIcon,
+  HeartHandshakeIcon,
   PlusIcon,
-  ShieldCheckIcon,
+  SearchCheckIcon,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -18,9 +18,9 @@ import {
   InstitutionList,
   InstitutionMarquee,
 } from "@/components/site/institution-marquee";
-import { Container, Section, SectionHead } from "@/components/site/layout-primitives";
+import { Container, RuledRow, Section, SectionHead } from "@/components/site/layout-primitives";
+import { OfferPills } from "@/components/site/offer-pills";
 import { SiteHeader } from "@/components/site/site-header";
-import { SupportEstimator } from "@/components/site/support-estimator";
 import { ButtonLink } from "@/components/ui/button";
 import { formatIsoDate } from "@/lib/logic/deadlines";
 import { formatPeso } from "@/lib/logic/format";
@@ -54,25 +54,37 @@ import { getScholarships } from "@/lib/scholarships";
  *           carries the full record list.
  */
 
-/** Wise's three-up expansion, as the three jobs and the one hard stop. */
-const PILLARS: { title: string; body: string; href: string; cta: string }[] = [
+/**
+ * The first reassurance after the hero. This is deliberately about the
+ * student's experience, rather than a list of product features or metrics.
+ */
+const STUDENT_SUPPORT: {
+  title: string;
+  body: string;
+  href: string;
+  cta: string;
+  Icon: typeof SearchCheckIcon;
+}[] = [
   {
-    title: "Discover",
-    body: "One deck drawn from national agencies, LGUs, universities and foundations — instead of six websites that each use different words for the same requirement.",
+    title: "Start where you are",
+    body: "You do not need to know every scholarship by name. Tell us a little about your path, and we will help you find a calm place to begin.",
     href: ROUTES.discover,
-    cta: "Open the deck",
+    cta: "Find your starting point",
+    Icon: SearchCheckIcon,
   },
   {
-    title: "Understand",
-    body: "Every match opens into the published requirement behind it, in plain language, with what is met, what needs attention, and what is simply unknown.",
+    title: "Make sense of the details",
+    body: "Requirements can be hard to read. We lay out what is clear, what may need attention, and what is still unknown without making assumptions about you.",
     href: ROUTES.howItWorks,
-    cta: "How matching works",
+    cta: "See how we explain matches",
+    Icon: HeartHandshakeIcon,
   },
   {
-    title: "Apply with the provider",
-    body: "Tul.AI takes you to the official application page and stops. It never applies on your behalf, and it never decides whether you get the scholarship.",
+    title: "Take the next step your way",
+    body: "When you are ready, we point you to the provider's official page. The application and decision stay with the people who run the scholarship.",
     href: ROUTES.howItWorks,
-    cta: "What we refuse to do",
+    cta: "How official applications work",
+    Icon: ExternalLinkIcon,
   },
 ];
 
@@ -104,8 +116,8 @@ const FAQ: [string, string][] = [
     "No. A rules engine compares your answers against each published requirement and reports met, needs attention, or unknown. The AI explains that result in plain language — it never overrides it, and unknown never means ineligible.",
   ],
   [
-    "Why is there no match percentage?",
-    "Because a number like 97.8% would be invented. You get a count you can audit — eight of nine published requirements met — and you can open each one to read the requirement itself.",
+    "What does the match percentage actually measure?",
+    "Exactly one thing: the share of a provider's own published requirements your profile already meets — eight of nine is 89%. It is arithmetic you can audit, and every requirement behind it opens so you can read it yourself. What it is not is a prediction: it says nothing about your chance of being awarded the scholarship, and no AI produces it. Where a provider publishes nothing we can check, we say so instead of showing 0%.",
   ],
   [
     "How current is the information?",
@@ -123,38 +135,77 @@ const FAQ: [string, string][] = [
 
 export default async function LandingPage() {
   const cards = await getScholarships();
-  const hero = cards[0];
-  const featured = cards[1];
+
+  /*
+   * Records whose published benefit reduces to a figure. The adapter in
+   * lib/scholarships.ts returns `amount: 0` when a provider states its benefit
+   * in prose it cannot parse — 12 of the 32 records today — and sets
+   * `amountNote` to "see provider details" instead. So anything on this page
+   * that prints a peso figure must draw from `priced`, never from every record,
+   * or the range collapses to "₱0 to …" and cards render a bare ₱0.
+   */
+  const priced = cards.filter((card) => card.amount > 0);
+
+  /* Showcase records: the two full cards below quote a figure, so they have to
+     come from `priced`. Falling back to the raw list keeps the page rendering
+     if a future data set has no parseable amounts at all. */
+  const hero = priced[0] ?? cards[0];
+  const featured = priced[1] ?? priced[0] ?? cards[0];
+  const sourceType = (card: (typeof cards)[number]) =>
+    card.back.facts.find(([label]) => label === "Provider type")?.[1].toLowerCase() ?? "";
+  const scholarshipSources = [
+    {
+      label: "Government",
+      title: "Public support, published openly",
+      body: "Scholarships from national agencies and local governments, with the official notice kept close at hand.",
+      image: "/scholarship-sources/government.jpg",
+      imageAlt: "Historic public building in Manila",
+      imageClassName: "object-[center_38%]",
+      records: cards.filter((card) => /government|agency|local/.test(sourceType(card))),
+    },
+    {
+      label: "Schools",
+      title: "Opportunities through schools",
+      body: "Programs offered by schools and education partners for students taking the next step in their studies.",
+      image: "/scholarship-sources/schools.jpg",
+      imageAlt: "Three Filipino students studying together",
+      imageClassName: "object-center",
+      records: cards.filter((card) => /school|university/.test(sourceType(card))),
+    },
+    {
+      label: "Foundations",
+      title: "Backing from mission-led partners",
+      body: "Foundation, nonprofit, corporate, and international programs that invest in students and communities.",
+      image: "/scholarship-sources/foundations.jpg",
+      imageAlt: "Filipino children walking to school",
+      imageClassName: "object-[center_45%]",
+      records: cards.filter((card) => !/government|agency|local|school|university/.test(sourceType(card))),
+    },
+  ];
 
   /* A range, not a total: these amounts are per year for some programmes and
      per semester for others, so summing them would overstate what a student
      could actually receive. */
-  const amounts = cards.map((card) => card.amount);
-  const lowest = Math.min(...amounts);
-  const highest = Math.max(...amounts);
+  const amounts = priced.map((card) => card.amount);
+  const lowest = amounts.length ? Math.min(...amounts) : 0;
+  const highest = amounts.length ? Math.max(...amounts) : 0;
   const lastChecked = cards
     .map((card) => card.lastVerified)
     .sort()
     .at(-1);
   const verified = cards.filter((card) => card.verification === "Verified").length;
 
-  /* Wise's third stat is round-the-clock support. Ours is the refusal, because
-     the thing a student most needs to know about this product is where it
-     stops. "Never" is the figure. */
-  const STATS: [
-    Icon: typeof BanknoteIcon,
+  const stats: [
     figure: string,
     label: string,
     body: string,
   ][] = [
     [
-      BanknoteIcon,
       `${formatPeso(lowest)}–${formatPeso(highest)}`,
       "Published per student",
-      "The figures each provider prints in its own notice — some per academic year, some per semester. Every record says which of the two it is.",
+      `The figures ${priced.length} of these ${cards.length} providers print in their own notices — some per academic year, some per semester, and each record says which. The rest describe their benefit in words we don't reduce to a number.`,
     ],
     [
-      ShieldCheckIcon,
       `${verified} of ${cards.length}`,
       "Confirmed against an official source",
       lastChecked
@@ -162,7 +213,6 @@ export default async function LandingPage() {
         : "The rest say “needs verification” and say why on their own page.",
     ],
     [
-      ExternalLinkIcon,
       "Never",
       "Applies on your behalf",
       "Tul.AI takes you to the provider's official page and stops. The application, and the decision, stay entirely with them.",
@@ -211,9 +261,9 @@ export default async function LandingPage() {
                 `ink-mute`, which falls to roughly 3:1 on lime and would fail
                 WCAG 1.4.3 as body text. */}
             <p className="t-body-lg enter enter-d1 mx-auto mt-7 max-w-[54ch] text-ink-deep text-pretty">
-              {cards.length} scholarships from national agencies, LGUs and universities —
-              each shown with the published requirement behind it, the official source, and
-              the date we last checked it.
+              {cards.length} scholarships from national agencies, LGUs, universities and
+              foundations — each shown with the published requirement behind it, the
+              official source, and the date we last checked it.
             </p>
 
             <div className="enter enter-d2 mt-9 flex justify-center">
@@ -240,8 +290,11 @@ export default async function LandingPage() {
            *   - the plate is painted before the Container in DOM order, so the
            *     photograph sits on top of it rather than under it.
            *
-           * Capped at the file's native 1024px — wider and a 1024×536 source
-           * is being upscaled. `priority` because it is the LCP element.
+           * The photograph now runs the full container width rather than being
+           * capped at its native 1024px. That is a ~17% upscale at desktop —
+           * acceptable for a photograph, but it is the ceiling: see the note in
+           * the report about supplying a larger source before going full-bleed.
+           * `priority` because it is the LCP element.
            */}
           <div className="relative mt-14 md:mt-16">
             <div
@@ -249,15 +302,24 @@ export default async function LandingPage() {
               className="absolute inset-x-0 bottom-0 h-1/2 bg-canvas"
             />
             <Container className="relative">
-              <Image
-                src="/hero-pic.png"
-                alt="Four students walking together on a campus path, looking at a phone one of them is holding."
-                width={1024}
-                height={536}
-                priority
-                sizes="(min-width: 1088px) 64rem, 100vw"
-                className="enter enter-d3 mx-auto w-full max-w-5xl rounded-xl"
-              />
+              {/* This wrapper exists so the pills can be positioned against the
+                  photograph itself. It holds nothing but the image and the
+                  absolutely-positioned overlay, so the seam's height maths —
+                  wrapper height == image height — still holds exactly. */}
+              <div className="relative">
+                <Image
+                  src="/hero-pic.png"
+                  alt="Four students walking together on a campus path, looking at a phone one of them is holding."
+                  width={1024}
+                  height={536}
+                  priority
+                  sizes="(min-width: 1264px) 75rem, 100vw"
+                  className="enter enter-d3 w-full rounded-xl"
+                />
+                {/* `priced`, not `cards`: a pill reading "Offers ₱0" is worse
+                    than one fewer institution in the rotation. */}
+                <OfferPills cards={priced} />
+              </div>
             </Container>
           </div>
         </section>
@@ -276,18 +338,13 @@ export default async function LandingPage() {
               Take the guesswork out of paying for school
             </h2>
 
-            <dl className="mt-14 grid gap-12 md:grid-cols-3 md:gap-8">
-              {STATS.map(([Icon, figure, label, body]) => (
-                <div key={label} className="flex flex-col items-center text-center">
-                  <span className="grid size-14 place-items-center rounded-full bg-brand text-ink">
-                    <Icon className="size-6" aria-hidden="true" />
-                  </span>
-                  <dt className="t-figure mt-6 text-ink">{figure}</dt>
+            <dl className="mt-12 grid divide-y divide-hairline border-y border-hairline md:grid-cols-3 md:divide-x md:divide-y-0">
+              {stats.map(([figure, label, body]) => (
+                <div key={label} className="px-0 py-7 md:px-7 md:py-2 first:md:pl-0 last:md:pr-0">
+                  <dt className="t-figure text-ink">{figure}</dt>
                   <dd>
-                    <p className="t-body-strong mt-3 text-ink">{label}</p>
-                    <p className="t-caption mx-auto mt-2 max-w-[38ch] text-ink-mute text-pretty">
-                      {body}
-                    </p>
+                    <p className="t-body-strong mt-2 text-ink">{label}</p>
+                    <p className="t-caption mt-2 max-w-[34ch] text-ink-mute text-pretty">{body}</p>
                   </dd>
                 </div>
               ))}
@@ -296,37 +353,58 @@ export default async function LandingPage() {
         </Section>
 
         {/* ── The signature card ───────────────────────────────
-            Wise puts its calculator on a full-strength lime band, copy left and
-            the white card right. Same here — and the card keeps its own lime
-            CTA inside, because there it sits on white. */}
-        <Section tone="brand" labelledBy="estimator-heading">
+            Three source cards put the kinds of organisations students can browse
+            ahead of a single sample record, using provider crests as the visual. */}
+        <Section tone="soft" labelledBy="sources-heading">
           <Container>
-            <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
-              <div className="lg:col-span-5">
-                <h2 id="estimator-heading" className="t-display-xl text-balance">
-                  See what&apos;s actually on the table.
-                </h2>
-                <p className="t-body-lg mt-6 max-w-[46ch] text-ink text-pretty">
-                  A description of what these providers publish — not an eligibility
-                  check, and not a projection of what you would receive.
-                </p>
-                <ButtonLink
-                  variant="onBrand"
-                  className="t-body-strong mt-8 h-12 px-6 text-base"
-                  href={ROUTES.scholarships}
-                >
-                  Browse every record
-                </ButtonLink>
-              </div>
-              <div className="lg:col-span-6 lg:col-start-7">
-                <SupportEstimator cards={cards} />
-              </div>
+            <h2
+              id="sources-heading"
+              className="t-display-xl mx-auto max-w-[23ch] text-center text-balance uppercase"
+            >
+              Scholarships for Filipino students anywhere
+            </h2>
+
+            <div className="mt-12 grid gap-5 md:grid-cols-3">
+              {scholarshipSources.map((source) => {
+                return (
+                  <article key={source.label} className="flex min-h-[30rem] flex-col rounded-xl bg-canvas p-5 sm:p-6">
+                    <div className="relative min-h-52 overflow-hidden rounded-lg bg-canvas-soft">
+                      <Image
+                        src={source.image}
+                        alt={source.imageAlt}
+                        fill
+                        sizes="(min-width: 768px) 33vw, 100vw"
+                        className={`object-cover ${source.imageClassName}`}
+                      />
+                      <p className="t-caption-strong absolute top-4 left-4 inline-flex w-fit rounded-full bg-canvas px-3 py-1 text-ink">
+                        {source.label}
+                      </p>
+                    </div>
+
+                    <div className="mt-6 flex flex-1 flex-col">
+                      <h3 className="t-display-md text-balance">{source.title}</h3>
+                      <p className="t-body mt-3 text-ink-mute text-pretty">{source.body}</p>
+                      <p className="t-caption mt-5 text-ink-mute">
+                        {source.records.length} {source.records.length === 1 ? "record" : "records"} in the directory
+                      </p>
+                      <Link
+                        href={ROUTES.scholarships}
+                        className="ring-brand t-caption-strong mt-6 inline-flex items-center gap-2 rounded-xs text-ink underline decoration-hairline underline-offset-4 hover:decoration-ink"
+                      >
+                        Explore {source.label.toLowerCase()} scholarships
+                        <ArrowRightIcon className="size-4" aria-hidden="true" />
+                      </Link>
+                    </div>
+                  </article>
+                );
+              })}
             </div>
           </Container>
         </Section>
 
         {/* ── Two-up, a figure in each ─────────────────────────
             Wise's "22 currencies" / "231 countries" pair. */}
+        {false && <>
         <Section labelledBy="what-heading">
           <Container>
             <h2
@@ -461,28 +539,33 @@ export default async function LandingPage() {
             <SectionHead
               id="pillars-heading"
               align="center"
-              caps
-              title="Discover it. Understand it. Then go and apply."
-              lead="Three jobs, in the order a student actually does them — and a hard stop at the point where the provider takes over."
+              title="You do not have to figure it all out alone."
+              lead="A quieter way to move from uncertainty to an opportunity you can understand and act on."
             />
 
-            <div className="mt-12 grid gap-10 md:grid-cols-3 md:gap-8">
-              {PILLARS.map((pillar) => (
-                <div key={pillar.title} className="flex flex-col">
-                  <h3 className="t-display-lg text-ink">{pillar.title}</h3>
+            <ul className="mt-14 grid gap-10 md:grid-cols-3 md:gap-8">
+              {STUDENT_SUPPORT.map(({ title, body, href, cta, Icon }) => (
+                <li
+                  key={title}
+                  className="flex flex-col border-t border-hairline pt-6 md:pt-8"
+                >
+                  <div className="flex size-14 items-center justify-center rounded-full bg-brand-pale text-ink">
+                    <Icon className="size-6" strokeWidth={1.75} aria-hidden="true" />
+                  </div>
+                  <h3 className="t-display-lg mt-6 text-ink">{title}</h3>
                   <p className="t-body mt-4 flex-1 text-ink-mute text-pretty">
-                    {pillar.body}
+                    {body}
                   </p>
                   <Link
-                    href={pillar.href}
+                    href={href}
                     className="ring-brand t-caption-strong mt-6 inline-flex items-center gap-1.5 self-start rounded-xs text-ink underline decoration-hairline underline-offset-4 hover:decoration-ink"
                   >
-                    {pillar.cta}
+                    {cta}
                     <ArrowRightIcon className="size-3.5" aria-hidden="true" />
                   </Link>
-                </div>
+                </li>
               ))}
-            </div>
+            </ul>
           </Container>
         </Section>
 
@@ -510,6 +593,7 @@ export default async function LandingPage() {
                   <ProviderCrest
                     index={index}
                     provider={card.provider}
+                    logo={card.logo}
                     className="size-10"
                   />
                   <p className="t-body mt-5 flex-1 text-ink text-pretty">
@@ -667,6 +751,53 @@ export default async function LandingPage() {
                   </details>
                 ))}
               </div>
+            </div>
+          </Container>
+        </Section>
+
+        </>}
+
+        <Section labelledBy="providers-heading">
+          <Container>
+            <div className="grid gap-10 lg:grid-cols-12 lg:items-start lg:gap-16">
+              <div className="lg:col-span-4 lg:pt-3">
+                <h2 id="providers-heading" className="t-display-xl text-balance">
+                  A small index. Real sources.
+                </h2>
+                <p className="t-body-lg mt-6 max-w-[38ch] text-ink-mute text-pretty">
+                  {cards.length} opportunities across national agencies, LGUs,
+                  universities and foundations.
+                </p>
+                <Link
+                  href={ROUTES.scholarships}
+                  className="ring-brand t-body-strong mt-8 inline-flex items-center gap-2 rounded-xs text-ink underline decoration-hairline underline-offset-4 hover:decoration-ink"
+                >
+                  See all {cards.length} records
+                  <ArrowRightIcon className="size-4" aria-hidden="true" />
+                </Link>
+              </div>
+
+              <ul className="border-t border-hairline lg:col-span-8">
+                {cards.slice(0, 6).map((card, index, list) => (
+                  <li key={card.id}>
+                    <RuledRow
+                      last={index === list.length - 1}
+                      className="gap-2 py-5 md:grid-cols-[minmax(0,1fr)_11rem] md:gap-8"
+                    >
+                      <Link href={ROUTES.scholarship(card.id)} className="group ring-brand rounded-xs">
+                        <p className="t-body-strong text-ink group-hover:underline group-hover:decoration-hairline group-hover:underline-offset-4">
+                          {card.provider}
+                        </p>
+                        <p className="t-caption mt-1 text-ink-mute text-pretty">{card.title}</p>
+                      </Link>
+                      <p className="t-caption text-ink-mute md:text-right">
+                        Tier {card.sourceTier} source · checked{" "}
+                        <time dateTime={card.lastVerified}>{formatIsoDate(card.lastVerified)}</time>
+                      </p>
+                    </RuledRow>
+                  </li>
+                ))}
+              </ul>
             </div>
           </Container>
         </Section>

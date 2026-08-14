@@ -1,5 +1,6 @@
 import type { Profile } from "@/lib/logic/state";
 import { ONBOARDING_STEPS } from "@/lib/logic/routes";
+import { PLANNING } from "@/lib/scholarships";
 
 /** Empty GWA is allowed (unknown); a filled GWA must be a number in [60, 100]. */
 export function gwaError(gwa: string): boolean {
@@ -17,23 +18,35 @@ export function dependentsError(value: string): boolean {
   return !Number.isInteger(n) || n < 0 || n > 20;
 }
 
+/** Whether this student has committed to studying somewhere yet. */
+export function isPlanning(profile: Profile): boolean {
+  return profile.stage.trim() === PLANNING;
+}
+
 /**
  * Whether a student can move on from an onboarding step.
  *
- * Only the two questions that materially change which scholarships can be
- * matched at all — where they study and what they study — are required. Money
- * and circumstances are optional by design: a blank answer becomes an *unknown*
- * requirement later, never a failed one (AGENTS.md §3).
+ * The six steps are: journey, location, studies, academic standing, household,
+ * free text (spec §3.3). Only the first three gate anything, and only on the two
+ * answers that decide which programmes can apply at all — where they are based
+ * and what they study. Money, circumstances and academic standing are optional by
+ * design: a blank answer becomes an *unknown* requirement later, never a failed
+ * one (AGENTS.md §3).
+ *
+ * A student still planning where to study is never asked for a school, so step 3
+ * asks them only for a course.
  */
 export function canAdvance(step: number, profile: Profile): boolean {
   switch (step) {
     case 1:
-      return profile.city.trim() !== "";
+      return profile.stage.trim() !== "";
     case 2:
-      return profile.course.trim() !== "";
+      return profile.city.trim() !== "";
     case 3:
-      return profile.stage.trim() !== "" && !gwaError(profile.gwa);
+      return profile.course.trim() !== "";
     case 4:
+      return !gwaError(profile.gwa);
+    case 5:
       return !dependentsError(profile.dependents);
     default:
       return true;
@@ -48,15 +61,27 @@ export function firstIncompleteStep(profile: Profile): number {
   return ONBOARDING_STEPS;
 }
 
-/** Enough of a profile to run matching at all. */
-export function isProfileReady(profile: Profile): boolean {
-  // Matching requires the two onboarding answers that determine which
-  // programmes apply at all: where the student studies and what they study.
-  // GWA and other details are optional and resolve to Unknown, never Not Met.
-  return canAdvance(1, profile) && canAdvance(2, profile);
+/** The appropriate question to reopen when matching lacks required answers. */
+export function matchingRecoveryStep(profile: Profile): number {
+  return firstIncompleteStep(profile);
 }
 
-/** How much of the profile is filled in — drives the completeness meter. */
+/** Enough of a profile to run matching at all. */
+export function isProfileReady(profile: Profile): boolean {
+  // Matching requires the two answers that determine which programmes apply at
+  // all: where the student is based and what they study. Everything else is
+  // optional and resolves to Unknown, never Not Met.
+  return profile.city.trim() !== "" && profile.course.trim() !== "";
+}
+
+/**
+ * How much of the profile is filled in — drives the completeness meter.
+ *
+ * A band and its exact counterpart count once between them: a student who
+ * answered the band has answered the question, and showing them an unfilled
+ * segment for declining to give an exact figure would push disclosure the
+ * privacy model does not want (AGENTS.md §9).
+ */
 export function profileCompleteness(profile: Profile): { filled: number; total: number } {
   const fields = [
     profile.city,
@@ -64,9 +89,9 @@ export function profileCompleteness(profile: Profile): { filled: number; total: 
     profile.school,
     profile.stage,
     profile.year,
-    profile.gwa,
+    profile.gwaBand || profile.gwa,
     profile.income,
-    profile.dependents,
+    profile.householdBand || profile.dependents,
     profile.chips.length > 0 ? "x" : "",
     profile.notes,
   ];
