@@ -15,11 +15,11 @@ export default async function DiscoverPage({ searchParams }: PageProps<"/discove
   const cardId = parseCardId(params.card);
 
   return (
-    <>
+    <div className="flex min-h-dvh flex-col lg:h-dvh lg:overflow-hidden">
       <AppHeader />
-      <main id="main" className="flex min-h-0 flex-1 flex-col">
+      <main id="main" className="flex flex-1 flex-col lg:min-h-0">
         <DiscoverScreen cardId={cardId} />
       </main>
-    </>
+    </div>
   );
 }

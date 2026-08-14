@@ -1,7 +1,7 @@
 import Image from "next/image";
 import type { CSSProperties } from "react";
 
-import { providerHue, scholarshipLogo } from "@/lib/scholarships";
+import { providerHue } from "@/lib/scholarships";
 import { cn } from "@/lib/utils";
 
 /**
@@ -55,10 +55,11 @@ export function ProviderCrest({
 }: {
   index: number;
   provider: string;
-  logo?: string | null;
+  logo: string | null;
   className?: string;
 }) {
-  const src = logo === undefined ? scholarshipLogo(index) : logo;
+  if (!logo) return null;
+  const src = logo;
 
   return (
     <span
@@ -91,19 +92,21 @@ export function ProviderCrest({
 
 /** The same logo blown up as a faint watermark behind card content. */
 export function ProviderWatermark({
-  index,
+  logo,
   className,
 }: {
-  index: number;
+  logo: string | null;
   className?: string;
 }) {
+  if (!logo) return null;
+
   return (
     <span
       aria-hidden="true"
       className={cn("pointer-events-none absolute opacity-[0.07]", className)}
     >
       <Image
-        src={scholarshipLogo(index)}
+        src={logo}
         alt=""
         fill
         sizes="240px"

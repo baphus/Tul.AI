@@ -7,6 +7,7 @@ import { ProviderCrest } from "@/components/scholarship/provider-logo";
 import { VerificationBadge } from "@/components/scholarship/verification-badge";
 import { formatPeso } from "@/lib/logic/format";
 import { ROUTES } from "@/lib/logic/routes";
+import type { RankedMatch } from "@/lib/logic/matching";
 import type { Scholarship } from "@/lib/scholarships";
 import { cn } from "@/lib/utils";
 
@@ -22,6 +23,7 @@ export function ScholarshipSummaryCard({
   actions,
   muted = false,
   className,
+  result,
 }: {
   card: Scholarship;
   index: number;
@@ -29,6 +31,7 @@ export function ScholarshipSummaryCard({
   actions?: ReactNode;
   muted?: boolean;
   className?: string;
+  result?: RankedMatch;
 }) {
   const target = href ?? ROUTES.scholarship(card.id);
 
@@ -74,7 +77,7 @@ export function ScholarshipSummaryCard({
         <VerificationBadge status={card.verification} />
       </div>
 
-      <MatchMetric card={card} className="mt-4" />
+      <MatchMetric card={result ?? card} className="mt-4" />
 
       {actions && <div className="mt-5 flex flex-wrap gap-2">{actions}</div>}
     </article>

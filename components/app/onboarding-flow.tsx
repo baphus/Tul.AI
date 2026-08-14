@@ -7,12 +7,11 @@ import {
   ChurchIcon,
   CheckIcon,
   LandmarkIcon,
-  Loader2Icon,
   GraduationCapIcon,
   SparklesIcon,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 
 import { BandPicker } from "@/components/app/band-picker";
 import { ChoiceCard, ChoiceChip } from "@/components/app/choice-card";
@@ -26,7 +25,6 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useTulAi } from "@/hooks/use-tul-ai";
 import { ONBOARDING_STEPS, ROUTES } from "@/lib/logic/routes";
-import { useLanguage } from "@/lib/logic/language";
 import type { Profile } from "@/lib/logic/state";
 import { canAdvance, dependentsError, gwaError, isPlanning } from "@/lib/logic/validation";
 import { GWA_BANDS, HOUSEHOLD_BANDS } from "@/lib/reference/bands";
@@ -86,14 +84,6 @@ const schoolKindLabels: Record<SchoolKind, string> = {
   sectarian: "Sectarian institution",
 };
 
-type ExtractionProposal = {
-  city?: string;
-  course?: string;
-  gwa?: string;
-  chips?: string[];
-  summary?: string;
-};
-
 function SchoolKindIcon({ kind }: { kind: SchoolKind }) {
   const Icon =
     kind === "state"
@@ -146,7 +136,7 @@ function metaFor(step: number, planning: boolean): StepMeta {
     default:
       return {
         question: "Anything else you'd like Tul.AI to know?",
-        why: "This is where AI earns its place: a sentence in your own words can surface a programme no dropdown would have found.",
+        why: "Share anything that may help us explain your matches more clearly. You can always update these details later.",
         optional: true,
       };
   }
@@ -155,61 +145,17 @@ function metaFor(step: number, planning: boolean): StepMeta {
 export function OnboardingFlow({ step }: { step: number }) {
   const router = useRouter();
   const { state, dispatch } = useTulAi();
-  const language = useLanguage();
   const profile = state.profile;
-
-  const [extracting, setExtracting] = useState(false);
-  const [extractionResult, setExtractionResult] = useState<string | null>(null);
-  const [extractionProposal, setExtractionProposal] = useState<ExtractionProposal | null>(null);
-  const [extractConsent, setExtractConsent] = useState(false);
 
   const planning = isPlanning(profile);
   const meta = metaFor(step, planning);
   const ready = canAdvance(step, profile);
   const isLast = step === ONBOARDING_STEPS;
-  /*
-   * The first five questions collect core matching inputs with reviewed
-   * controls. AI is only a catch-all when it could fill an optional detail the
-   * student skipped, rather than a second way to answer the same questions.
-   */
-  const canUseAiProfileHelper = !profile.gwa.trim() || profile.chips.length === 0;
-
   const setField = useCallback(
     (field: keyof Omit<Profile, "chips">, value: string) =>
       dispatch({ type: "SET_FIELD", field, value }),
     [dispatch]
   );
-
-  /**
-   * Turn the student's own sentence into structured fields (AGENTS.md §7 — the
-   * LLM may convert natural language into attributes, but it decides no
-   * eligibility and it only ever proposes). Existing answers are never
-   * overwritten, and every field it touches is one the student can go back and
-   * correct.
-   */
-  const runAiExtract = async () => {
-    if (!profile.notes.trim() || extracting) return;
-    setExtracting(true);
-    setExtractionResult(null);
-    setExtractionProposal(null);
-    try {
-      const res = await fetch("/api/ai/extract", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: profile.notes, consent: extractConsent, language }),
-      });
-      const json = await res.json();
-      if (json?.extracted) {
-        const ext = json.extracted as ExtractionProposal;
-        setExtractionProposal(ext);
-        setExtractionResult(ext.summary || "Review each suggestion before adding it to your profile.");
-      }
-    } catch (err) {
-      console.error("AI extraction error:", err);
-    } finally {
-      setExtracting(false);
-    }
-  };
 
   const goTo = useCallback(
     (next: number) => {
@@ -675,101 +621,6 @@ export function OnboardingFlow({ step }: { step: number }) {
               />
             </div>
 
-            {canUseAiProfileHelper && (
-              <div className="flex flex-col gap-3">
-                <p className="t-micro max-w-[58ch] text-ink-mute text-pretty">
-                  Mentioned a GWA or household circumstance you skipped earlier? We can pull out
-                  just those optional details.
-                </p>
-              <Button
-                type="button"
-                variant="outline"
-                disabled={!profile.notes.trim() || extracting || !extractConsent}
-                onClick={runAiExtract}
-                className="h-11 w-full justify-center gap-2 rounded-md border-hairline-dark/40 bg-canvas text-ink hover:bg-canvas-soft sm:w-auto"
-              >
-                {extracting ? (
-                  <>
-                    <Loader2Icon className="size-4 animate-spin" />
-                    Parsing with AI…
-                  </>
-                ) : (
-                  <>
-                    <SparklesIcon className="size-4 text-brand" />
-                    Check optional details with AI
-                  </>
-                )}
-              </Button>
-
-              {extractionResult && (
-                <div className="flex items-start gap-3 rounded-lg border border-met/30 bg-met/10 p-4 [animation:rise_260ms_cubic-bezier(.2,.8,.3,1)_both]">
-                  <span
-                    className="grid size-5 flex-none place-items-center rounded-full bg-met text-white"
-                    aria-hidden="true"
-                  >
-                    <CheckIcon className="size-3" strokeWidth={3} />
-                  </span>
-                  <div>
-                    <p className="t-caption-strong text-ink">Optional details proposed</p>
-                    <p className="t-caption mt-0.5 text-ink-mute text-pretty">
-                      {extractionResult}
-                    </p>
-                    <p className="t-micro mt-2 text-ink-mute text-pretty">
-                      These are proposals, not decisions. Nothing changes in your profile until
-                      you choose to add a suggestion.
-                    </p>
-                    {extractionProposal && (
-                      <div className="mt-3 flex flex-wrap gap-2">
-                        {extractionProposal.course && !profile.course && (
-                          <Button type="button" size="sm" variant="outline" onClick={() => setField("course", extractionProposal.course!)}>
-                            Add course: {extractionProposal.course}
-                          </Button>
-                        )}
-                        {extractionProposal.city && !profile.city && (
-                          <Button type="button" size="sm" variant="outline" onClick={() => setField("city", extractionProposal.city!)}>
-                            Add location: {extractionProposal.city}
-                          </Button>
-                        )}
-                        {extractionProposal.gwa && !profile.gwa && (
-                          <Button type="button" size="sm" variant="outline" onClick={() => setField("gwa", extractionProposal.gwa!)}>
-                            Add GWA: {extractionProposal.gwa}
-                          </Button>
-                        )}
-                        {extractionProposal.chips?.filter((chip) => !profile.chips.includes(chip)).length ? (
-                          <Button
-                            type="button"
-                            size="sm"
-                            variant="outline"
-                            onClick={() => extractionProposal.chips?.filter((chip) => !profile.chips.includes(chip)).forEach((value) => dispatch({ type: "TOGGLE_CHIP", value }))}
-                          >
-                            Add circumstances: {extractionProposal.chips.filter((chip) => !profile.chips.includes(chip)).join(", ")}
-                          </Button>
-                        ) : null}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-              <label className="flex items-start gap-2.5">
-                <input type="checkbox" checked={extractConsent} onChange={(event) => setExtractConsent(event.target.checked)} className="mt-1 size-4 accent-ink" />
-                <span className="t-micro max-w-[58ch] text-ink-mute">I agree to send this text to Tul.AI&apos;s configured AI provider to propose editable optional profile fields. Tul.AI will not use it to decide eligibility.</span>
-              </label>
-              </div>
-            )}
-
-            <div className="flex gap-3.5 rounded-lg border border-hairline bg-canvas-soft p-4">
-              <span
-                className="grid size-7 flex-none place-items-center rounded-md bg-ink text-white"
-                aria-hidden="true"
-              >
-                <SparklesIcon className="size-3.5" />
-              </span>
-              <p className="t-caption text-ink-mute text-pretty">
-                Tul.AI reads this to propose structured details — an OFW parent,
-                first-generation student, an intended course — and you&apos;ll be able to
-                review and correct them. It never decides eligibility from a sentence.
-              </p>
-            </div>
           </div>
         )}
       </div>

@@ -2,7 +2,7 @@
 
 import { ArrowLeftIcon, ArrowRightIcon, SparklesIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { TulAiChat } from "@/components/app/tul-ai-chat";
 import { ScholarshipCard } from "@/components/scholarship/scholarship-card";
@@ -13,14 +13,21 @@ import { useTulAi } from "@/hooks/use-tul-ai";
 import { isDeadlineOpen } from "@/lib/logic/deadlines";
 import { rankScholarships } from "@/lib/logic/matching";
 import { ROUTES } from "@/lib/logic/routes";
+import { cn } from "@/lib/utils";
 
 /** A browsable set of deterministic matches, never a pass/save sorter. */
-export function Deck({ detailOpen }: { detailOpen: boolean }) {
+export function Deck({ detailOpen, onCardChange }: { detailOpen: boolean; onCardChange?: (id: string) => void }) {
   const router = useRouter();
   const { state, dispatch, cards } = useTulAi();
   const reduced = usePrefersReducedMotion();
   const today = useToday();
   const [position, setPosition] = useState(0);
+  const [dragX, setDragX] = useState(0);
+  const [dragging, setDragging] = useState(false);
+  const [exiting, setExiting] = useState<1 | -1 | null>(null);
+  const dragOrigin = useRef<number | null>(null);
+  const dragDistance = useRef(0);
+  const swipeTimer = useRef(0);
 
   const deck = useMemo(
     () =>
@@ -48,6 +55,49 @@ export function Deck({ detailOpen }: { detailOpen: boolean }) {
   const canGoBack = position > 0;
   const canGoForward = position < deck.length - 1;
 
+  useEffect(() => () => window.clearTimeout(swipeTimer.current), []);
+
+  const move = useCallback((direction: 1 | -1) => {
+    if (exiting || (direction < 0 && !canGoBack) || (direction > 0 && !canGoForward)) return;
+    setDragging(false);
+    setExiting(direction);
+    setDragX(direction * -720);
+    swipeTimer.current = window.setTimeout(() => {
+      const nextPosition = position + direction;
+      setPosition(nextPosition);
+      onCardChange?.(deck[nextPosition]!.card.id);
+      setDragX(0);
+      setExiting(null);
+    }, reduced ? 1 : 320);
+  }, [canGoBack, canGoForward, deck, exiting, onCardChange, position, reduced]);
+
+  const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (exiting || (event.target as HTMLElement).closest("button, a")) return;
+    dragOrigin.current = event.clientX;
+    dragDistance.current = 0;
+    setDragging(true);
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+
+  const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (dragOrigin.current === null) return;
+    dragDistance.current = (event.clientX - dragOrigin.current) * 0.55;
+    setDragX(dragDistance.current);
+  };
+
+  const onPointerUp = () => {
+    if (dragOrigin.current === null) return;
+    const x = dragDistance.current;
+    dragOrigin.current = null;
+    setDragging(false);
+    if (x > 40) move(-1);
+    else if (x < -40) move(1);
+    else {
+      setDragX(0);
+      dispatch({ type: "TAP_CARD" });
+    }
+  };
+
   const openDetail = useCallback(() => {
     if (card) router.push(ROUTES.discoverCard(card.id), { scroll: false });
   }, [card, router]);
@@ -73,7 +123,7 @@ export function Deck({ detailOpen }: { detailOpen: boolean }) {
   }, [canGoBack, canGoForward, detailOpen, dispatch]);
 
   return (
-    <section className="relative mx-auto flex w-full max-w-[31rem] flex-1 flex-col px-5 pt-7 pb-8 sm:px-6" aria-labelledby="deck-heading">
+    <section className="relative mx-auto flex w-full max-w-[31rem] flex-1 flex-col px-5 pt-7 pb-8 sm:px-6 lg:[zoom:.64]" aria-labelledby="deck-heading">
       <div className="mb-6 flex flex-none items-end justify-between gap-4">
         <div>
           <h1 id="deck-heading" className="t-display-lg">Your matched options</h1>
@@ -82,9 +132,9 @@ export function Deck({ detailOpen }: { detailOpen: boolean }) {
         {deck.length > 0 && <p className="t-caption t-num whitespace-nowrap text-ink-mute">{position + 1} of {deck.length}</p>}
       </div>
 
-      <div className="relative min-h-[31rem] flex-1">
+      <div className="relative min-h-[31rem] flex-1 lg:min-h-[48rem]">
         {card && current ? (
-          <div className="absolute inset-0 [animation:rise_220ms_cubic-bezier(.2,.8,.3,1)_both]" key={card.id}>
+          <div onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp} className={cn("absolute inset-0 touch-none origin-top will-change-transform [animation:rise_220ms_cubic-bezier(.2,.8,.3,1)_both]", dragging ? "transition-none" : "transition-[transform,opacity] duration-[320ms] ease-[cubic-bezier(.22,.85,.28,1)]")} style={{ transform: `translate3d(${dragX}px, ${exiting ? 28 : 0}px, 0) rotate(${reduced ? 0 : dragX / 28}deg)`, opacity: exiting ? 0 : 1 }} key={card.id}>
             <ScholarshipCard card={card} index={current.rawIndex} flipped={state.flipped} reduced={reduced} onFlip={() => dispatch({ type: "TAP_CARD" })} result={current.result} />
           </div>
         ) : (
@@ -97,10 +147,10 @@ export function Deck({ detailOpen }: { detailOpen: boolean }) {
       </div>
 
       {card && (
-        <div className="mt-6 grid flex-none grid-cols-[1fr_auto_1fr] items-center gap-3">
-          <Button variant="tertiary" className="h-12 gap-2 px-4" onClick={() => setPosition((current) => current - 1)} disabled={!canGoBack}><ArrowLeftIcon />Previous</Button>
-          <Button variant="outline" className="h-12 gap-2 px-4" onClick={openDetail}><SparklesIcon />Details</Button>
-          <Button className="h-12 gap-2 px-4" onClick={() => setPosition((current) => current + 1)} disabled={!canGoForward}>Next<ArrowRightIcon /></Button>
+        <div className="mt-6 grid flex-none grid-cols-[1fr_auto_1fr] items-center gap-3 lg:grid-cols-2">
+          <Button variant="tertiary" className="h-12 w-full justify-center gap-2 px-4" onClick={() => move(-1)} disabled={!canGoBack || Boolean(exiting)}><ArrowLeftIcon />Previous</Button>
+          <Button variant="outline" className="h-12 gap-2 px-4 lg:hidden" onClick={openDetail}><SparklesIcon />Details</Button>
+          <Button className="h-12 w-full justify-center gap-2 px-4" onClick={() => move(1)} disabled={!canGoForward || Boolean(exiting)}>Next<ArrowRightIcon /></Button>
         </div>
       )}
 

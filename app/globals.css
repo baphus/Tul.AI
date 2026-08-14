@@ -477,6 +477,10 @@
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: none; }
 }
+@keyframes discover-detail-in {
+  from { opacity: 0; transform: translateX(3rem); filter: blur(4px); }
+  to { opacity: 1; transform: translateX(0); filter: none; }
+}
 @keyframes countUp {
   from { counter-increment: none; opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: none; }

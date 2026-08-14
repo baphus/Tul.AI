@@ -1,6 +1,17 @@
 import { GoogleGenAI } from "@google/genai";
 import { responseLanguageInstruction, type Language } from "@/lib/logic/locale";
 
+/** The server-side environment values used to select and configure an AI provider. */
+export interface AiEnvironment {
+  /** Retained so Next.js's generated ProcessEnv remains structurally assignable. */
+  NODE_ENV?: string;
+  AI_PROVIDER?: string;
+  GEMINI_API_KEY?: string;
+  GEMINI_MODEL?: string;
+  OPENAI_API_KEY?: string;
+  OPENAI_MODEL?: string;
+}
+
 export interface AiCitation {
   title: string;
   url: string;
@@ -14,23 +25,23 @@ export interface AiTextResult {
   error?: string;
 }
 
-export function resolveGeminiApiKey(env: NodeJS.ProcessEnv): string {
+export function resolveGeminiApiKey(env: AiEnvironment): string {
   return env.GEMINI_API_KEY ?? "";
 }
 
-export function resolveGeminiModel(env: NodeJS.ProcessEnv): string {
+export function resolveGeminiModel(env: AiEnvironment): string {
   return env.GEMINI_MODEL ?? "gemini-3.6-flash";
 }
 
-export function resolveOpenAiApiKey(env: NodeJS.ProcessEnv): string {
+export function resolveOpenAiApiKey(env: AiEnvironment): string {
   return env.OPENAI_API_KEY ?? "";
 }
 
-export function resolveOpenAiModel(env: NodeJS.ProcessEnv): string {
+export function resolveOpenAiModel(env: AiEnvironment): string {
   return env.OPENAI_MODEL ?? "gpt-5.6-luna";
 }
 
-export function resolveAiProvider(env: NodeJS.ProcessEnv): "gemini" | "openai" | "none" {
+export function resolveAiProvider(env: AiEnvironment): "gemini" | "openai" | "none" {
   const provider = env.AI_PROVIDER?.toLowerCase();
   if (provider === "gemini" || provider === "openai") return provider;
   if (env.OPENAI_API_KEY) return "openai";
@@ -118,7 +129,7 @@ function isOfficialCitation(citation: AiCitation, officialDomains: string[]): bo
 }
 
 /** Web research is currently available only through Gemini's Google Search tool. */
-export function canUseLiveResearch(env: NodeJS.ProcessEnv = process.env): boolean {
+export function canUseLiveResearch(env: AiEnvironment = process.env): boolean {
   return resolveAiProvider(env) === "gemini" && Boolean(resolveGeminiApiKey(env));
 }
 
