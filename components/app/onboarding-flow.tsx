@@ -3,8 +3,12 @@
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
+  Building2Icon,
+  ChurchIcon,
   CheckIcon,
+  LandmarkIcon,
   Loader2Icon,
+  GraduationCapIcon,
   SparklesIcon,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -28,7 +32,7 @@ import { canAdvance, dependentsError, gwaError, isPlanning } from "@/lib/logic/v
 import { GWA_BANDS, HOUSEHOLD_BANDS } from "@/lib/reference/bands";
 import { COURSE_GROUPS, type CourseOption } from "@/lib/reference/courses";
 import { LOCATION_OPTIONS } from "@/lib/reference/locations";
-import { schoolsFor } from "@/lib/reference/schools";
+import { schoolsFor, type SchoolKind } from "@/lib/reference/schools";
 import {
   CHIP_EXCLUSIVE,
   CHIP_NONE,
@@ -73,6 +77,33 @@ interface StepMeta {
   question: string;
   why: string;
   optional?: boolean;
+}
+
+const schoolKindLabels: Record<SchoolKind, string> = {
+  state: "State university",
+  local: "Local college",
+  private: "Private institution",
+  sectarian: "Sectarian institution",
+};
+
+function SchoolKindIcon({ kind }: { kind: SchoolKind }) {
+  const Icon =
+    kind === "state"
+      ? LandmarkIcon
+      : kind === "local"
+        ? Building2Icon
+        : kind === "sectarian"
+          ? ChurchIcon
+          : GraduationCapIcon;
+
+  return (
+    <span
+      className="flex size-8 flex-none items-center justify-center rounded-full bg-canvas-soft text-ink group-data-highlighted:bg-white/15 group-data-highlighted:text-white"
+      aria-hidden="true"
+    >
+      <Icon className="size-4" />
+    </span>
+  );
 }
 
 function metaFor(step: number, planning: boolean): StepMeta {
@@ -243,6 +274,10 @@ export function OnboardingFlow({ step }: { step: number }) {
     profile.stage === "College Student" || profile.stage === "Graduate Student";
 
   const schools = useMemo(() => schoolsFor(profile.city), [profile.city]);
+  const schoolsByName = useMemo(
+    () => new Map(schools.schools.map((school) => [school.name, school])),
+    [schools.schools]
+  );
   const locationNames = useMemo(() => LOCATION_OPTIONS.map((o) => o.value), []);
 
   return (
@@ -452,6 +487,22 @@ export function OnboardingFlow({ step }: { step: number }) {
                   value={profile.school}
                   onValueChange={(value) => setField("school", value)}
                   placeholder="e.g. Cebu Technological University"
+                  itemContent={(name) => {
+                    const school = schoolsByName.get(name);
+                    if (!school) return name;
+
+                    return (
+                      <span className="flex min-w-0 items-center gap-3">
+                        <SchoolKindIcon kind={school.kind} />
+                        <span className="min-w-0 flex-1">
+                          <span className="t-body block truncate">{school.name}</span>
+                          <span className="t-micro block truncate text-ink-faint group-data-highlighted:text-white/70">
+                            {school.city} · {schoolKindLabels[school.kind]}
+                          </span>
+                        </span>
+                      </span>
+                    );
+                  }}
                   emptyMessage="Not on our list — we'll keep what you typed."
                 />
                 <p className="t-micro text-ink-mute text-pretty">
@@ -525,14 +576,14 @@ export function OnboardingFlow({ step }: { step: number }) {
               />
             </div>
 
-            <fieldset className="lg:col-start-2 lg:row-span-2">
+            <fieldset className="mx-auto w-full max-w-md text-center lg:col-start-2 lg:row-span-2 lg:row-start-1">
               <legend className="t-body-strong">Do any of these apply?</legend>
               <p className="t-caption mt-1 mb-3.5 text-ink-mute text-pretty">
                 Choose as many as you like — each one unlocks specific programmes. The two
                 below the line are answers about the whole list, so picking either clears
                 the rest.
               </p>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap justify-center gap-2">
                 {CIRCUMSTANCE_CHIPS.map((option) => (
                   <ChoiceChip
                     key={option}
@@ -542,7 +593,7 @@ export function OnboardingFlow({ step }: { step: number }) {
                   />
                 ))}
               </div>
-              <div className="mt-3.5 flex flex-wrap gap-2 border-t border-hairline pt-3.5">
+              <div className="mt-3.5 flex flex-wrap justify-center gap-2 border-t border-hairline pt-3.5">
                 {CHIP_EXCLUSIVE.map((option) => (
                   <ChoiceChip
                     key={option}
@@ -553,7 +604,7 @@ export function OnboardingFlow({ step }: { step: number }) {
                 ))}
               </div>
               {profile.chips.includes(CHIP_NONE) && (
-                <p className="t-micro mt-3.5 max-w-[46ch] text-ink-mute text-pretty">
+                <p className="t-micro mx-auto mt-3.5 max-w-[46ch] text-ink-mute text-pretty">
                   Programmes reserved for one of the categories above will now show as not
                   currently eligible, because you&apos;ve told us none apply. Untick this if
                   you&apos;d rather leave it unanswered.
