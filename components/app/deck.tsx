@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { ScholarshipCard } from "@/components/scholarship/scholarship-card";
+import { TapCardIndicator } from "@/components/app/tap-card-indicator";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { usePrefersReducedMotion } from "@/hooks/use-media-query";
 import { useToday } from "@/hooks/use-today";
@@ -173,6 +174,7 @@ export function Deck({ detailOpen, onCardChange }: { detailOpen: boolean; onCard
         {card && current ? (
           <div onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp} className={cn("absolute inset-0 touch-pan-y origin-top will-change-transform [animation:rise_220ms_cubic-bezier(.2,.8,.3,1)_both]", dragging ? "transition-none" : "transition-[transform,opacity] duration-[320ms] ease-[cubic-bezier(.22,.85,.28,1)]")} style={{ transform: `translate3d(${dragX}px, ${exiting ? 28 : 0}px, 0) rotate(${reduced ? 0 : dragX / 28}deg)`, opacity: exiting ? 0 : 1 }} key={card.id}>
             <ScholarshipCard card={card} index={current.rawIndex} flipped={state.flipped} reduced={reduced} result={current.result} />
+            {!state.flipped && <TapCardIndicator />}
           </div>
         ) : (
           <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center">

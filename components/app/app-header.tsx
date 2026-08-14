@@ -4,8 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { BrandMark } from "@/components/site/brand";
-import { useTulAi } from "@/hooks/use-tul-ai";
-import { savedCount } from "@/lib/logic/state";
 import { ROUTES } from "@/lib/logic/routes";
 import { useTranslation } from "@/lib/logic/language";
 import { cn } from "@/lib/utils";
@@ -13,15 +11,12 @@ import { cn } from "@/lib/utils";
 const NAV = [
   { href: ROUTES.discover, label: "discover" },
   { href: ROUTES.review, label: "review" },
-  { href: ROUTES.saved, label: "saved" },
   { href: ROUTES.profile, label: "profile" },
 ] as const;
 
 export function AppHeader() {
   const pathname = usePathname();
-  const { state, ready } = useTulAi();
   const { t } = useTranslation();
-  const saved = savedCount(state);
 
   return (
     <header className="sticky top-0 z-50 flex-none border-b border-hairline bg-canvas/90 backdrop-blur-md">
@@ -47,9 +42,6 @@ export function AppHeader() {
                 )}
               >
                 {t(item.label)}
-                {item.href === ROUTES.saved && ready && saved > 0 && (
-                  <span className="t-num ml-1.5 text-ink-mute">{saved}</span>
-                )}
               </Link>
             );
           })}

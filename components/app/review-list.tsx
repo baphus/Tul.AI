@@ -12,8 +12,8 @@ import { ROUTES } from "@/lib/logic/routes";
 import type { Scholarship } from "@/lib/scholarships";
 
 /**
- * Review before applying. Nothing was discarded during sorting, so this screen
- * shows all three states and lets anything move in either direction.
+ * Review before applying. The dashboard focuses on the scholarships a student
+ * has prioritized, while the complete public directory remains one click away.
  */
 export function ReviewList() {
   const { state, dispatch, cards, ready } = useTulAi();
@@ -25,7 +25,6 @@ export function ReviewList() {
 
   const saved = group("yes");
   const passed = group("no");
-  const unsorted = group(undefined);
   const advice = advisory(state.decisions);
   const recommendedMatches = rankScholarships(cards, state.profile).filter((match) => match.tone !== "none");
   const recommendedCards = recommendedMatches
@@ -92,18 +91,6 @@ export function ReviewList() {
           onMove={(index) => dispatch({ type: "MOVE", index })}
         />
 
-        {unsorted.length > 0 && (
-          <Group
-            title="Not sorted yet"
-            count={unsorted.length}
-            empty=""
-            rows={unsorted}
-            moveLabel="Move up"
-            onMove={(index) => dispatch({ type: "MOVE", index })}
-            muted
-          />
-        )}
-
         <Group
           title="Lower priority"
           count={passed.length}
@@ -116,15 +103,9 @@ export function ReviewList() {
       </div>
 
       <div className="mt-14 flex flex-wrap items-center gap-3 border-t border-hairline pt-8">
-        {saved.length > 0 ? (
-          <ButtonLink className="h-12 rounded-md px-6" href={ROUTES.saved}>
-            Prepare {saved.length} application{saved.length === 1 ? "" : "s"}
-          </ButtonLink>
-        ) : (
-          <Button className="h-12 rounded-md px-6" disabled>
-            Prepare your applications
-          </Button>
-        )}
+        <ButtonLink className="h-12 rounded-md px-6" href={ROUTES.scholarships}>
+          Browse all scholarships
+        </ButtonLink>
         <ButtonLink
           variant="outline"
           className="h-12 rounded-md border-hairline-dark px-5"

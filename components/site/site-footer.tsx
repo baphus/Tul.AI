@@ -15,7 +15,6 @@ const COLUMNS: { title: TranslationKey; links: { href: string; label: Translatio
       { href: ROUTES.scholarships, label: "footerAllScholarships" },
       { href: ROUTES.onboarding, label: "footerBuildProfile" },
       { href: ROUTES.discover, label: "footerSwipeDeck" },
-      { href: ROUTES.saved, label: "footerSavedDeadlines" },
     ],
   },
   {

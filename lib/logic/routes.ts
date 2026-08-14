@@ -22,7 +22,6 @@ export const ROUTES = {
   discoverCard: (id: string) => `/discover?card=${encodeURIComponent(id)}`,
   discoverCardExpanded: (id: string) => `/discover?card=${encodeURIComponent(id)}&panel=expanded`,
   review: "/review",
-  saved: "/saved",
   profile: "/profile",
 } as const;
 

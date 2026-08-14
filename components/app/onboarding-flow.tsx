@@ -442,7 +442,7 @@ export function OnboardingFlow({ step }: { step: number }) {
                 items={locationNames}
                 value={profile.city}
                 onValueChange={(value) => setField("city", value)}
-                placeholder="hal. Iloilo City"
+                placeholder={language === "FIL" ? "hal. Iloilo City" : "e.g. Iloilo City"}
                 emptyMessage="Wala sa listahan — pananatilihin ang isinulat mo at itutugma sa mga pambansang programa."
               />
               {otherSelected && (
@@ -500,7 +500,11 @@ export function OnboardingFlow({ step }: { step: number }) {
                   items={schools.schools.map((school) => school.name)}
                   value={profile.school}
                   onValueChange={(value) => setField("school", value)}
-                  placeholder="hal. Cebu Technological University"
+                  placeholder={
+                    language === "FIL"
+                      ? "hal. Cebu Technological University"
+                      : "e.g. Cebu Technological University"
+                  }
                   itemContent={(name) => {
                     const school = schoolsByName.get(name);
                     if (!school) return name;
