@@ -18,7 +18,7 @@ import {
 import { useTulAi } from "@/hooks/use-tul-ai";
 import { useIsDesktop } from "@/hooks/use-media-query";
 import { matchScholarship } from "@/lib/logic/matching";
-import { cardIndexOf, ROUTES } from "@/lib/logic/routes";
+import { cardForId, ROUTES } from "@/lib/logic/routes";
 import { cn } from "@/lib/utils";
 
 /**
@@ -36,9 +36,8 @@ export function DiscoverScreen({ cardId }: { cardId: string | null }) {
   const activeCardId = desktop
     ? desktopCardId ?? cardId ?? cards[0]?.id ?? null
     : cardId;
-  const routeIndex = cardIndexOf(activeCardId);
-  const index = routeIndex >= 0 ? routeIndex : 0;
-  const card = routeIndex >= 0 ? cards[routeIndex] : desktop ? cards[0] ?? null : null;
+  const card = cardForId(cards, activeCardId, desktop ? cards[0] ?? null : null);
+  const index = card ? cards.findIndex((item) => item.id === card.id) : 0;
   const result = card ? matchScholarship(card, state.profile) : undefined;
 
   const close = useCallback(() => {

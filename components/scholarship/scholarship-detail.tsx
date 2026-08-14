@@ -7,12 +7,6 @@ import { DeadlineChip } from "@/components/scholarship/deadline-chip";
 import { MatchBadge, MatchMetric } from "@/components/scholarship/match-metric";
 import { ProviderCrest, providerTint } from "@/components/scholarship/provider-logo";
 import { RequirementMark } from "@/components/scholarship/requirement-mark";
-import {
-  sourceTierLabel,
-  VerificationBadge,
-  verificationHelp,
-} from "@/components/scholarship/verification-badge";
-import { VerifyDialog } from "@/components/scholarship/verify-dialog";
 import { formatPeso } from "@/lib/logic/format";
 import { detailRequirements } from "@/lib/logic/detail-match";
 import type { RankedMatch } from "@/lib/logic/matching";
@@ -23,7 +17,7 @@ import { cn } from "@/lib/utils";
  * The full scholarship record (PRD §23). Server-rendered and shareable: the
  * requirement rows are native <details>, so they open without JavaScript and
  * the page is readable before anything hydrates. Only the three interactive
- * moments — ask, verify, apply — are client islands.
+ * moments — ask and apply — are client islands.
  */
 export function ScholarshipDetail({
   card,
@@ -64,7 +58,6 @@ export function ScholarshipDetail({
         <div className="mt-5 flex flex-wrap items-center gap-2">
           {personalized && <MatchBadge card={match} />}
           <DeadlineChip deadline={card.deadline} deadlineIso={card.deadlineIso} />
-          <VerificationBadge status={card.verification} />
         </div>
       </header>
 
@@ -172,38 +165,6 @@ export function ScholarshipDetail({
               </li>
             ))}
           </ul>
-        </section>
-
-        {/* ── Verification & sources ── */}
-        <section className="mt-12" aria-labelledby="sources">
-          <h2 id="sources" className="t-display-lg">
-            Sources checked
-          </h2>
-          <p className="t-body mt-2 text-ink-mute text-pretty">
-            {verificationHelp(card.verification)} {sourceTierLabel(card.sourceTier)}.
-          </p>
-
-          <ul className="mt-5 flex flex-col gap-2.5">
-            {card.sources.map((source) => (
-              <li key={source.url || source.name} className="rounded-lg border border-hairline bg-canvas p-4">
-                <p className="t-micro flex items-center gap-2 text-met">
-                  <span className="size-1.5 rounded-full bg-met" aria-hidden="true" />
-                  Official source
-                </p>
-                {source.url ? <a className="ring-brand t-body-strong mt-1.5 block underline underline-offset-2" href={source.url} target="_blank" rel="noreferrer">{source.name}</a> : <p className="t-body-strong mt-1.5">{source.name}</p>}
-                <p className="t-caption mt-0.5 text-ink-mute">{source.date}</p>
-              </li>
-            ))}
-          </ul>
-
-          <p className="t-caption mt-4 text-ink-mute">
-            Provider pages can change at any time. Always confirm details with the official
-            source before you apply.
-          </p>
-
-          <div className="mt-5">
-            <VerifyDialog card={card} />
-          </div>
         </section>
 
         {/* ── Grounded Q&A ── */}

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { cardForId } from "@/lib/logic/routes";
 import { DATA } from "@/lib/scholarships";
 import {
   cardIndexOf,
@@ -73,5 +74,14 @@ describe("cardIndexOf", () => {
   it("returns -1 for nothing or an unknown id", () => {
     expect(cardIndexOf(null)).toBe(-1);
     expect(cardIndexOf("nope")).toBe(-1);
+  });
+});
+
+describe("cardForId", () => {
+  it("keeps the selected scholarship when the rendered collection is reordered", () => {
+    const cards = [DATA[1], DATA[0]];
+    const selected = cardForId(cards, DATA[0].id);
+
+    expect(selected?.id).toBe(DATA[0].id);
   });
 });

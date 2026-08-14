@@ -59,3 +59,17 @@ export function cardIndexOf(id: string | null): number {
   if (!id) return -1;
   return DATA.findIndex((d) => d.id === id);
 }
+
+/**
+ * Resolve a selected record from the collection currently rendered by a
+ * client surface. The collection may be ranked or filtered, so its position
+ * must never be inferred from the canonical dataset's order.
+ */
+export function cardForId<T extends { id: string }>(
+  cards: readonly T[],
+  id: string | null,
+  fallback: T | null = null
+): T | null {
+  if (!id) return fallback;
+  return cards.find((card) => card.id === id) ?? null;
+}
