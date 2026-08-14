@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { answerFor, SUGGESTIONS, type Answer } from "@/lib/logic/answerFor";
 import { useTulAiOptional } from "@/hooks/use-tul-ai";
-import { useLanguage } from "@/lib/logic/language";
+import { useLanguage, useTranslation } from "@/lib/logic/language";
 import type { Scholarship } from "@/lib/scholarships";
 
 interface Entry {
@@ -27,6 +27,7 @@ export function AskPanel({ card }: { card: Scholarship }) {
   const [input, setInput] = useState("");
   const [pending, setPending] = useState(false);
   const language = useLanguage();
+  const { t } = useTranslation();
   useTulAiOptional();
 
   const ask = useCallback(
@@ -65,7 +66,7 @@ export function AskPanel({ card }: { card: Scholarship }) {
   return (
     <div>
       <h2 className="t-display-lg" id="ask">
-        Ask about this one
+        {t("askAboutThis")}
       </h2>
       <p className="t-body mt-2 text-ink-mute text-pretty">
         Answers use the published record. For current facts, Tul.AI may research the
@@ -85,11 +86,11 @@ export function AskPanel({ card }: { card: Scholarship }) {
                   {entry.a.src ? (
                     <p className="t-micro mt-3 flex items-center gap-2 border-t border-hairline pt-2.5 text-ink-mute">
                       <span className="size-1.5 rounded-full bg-met" aria-hidden="true" />
-                      Source: {entry.a.src}
+                      {t("source")}: {entry.a.src}
                     </p>
                   ) : (
                     <p className="t-micro mt-3 border-t border-hairline pt-2.5 text-ink-mute">
-                      Not stated in the published information.
+                      {t("notStated")}
                     </p>
                   )}
                   {entry.a.citations?.length ? (
@@ -105,7 +106,7 @@ export function AskPanel({ card }: { card: Scholarship }) {
           ))}
           {pending && (
             <div className="flex w-fit items-center gap-1.5 self-start rounded-lg rounded-bl-xs border border-hairline bg-canvas px-4 py-3.5">
-              <span className="sr-only">Looking that up…</span>
+              <span className="sr-only">{t("lookingUp")}</span>
               {[0, 0.15, 0.3].map((delay) => (
                 <span
                   key={delay}
@@ -142,8 +143,8 @@ export function AskPanel({ card }: { card: Scholarship }) {
       >
         <Input
           className="h-11 rounded-sm border-hairline bg-canvas px-3"
-          placeholder="Ask anything about this scholarship"
-          aria-label="Ask a question about this scholarship"
+          placeholder={t("askAnything")}
+          aria-label={t("askAnything")}
           value={input}
           onChange={(e) => setInput(e.target.value)}
         />
@@ -151,7 +152,7 @@ export function AskPanel({ card }: { card: Scholarship }) {
           type="submit"
           size="icon-lg"
           className="size-11 flex-none rounded-md"
-          aria-label="Send question"
+          aria-label={t("sendQuestion")}
           disabled={!input.trim() || pending}
         >
           <ArrowUpIcon />

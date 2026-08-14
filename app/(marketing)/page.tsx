@@ -1,3 +1,5 @@
+"use client";
+
 import {
   ArrowRightIcon,
   ExternalLinkIcon,
@@ -23,8 +25,10 @@ import { Container, RuledRow, Section, SectionHead } from "@/components/site/lay
 import { OfferPills } from "@/components/site/offer-pills";
 import { SiteHeader } from "@/components/site/site-header";
 import { ButtonLink } from "@/components/ui/button";
+import { useTranslation } from "@/lib/logic/language";
+import { homeTranslations } from "@/lib/logic/home-translations";
 import { ROUTES } from "@/lib/logic/routes";
-import { getScholarships } from "@/lib/scholarships";
+import { DATA } from "@/lib/scholarships";
 
 /*
  * The landing page, laid out against wise.com's own section order — centred
@@ -132,8 +136,10 @@ const FAQ: [string, string][] = [
   ],
 ];
 
-export default async function LandingPage() {
-  const cards = await getScholarships();
+export default function LandingPage() {
+  const { language } = useTranslation();
+  const copy = homeTranslations[language];
+  const cards = DATA;
 
   /*
    * Records whose published benefit reduces to a figure. The adapter in
@@ -155,7 +161,7 @@ export default async function LandingPage() {
       title: "Public support, published openly",
       body: "Scholarships from national agencies and local governments, with the official notice kept close at hand.",
       image: "/scholarship-sources/government.jpg",
-      imageAlt: "Historic public building in Manila",
+      imageAlt: copy.sources[0].imageAlt,
       imageClassName: "object-[center_38%]",
       Icon: LandmarkIcon,
     },
@@ -164,7 +170,7 @@ export default async function LandingPage() {
       title: "Opportunities through schools",
       body: "Programs offered by schools and education partners for students taking the next step in their studies.",
       image: "/scholarship-sources/schools.jpg",
-      imageAlt: "Three Filipino students studying together",
+      imageAlt: copy.sources[1].imageAlt,
       imageClassName: "object-center",
       Icon: GraduationCapIcon,
     },
@@ -173,7 +179,7 @@ export default async function LandingPage() {
       title: "Backing from mission-led partners",
       body: "Foundation, nonprofit, corporate, and international programs that invest in students and communities.",
       image: "/scholarship-sources/foundations.jpg",
-      imageAlt: "Filipino children walking to school",
+      imageAlt: copy.sources[2].imageAlt,
       imageClassName: "object-[center_45%]",
       Icon: HeartHandshakeIcon,
     },
@@ -212,7 +218,7 @@ export default async function LandingPage() {
                 version had — narrower glyphs mean 20ch was becoming a tall
                 column rather than a headline. */}
             <h1 className="t-hero enter mx-auto max-w-[26ch] text-balance uppercase text-ink-deep">
-              Your next opportunity is closer than you think.
+              {copy.heroTitle}
             </h1>
             {/* Deliberately factual under AGENTS.md §3: the headline says an
                 opportunity is near, and this line says what is actually on
@@ -221,8 +227,7 @@ export default async function LandingPage() {
                 `ink-mute`, which falls to roughly 3:1 on lime and would fail
                 WCAG 1.4.3 as body text. */}
             <p className="t-body-lg enter enter-d1 mx-auto mt-7 max-w-[54ch] text-ink-deep text-pretty">
-              Finding support for school can feel overwhelming. Tul.AI helps you explore
-              opportunities with more clarity, one step at a time.
+              {copy.heroBody}
             </p>
 
             <div className="enter enter-d2 mt-9 flex justify-center">
@@ -231,7 +236,7 @@ export default async function LandingPage() {
                 className="t-body-strong h-13 px-7 text-base"
                 href={ROUTES.onboarding}
               >
-                Find my scholarships
+                {copy.heroCta}
               </ButtonLink>
             </div>
           </Container>
@@ -268,7 +273,7 @@ export default async function LandingPage() {
               <div className="relative">
                 <Image
                   src="/hero-pic.png"
-                  alt="Four students walking together on a campus path, looking at a phone one of them is holding."
+                  alt={copy.heroImageAlt}
                   width={1024}
                   height={536}
                   priority
@@ -294,23 +299,19 @@ export default async function LandingPage() {
               id="stats-heading"
               className="t-display-xl mx-auto max-w-[25ch] text-center text-balance"
             >
-              You deserve a clearer path forward.
+              {copy.statsTitle}
             </h2>
 
             <ul className="mt-12 grid gap-8 md:grid-cols-3 md:gap-10">
-              {[
-                [SearchCheckIcon, "Discover scholarship opportunities that may fit your path."],
-                [HeartHandshakeIcon, "Understand each opportunity in clear, simple language."],
-                [ExternalLinkIcon, "Move to the provider's official page when you are ready to apply."],
-              ].map(([Icon, text]) => {
+              {[SearchCheckIcon, HeartHandshakeIcon, ExternalLinkIcon].map((Icon, index) => {
                 const SupportIcon = Icon as typeof SearchCheckIcon;
 
                 return (
-                  <li key={text as string} className="flex items-start gap-4">
+                  <li key={copy.stats[index]} className="flex items-start gap-4">
                     <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-brand-pale text-ink">
                       <SupportIcon className="size-5" strokeWidth={1.75} aria-hidden="true" />
                     </span>
-                    <p className="t-body-strong pt-2 text-ink text-pretty">{text as string}</p>
+                    <p className="t-body-strong pt-2 text-ink text-pretty">{copy.stats[index]}</p>
                   </li>
                 );
               })}
@@ -327,11 +328,11 @@ export default async function LandingPage() {
               id="sources-heading"
               className="t-display-xl mx-auto max-w-[23ch] text-center text-balance uppercase"
             >
-              Scholarships for Filipino students anywhere
+              {copy.sourcesTitle}
             </h2>
 
             <div className="mt-12 grid gap-5 md:grid-cols-3">
-              {scholarshipSources.map((source) => {
+              {scholarshipSources.map((source, sourceIndex) => {
                 const SourceIcon = source.Icon;
 
                 return (
@@ -340,7 +341,7 @@ export default async function LandingPage() {
                       <span className="flex size-8 items-center justify-center rounded-full bg-canvas">
                         <SourceIcon className="size-4" strokeWidth={1.75} aria-hidden="true" />
                       </span>
-                      <span className="t-body-strong">{source.label}</span>
+                      <span className="t-body-strong">{copy.sources[sourceIndex].label}</span>
                     </div>
 
                     <div className="relative min-h-52 overflow-hidden rounded-lg bg-canvas-soft">
@@ -354,13 +355,13 @@ export default async function LandingPage() {
                     </div>
 
                     <div className="mt-6 flex flex-1 flex-col">
-                      <h3 className="t-display-md text-balance">{source.title}</h3>
-                      <p className="t-body mt-3 text-ink-mute text-pretty">{source.body}</p>
+                      <h3 className="t-display-md text-balance">{copy.sources[sourceIndex].title}</h3>
+                      <p className="t-body mt-3 text-ink-mute text-pretty">{copy.sources[sourceIndex].body}</p>
                       <Link
                         href={ROUTES.scholarships}
                         className="ring-brand t-caption-strong mt-6 inline-flex items-center gap-2 rounded-xs text-ink underline decoration-hairline underline-offset-4 hover:decoration-ink"
                       >
-                        Explore {source.label.toLowerCase()} scholarships
+                        {copy.sources[sourceIndex].explore}
                         <ArrowRightIcon className="size-4" aria-hidden="true" />
                       </Link>
                     </div>
@@ -626,33 +627,14 @@ export default async function LandingPage() {
 
               <div className="lg:col-span-7 lg:pl-4">
                 <h2 id="support-heading" className="t-display-xl max-w-[18ch] text-balance">
-                  You don&apos;t have to figure it all out alone.
+                  {copy.supportTitle}
                 </h2>
                 <p className="t-body-lg mt-6 max-w-[50ch] text-ink-mute text-pretty">
-                  Looking for support can bring a lot of questions at once. Tul.AI gives
-                  you one clear place to explore what&apos;s out there, understand the
-                  details, and decide what feels worth pursuing.
+                  {copy.supportBody}
                 </p>
 
                 <ul className="mt-10 border-t border-hairline">
-                  {[
-                    [
-                      "Find opportunities that fit your path",
-                      "Start with what you know about yourself, your studies and the support you are looking for.",
-                    ],
-                    [
-                      "Understand why each one appears",
-                      "See the published requirements alongside what your profile can confirm and what still needs checking.",
-                    ],
-                    [
-                      "Keep official information close",
-                      "Read the source and its verification state before you rely on it.",
-                    ],
-                    [
-                      "Move forward at your own pace",
-                      "Save opportunities for later, then go to the provider&apos;s official page whenever you are ready to apply.",
-                    ],
-                  ].map(([title, body], index) => (
+                  {copy.supportItems.map(({ title, body }, index) => (
                     <li
                       key={title}
                       className="grid gap-3 border-b border-hairline py-5 sm:grid-cols-[2rem_minmax(0,1fr)] sm:gap-5"
@@ -670,7 +652,7 @@ export default async function LandingPage() {
 
                 <div className="mt-9">
                   <ButtonLink className="t-body-strong h-12 px-6 text-base" href={ROUTES.onboarding}>
-                    Find my starting point
+                    {copy.supportCta}
                   </ButtonLink>
                 </div>
               </div>
@@ -726,19 +708,16 @@ export default async function LandingPage() {
                   id="coverage-heading"
                   className="t-display-xl max-w-[24ch] text-balance text-brand"
                 >
-                  Every institution we cover, and what they publish.
+                  {copy.coverageTitle}
                 </h2>
                 <p className="t-body-lg mt-6 max-w-[46ch] text-on-dark-mute text-pretty">
-                  All {cards.length} records we hold today — not a sample of a larger
-                  index. Coverage is deliberately Cebu-first while we prove the quality of
-                  each record, and it is small enough to print in full, so we print it in
-                  full.
+                  {copy.coverageBody(cards.length)}
                 </p>
                 <Link
                   href={ROUTES.scholarships}
                   className="ring-brand t-body-strong mt-8 inline-flex items-center gap-2 rounded-xs text-brand underline decoration-brand/40 underline-offset-4 hover:decoration-brand"
                 >
-                  Open the full directory
+                  {copy.coverageCta}
                   <ArrowRightIcon className="size-4" aria-hidden="true" />
                 </Link>
               </div>
@@ -793,17 +772,16 @@ export default async function LandingPage() {
             <div className="grid gap-10 lg:grid-cols-12 lg:items-start lg:gap-16">
               <div className="lg:col-span-4 lg:pt-3">
                 <h2 id="providers-heading" className="t-display-xl text-balance">
-                  A small index. Real sources.
+                  {copy.providersTitle}
                 </h2>
                 <p className="t-body-lg mt-6 max-w-[38ch] text-ink-mute text-pretty">
-                  {cards.length} opportunities across national agencies, LGUs,
-                  universities and foundations.
+                  {copy.providersBody(cards.length)}
                 </p>
                 <Link
                   href={ROUTES.scholarships}
                   className="ring-brand t-body-strong mt-8 inline-flex items-center gap-2 rounded-xs text-ink underline decoration-hairline underline-offset-4 hover:decoration-ink"
                 >
-                  See all {cards.length} records
+                  {copy.providersCta} ({cards.length})
                   <ArrowRightIcon className="size-4" aria-hidden="true" />
                 </Link>
               </div>
@@ -822,7 +800,7 @@ export default async function LandingPage() {
                         <p className="t-caption mt-1 text-ink-mute text-pretty">{card.title}</p>
                       </Link>
                       <p className="t-caption text-ink-mute md:text-right">
-                        Tier {card.sourceTier} source
+                        {copy.tierSource(card.sourceTier)}
                       </p>
                     </RuledRow>
                   </li>
@@ -832,7 +810,7 @@ export default async function LandingPage() {
           </Container>
         </Section>
 
-        <ClosingCta />
+        <ClosingCta title={copy.closeTitle} body={copy.closeBody} cta={copy.closeCta} />
       </main>
     </>
   );

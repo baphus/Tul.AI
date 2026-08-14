@@ -26,7 +26,8 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useTulAi } from "@/hooks/use-tul-ai";
 import { ONBOARDING_STEPS, ROUTES } from "@/lib/logic/routes";
-import { useLanguage } from "@/lib/logic/language";
+import { useLanguage, useTranslation } from "@/lib/logic/language";
+import type { TranslationKey } from "@/lib/logic/translations";
 import type { Profile } from "@/lib/logic/state";
 import { canAdvance, dependentsError, gwaError, isPlanning } from "@/lib/logic/validation";
 import { GWA_BANDS, HOUSEHOLD_BANDS } from "@/lib/reference/bands";
@@ -79,6 +80,7 @@ interface StepMeta {
   optional?: boolean;
 }
 
+/* Main's school metadata is rendered in the searchable school results below. */
 const schoolKindLabels: Record<SchoolKind, string> = {
   state: "State university",
   local: "Local college",
@@ -114,39 +116,39 @@ function SchoolKindIcon({ kind }: { kind: SchoolKind }) {
   );
 }
 
-function metaFor(step: number, planning: boolean): StepMeta {
+function metaFor(step: number, planning: boolean, t: (key: TranslationKey) => string): StepMeta {
   switch (step) {
     case 1:
       return {
-        question: "Where are you in your studies?",
-        why: "Programmes are written for a particular group — graduating Grade 12, incoming freshmen, continuing students. This decides which ones can apply to you, and it's fine if you haven't started yet.",
+        question: t("whereStudies"),
+        why: t("onboardingWhyStage"),
       };
     case 2:
       return {
-        question: "Where are you based?",
-        why: "City and provincial programmes are limited to residents, and it lets us show you schools near you rather than a national list.",
+        question: t("whereBased"),
+        why: t("onboardingWhyLocation"),
       };
     case 3:
       return {
-        question: planning ? "What are you planning to study?" : "What are you studying?",
-        why: "Priority-course lists decide whole programmes — DOST-SEI's science and technology fields, or a province's list for this cycle.",
+        question: planning ? t("planningStudy") : t("studying"),
+        why: t("onboardingWhyCourse"),
       };
     case 4:
       return {
-        question: "What's your academic standing?",
-        why: "Merit programmes publish a numeric cut-off. A range is enough for most of them, and telling us nothing is treated as unknown — never as unmet.",
+        question: t("academicStanding"),
+        why: t("onboardingWhyGwa"),
         optional: true,
       };
     case 5:
       return {
-        question: "Tell us about your household.",
-        why: "Need-based programmes publish income ceilings, and a ceiling means something different for a household of two than for eight.",
+        question: t("household"),
+        why: t("onboardingWhyHousehold"),
         optional: true,
       };
     default:
       return {
-        question: "Anything else you'd like Tul.AI to know?",
-        why: "This is where AI earns its place: a sentence in your own words can surface a programme no dropdown would have found.",
+        question: t("anythingElse"),
+        why: t("onboardingWhyAnything"),
         optional: true,
       };
   }
@@ -156,6 +158,7 @@ export function OnboardingFlow({ step }: { step: number }) {
   const router = useRouter();
   const { state, dispatch } = useTulAi();
   const language = useLanguage();
+  const { t } = useTranslation();
   const profile = state.profile;
 
   const [extracting, setExtracting] = useState(false);
@@ -164,7 +167,7 @@ export function OnboardingFlow({ step }: { step: number }) {
   const [extractConsent, setExtractConsent] = useState(false);
 
   const planning = isPlanning(profile);
-  const meta = metaFor(step, planning);
+  const meta = metaFor(step, planning, t);
   const ready = canAdvance(step, profile);
   const isLast = step === ONBOARDING_STEPS;
   /*
@@ -279,6 +282,75 @@ export function OnboardingFlow({ step }: { step: number }) {
   );
   const locationNames = useMemo(() => LOCATION_OPTIONS.map((o) => o.value), []);
 
+  const display = (value: string) =>
+    language === "FIL"
+      ? ({
+          "Grade 12": "Grade 12",
+          "Incoming College": "Papasok sa kolehiyo",
+          "College Student": "Estudyante sa kolehiyo",
+          "Graduate Student": "Estudyanteng kumukuha ng graduate degree",
+          "Still planning to study": "Nagpaplano pa lang mag-aral",
+          "Finishing senior high and looking ahead to college": "Tinatapos ang senior high at naghahanda para sa kolehiyo",
+          "Accepted or enrolling, but classes haven't started": "Tanggap na o nag-e-enroll pa lang, pero hindi pa nagsisimula ang klase",
+          "Currently enrolled in an undergraduate programme": "Kasalukuyang naka-enroll sa undergraduate na programa",
+          "Taking a master's, doctorate or professional degree": "Kumukuha ng master's, doctorate, o professional degree",
+          "Securing funding first — no school decided yet": "Naghahanap muna ng pondo — wala pang napipiling paaralan",
+          Filipino: "Filipino",
+          "Not a Filipino citizen": "Hindi Pilipinong mamamayan",
+          "One of my parents works overseas": "Nagtatrabaho sa ibang bansa ang isa sa mga magulang ko",
+          "We're a 4Ps household": "Sambahayan kami ng 4Ps",
+          "I'm from a solo-parent household": "Galing ako sa sambahayang may solo parent",
+          "I'm the first in my family to go to college": "Ako ang unang mag-aaral sa kolehiyo sa aming pamilya",
+          "I'm working while studying": "Nagtatrabaho ako habang nag-aaral",
+          "I need allowance, not just tuition": "Kailangan ko ng allowance, hindi tuition lang",
+          "I had to stop studying for a while": "Kinailangan kong tumigil muna sa pag-aaral",
+          "I'm planning to shift courses": "Nagpaplano akong magpalit ng kurso",
+          "Prefer not to say": t("onboardingPreferNot"),
+          "Somewhere else": "Ibang lugar",
+          "Elsewhere in Cebu": "Ibang bahagi ng Cebu",
+          "Metro Manila": "Metro Manila",
+          Davao: "Davao",
+          "Cebu City": "Cebu City",
+          "Below 80": "Mas mababa sa 80",
+          "9 or more": "9 o higit pa",
+          "None of these apply": "Wala sa mga ito",
+          None: "Wala sa mga ito",
+          "4Ps household": "Sambahayan ng 4Ps",
+          "OFW parent": "Magulang na OFW",
+          "Solo-parent household": "Sambahayan ng solo parent",
+          PWD: "PWD",
+          "Indigenous community": "Katutubong komunidad",
+        }[value] ?? value)
+      : value;
+
+  const noteFor = (value: string) =>
+    language === "FIL"
+      ? ({
+          "Finishing senior high and looking ahead to college": "Tinatapos ang senior high at naghahanda para sa kolehiyo",
+          "Accepted or enrolling, but classes haven't started": "Tanggap na o nag-e-enroll pa lang, pero hindi pa nagsisimula ang klase",
+          "Currently enrolled in an undergraduate programme": "Kasalukuyang naka-enroll sa undergraduate na programa",
+          "Taking a master's, doctorate or professional degree": "Kumukuha ng master's, doctorate, o professional degree",
+          "Securing funding first — no school decided yet": "Naghahanap muna ng pondo — wala pang napipiling paaralan",
+          "Usually clears every published cut-off": "Karaniwang pasok sa lahat ng inilathalang cut-off",
+          "Clears most merit programmes": "Pasok sa karamihan ng merit programme",
+          "Clears many need-based and LGU programmes": "Pasok sa maraming need-based at LGU programme",
+          "Below most merit cut-offs, but need-based aid rarely asks": "Mas mababa sa karamihan ng merit cut-off, pero bihirang manghingi ng GWA ang need-based aid",
+          "Need-based and category programmes usually publish no GWA": "Karaniwang walang GWA requirement ang need-based at category programme",
+          "Treated as unknown — never as a requirement you failed": "Ituturing na unknown — hindi kailanman requirement na hindi mo naabot",
+        }[value] ?? value)
+      : value;
+
+  const quickNoteText = (note: (typeof QUICK_NOTES)[number]) =>
+    language === "FIL"
+      ? ({
+          "I'm the first in my family to go to college.": "Ako ang unang makakapagkolehiyo sa aming pamilya.",
+          "I'm working while studying, so I need something that fits around a job.": "Nagtatrabaho ako habang nag-aaral, kaya kailangan ko ng bagay na maaaring isabay sa trabaho.",
+          "Tuition is only part of the problem — I need help with allowance, transport and books too.": "Bahagi lang ng problema ang tuition — kailangan ko rin ng tulong para sa allowance, pamasahe, at libro.",
+          "I had to stop studying for a while and I'm returning now.": "Kinailangan kong tumigil muna sa pag-aaral at ngayon ay nagbabalik ako.",
+          "I'm planning to shift courses, so I'm open to programmes tied to a different field.": "Nagpaplano akong magpalit ng kurso, kaya bukas ako sa programang kaugnay ng ibang larangan.",
+        }[note.text ?? ""] ?? note.text)
+      : note.text;
+
   return (
     <div className="flex min-h-0 flex-1 flex-col">
       {/* ── The lime question band ───────────────────────────
@@ -299,7 +371,7 @@ export function OnboardingFlow({ step }: { step: number }) {
             aria-valuemin={1}
             aria-valuemax={ONBOARDING_STEPS}
             aria-valuenow={step}
-            aria-label={`Question ${step} of ${ONBOARDING_STEPS}`}
+              aria-label={`${t("onboardingQuestion")} ${step} / ${ONBOARDING_STEPS}`}
           >
             {Array.from({ length: ONBOARDING_STEPS }, (_, i) => (
               <span
@@ -315,11 +387,11 @@ export function OnboardingFlow({ step }: { step: number }) {
           <div key={step} className="pt-8 lg:pt-5">
             <div className="flex items-start justify-between gap-6">
               <p className="t-eyebrow enter text-ink-deep/70">
-                Question {step} of {ONBOARDING_STEPS}
+                {t("onboardingQuestion")} {step} / {ONBOARDING_STEPS}
               </p>
               {meta.optional && (
                 <span className="t-micro enter flex-none rounded-full border border-ink-deep/25 px-2.5 py-1 text-ink-deep">
-                  Optional
+                  {t("onboardingOptional")}
                 </span>
               )}
             </div>
@@ -341,15 +413,15 @@ export function OnboardingFlow({ step }: { step: number }) {
         {/* ── 1 · Journey ── */}
         {step === 1 && (
           <fieldset>
-            <legend className="sr-only">Where are you in your studies?</legend>
+            <legend className="sr-only">{t("whereStudies")}</legend>
             <div className="flex flex-col gap-2.5 lg:grid lg:grid-cols-2">
               {STAGE_OPTS.map((option, i) => (
                 <ChoiceCard
                   key={option}
                   name="stage"
                   value={option}
-                  label={option}
-                  note={STAGE_NOTES[option]}
+                  label={display(option)}
+                  note={noteFor(STAGE_NOTES[option])}
                   shortcut={i + 1}
                   checked={profile.stage === option}
                   onSelect={(value) => setField("stage", value)}
@@ -360,7 +432,7 @@ export function OnboardingFlow({ step }: { step: number }) {
             {needsYear && (
               <div className="mt-6 grid max-w-xs gap-2.5">
                 <Label htmlFor="year">
-                  Year level <span className="t-micro text-ink-mute">— optional</span>
+                  {t("onboardingYearLevel")} <span className="t-micro text-ink-mute">— {t("optional")}</span>
                 </Label>
                 <select
                   id="year"
@@ -368,7 +440,7 @@ export function OnboardingFlow({ step }: { step: number }) {
                   value={profile.year}
                   onChange={(e) => setField("year", e.target.value)}
                 >
-                  <option value="">Prefer not to say</option>
+                  <option value="">{t("onboardingPreferNot")}</option>
                   {YEARS.map((year) => (
                     <option key={year} value={year}>
                       {year}
@@ -379,20 +451,18 @@ export function OnboardingFlow({ step }: { step: number }) {
             )}
 
             <fieldset className="mt-6">
-              <legend className="t-body-strong">Citizenship <span className="t-micro text-ink-mute">— optional</span></legend>
-              <p className="t-caption mt-1 text-ink-mute text-pretty">Only used when a provider publishes a citizenship requirement. Leaving it blank stays unknown, never ineligible.</p>
+              <legend className="t-body-strong">{t("onboardingCitizenship")} <span className="t-micro text-ink-mute">— {t("optional")}</span></legend>
+              <p className="t-caption mt-1 text-ink-mute text-pretty">{t("onboardingCitizenshipHint")}</p>
               <div className="mt-3 flex flex-wrap gap-2">
                 {CITIZENSHIP_OPTIONS.map((option) => (
-                  <ChoiceChip key={option} label={option} pressed={profile.citizenship === option} onToggle={() => setField("citizenship", profile.citizenship === option ? "" : option)} />
+                  <ChoiceChip key={option} label={display(option)} pressed={profile.citizenship === option} onToggle={() => setField("citizenship", profile.citizenship === option ? "" : option)} />
                 ))}
               </div>
             </fieldset>
 
             {planning && (
               <Aside>
-                Nothing after this will ask where you&apos;re enrolled. We&apos;ll match you
-                against programmes open to incoming students, and say plainly when one needs
-                a school before you can apply.
+                {t("onboardingPlanningAside")}
               </Aside>
             )}
           </fieldset>
@@ -402,12 +472,12 @@ export function OnboardingFlow({ step }: { step: number }) {
         {step === 2 && (
           <div className="flex flex-col gap-7 lg:grid lg:grid-cols-2 lg:items-start lg:gap-12">
             <fieldset>
-              <legend className="t-body-strong mb-3">Best covered</legend>
+              <legend className="t-body-strong mb-3">{t("onboardingBestCovered")}</legend>
               <div className="flex flex-wrap gap-2">
                 {LOCATIONS.filter((l) => l.value !== "Somewhere else").map((location) => (
                   <ChoiceChip
                     key={location.value}
-                    label={location.label}
+                    label={display(location.label)}
                     pressed={profile.city === location.value}
                     onToggle={() =>
                       setField("city", profile.city === location.value ? "" : location.value)
@@ -418,19 +488,18 @@ export function OnboardingFlow({ step }: { step: number }) {
             </fieldset>
 
             <div className="grid gap-2.5">
-              <Label htmlFor="city">Or search for your city or province</Label>
+              <Label htmlFor="city">{t("onboardingSearchLocation")}</Label>
               <SearchableField
                 id="city"
                 items={locationNames}
                 value={profile.city}
                 onValueChange={(value) => setField("city", value)}
-                placeholder="e.g. Iloilo City"
-                emptyMessage="Not on our list — we'll keep what you typed and match national programmes."
+                placeholder="hal. Iloilo City"
+                emptyMessage="Wala sa listahan — pananatilihin ang isinulat mo at itutugma sa mga pambansang programa."
               />
               {otherSelected && (
                 <p className="t-micro text-ink-mute text-pretty">
-                  Coverage outside Cebu is national programmes for now — we&apos;ll say so
-                  rather than pretend otherwise.
+                  {t("onboardingLocationCoverage")}
                 </p>
               )}
             </div>
@@ -441,7 +510,7 @@ export function OnboardingFlow({ step }: { step: number }) {
         {step === 3 && (
           <div className="flex flex-col gap-9 lg:grid lg:grid-cols-2 lg:items-start lg:gap-12">
             <div className="grid gap-2.5">
-              <Label htmlFor="course">Course or programme</Label>
+              <Label htmlFor="course">{t("onboardingCourse")}</Label>
               <SearchableGroupedField<CourseOption>
                 id="course"
                 groups={COURSE_GROUPS}
@@ -449,8 +518,8 @@ export function OnboardingFlow({ step }: { step: number }) {
                 onValueChange={(value) => setField("course", value)}
                 itemLabel={(item) => item.name}
                 autoFocus
-                placeholder="Search 120+ programmes, or type your own"
-                emptyMessage="Not on our list — we'll keep exactly what you typed and compare it against each provider's own wording."
+                placeholder={t("onboardingSearchCourses")}
+                emptyMessage="Wala sa listahan — pananatilihin namin ang eksaktong isinulat mo at ihahambing ito sa wording ng bawat provider."
               />
               <div className="mt-1 flex flex-wrap gap-2">
                 {COURSE_SUGGESTIONS.map((course) => (
@@ -468,16 +537,14 @@ export function OnboardingFlow({ step }: { step: number }) {
 
             {planning ? (
               <Aside>
-                You told us you&apos;re still planning, so we won&apos;t ask for a school.
-                Come back and add one once you&apos;ve decided — it unlocks university
-                grants.
+                {t("onboardingPlanningStudies")}
               </Aside>
             ) : (
               <div className="grid gap-2.5">
                 <Label htmlFor="school">
-                  School{" "}
+                  {t("onboardingSchool")}{" "}
                   <span className="t-micro text-ink-mute">
-                    — optional, but it unlocks university grants
+                    — {t("optional")}, pero nagbubukas ito ng university grant
                   </span>
                 </Label>
                 <SearchableField
@@ -485,7 +552,7 @@ export function OnboardingFlow({ step }: { step: number }) {
                   items={schools.schools.map((school) => school.name)}
                   value={profile.school}
                   onValueChange={(value) => setField("school", value)}
-                  placeholder="e.g. Cebu Technological University"
+                  placeholder="hal. Cebu Technological University"
                   itemContent={(name) => {
                     const school = schoolsByName.get(name);
                     if (!school) return name;
@@ -502,14 +569,16 @@ export function OnboardingFlow({ step }: { step: number }) {
                       </span>
                     );
                   }}
-                  emptyMessage="Not on our list — we'll keep what you typed."
+                  emptyMessage="Wala sa listahan — pananatilihin namin ang isinulat mo."
                 />
                 <p className="t-micro text-ink-mute text-pretty">
                   {schools.scope === "all"
-                    ? `Showing all ${schools.schools.length} schools we hold.`
-                    : `Showing ${schools.schools.length} ${
-                        schools.scope === "city" ? "schools in" : "schools across"
-                      } ${schools.place} — type to search every school instead.`}
+                    ? language === "FIL"
+                      ? `Ipinapakita ang lahat ng ${schools.schools.length} paaralan sa talaan namin.`
+                      : `Showing all ${schools.schools.length} schools we hold.`
+                    : language === "FIL"
+                      ? `Ipinapakita ang ${schools.schools.length} paaralan ${schools.scope === "city" ? "sa" : "sa buong"} ${schools.place} — mag-type para hanapin ang lahat ng paaralan.`
+                      : `Showing ${schools.schools.length} ${schools.scope === "city" ? "schools in" : "schools across"} ${schools.place} — type to search every school instead.`}
                 </p>
               </div>
             )}
@@ -525,13 +594,15 @@ export function OnboardingFlow({ step }: { step: number }) {
             onBandChange={(value) => setField("gwaBand", value)}
             exact={profile.gwa}
             onExactChange={(value) => setField("gwa", value)}
-            exactLabel="Exact GWA"
-            exactPlaceholder="e.g. 94.5"
-            exactHint="Only needed when a band sits across a provider's cut-off — we'll tell you on the match if it does."
+            exactLabel={language === "FIL" ? "Eksaktong GWA" : "Exact GWA"}
+            exactPlaceholder="hal. 94.5"
+            exactHint={language === "FIL" ? "Kailangan lamang kapag tumatawid ang isang range sa cut-off ng provider — sasabihin namin ito sa match kung kinakailangan." : "Only needed when a band sits across a provider's cut-off — we'll tell you on the match if it does."}
             exactError={gwaError(profile.gwa)}
-            exactErrorMessage="Use a number between 60 and 100 — or leave it blank."
-            withheldLabel="Prefer not to say"
-            disclosureLabel="Add my exact GWA (optional)"
+            exactErrorMessage={language === "FIL" ? "Gumamit ng numerong nasa pagitan ng 60 at 100 — o iwan itong blangko." : "Use a number between 60 and 100 — or leave it blank."}
+            withheldLabel={t("onboardingPreferNot")}
+            disclosureLabel={language === "FIL" ? "Idagdag ang eksaktong GWA (opsyonal)" : "Add my exact GWA (optional)"}
+            displayValue={display}
+            displayNote={noteFor}
           />
         )}
 
@@ -540,7 +611,7 @@ export function OnboardingFlow({ step }: { step: number }) {
           <div className="flex flex-col gap-9 lg:grid lg:grid-cols-[minmax(0,1.15fr)_minmax(0,.85fr)] lg:items-start lg:gap-x-12 lg:gap-y-8">
             <fieldset className="lg:col-start-1">
               <legend className="t-body-strong mb-3">
-                Estimated monthly household income
+                {t("onboardingHouseholdIncome")}
               </legend>
               <div className="grid gap-2.5 sm:grid-cols-2">
                 {INCOMES.map((option) => (
@@ -548,7 +619,7 @@ export function OnboardingFlow({ step }: { step: number }) {
                     key={option}
                     name="income"
                     value={option}
-                    label={option}
+                  label={display(option)}
                     checked={profile.income === option}
                     onSelect={(value) => setField("income", value)}
                   />
@@ -557,7 +628,7 @@ export function OnboardingFlow({ step }: { step: number }) {
             </fieldset>
 
             <div className="lg:col-start-1">
-              <p className="t-body-strong mb-3">Household size</p>
+              <p className="t-body-strong mb-3">{t("onboardingHouseholdSize")}</p>
               <BandPicker
                 name="Household size"
                 bands={HOUSEHOLD_BANDS}
@@ -565,28 +636,28 @@ export function OnboardingFlow({ step }: { step: number }) {
                 onBandChange={(value) => setField("householdBand", value)}
                 exact={profile.dependents}
                 onExactChange={(value) => setField("dependents", value)}
-                exactLabel="Exact household size"
-                exactPlaceholder="e.g. 5"
-                exactHint={DEPENDENT_HINT}
+                exactLabel={language === "FIL" ? "Eksaktong laki ng sambahayan" : "Exact household size"}
+                exactPlaceholder="hal. 5"
+                exactHint={language === "FIL" ? "Ilang tao ang umaasa sa kitang iyon, kasama ka?" : DEPENDENT_HINT}
                 exactError={dependentsError(profile.dependents)}
-                exactErrorMessage="Use a whole number between 0 and 20."
+                exactErrorMessage={language === "FIL" ? "Gumamit ng buong bilang sa pagitan ng 0 at 20." : "Use a whole number between 0 and 20."}
                 exactInputMode="numeric"
-                disclosureLabel="Give an exact number instead (optional)"
+                disclosureLabel={language === "FIL" ? "Magbigay ng eksaktong bilang (opsyonal)" : "Give an exact number instead (optional)"}
+                displayValue={display}
+                displayNote={noteFor}
               />
             </div>
 
             <fieldset className="mx-auto w-full max-w-md text-center lg:col-start-2 lg:row-span-2 lg:row-start-1">
-              <legend className="t-body-strong">Do any of these apply?</legend>
+              <legend className="t-body-strong">{t("onboardingCircumstances")}</legend>
               <p className="t-caption mt-1 mb-3.5 text-ink-mute text-pretty">
-                Choose as many as you like — each one unlocks specific programmes. The two
-                below the line are answers about the whole list, so picking either clears
-                the rest.
+                Pumili ng ilan hangga't gusto mo — bawat isa ay nagbubukas ng partikular na programa. Ang dalawang nasa ibaba ng linya ay sagot tungkol sa buong listahan, kaya lilinisin ng pagpili sa alinman ang iba.
               </p>
               <div className="flex flex-wrap justify-center gap-2">
                 {CIRCUMSTANCE_CHIPS.map((option) => (
                   <ChoiceChip
                     key={option}
-                    label={option}
+                    label={display(option)}
                     pressed={profile.chips.includes(option)}
                     onToggle={() => dispatch({ type: "TOGGLE_CHIP", value: option })}
                   />
@@ -596,7 +667,7 @@ export function OnboardingFlow({ step }: { step: number }) {
                 {CHIP_EXCLUSIVE.map((option) => (
                   <ChoiceChip
                     key={option}
-                    label={chipLabel(option)}
+                    label={display(chipLabel(option))}
                     pressed={profile.chips.includes(option)}
                     onToggle={() => dispatch({ type: "TOGGLE_CHIP", value: option })}
                   />
@@ -604,9 +675,7 @@ export function OnboardingFlow({ step }: { step: number }) {
               </div>
               {profile.chips.includes(CHIP_NONE) && (
                 <p className="t-micro mx-auto mt-3.5 max-w-[46ch] text-ink-mute text-pretty">
-                  Programmes reserved for one of the categories above will now show as not
-                  currently eligible, because you&apos;ve told us none apply. Untick this if
-                  you&apos;d rather leave it unanswered.
+                  Ang mga programang para sa isa sa mga kategorya sa itaas ay lalabas na hindi kasalukuyang kwalipikado dahil sinabi mong walang naaangkop. Alisin ang check kung mas gusto mong hindi ito sagutin.
                 </p>
               )}
             </fieldset>
@@ -617,18 +686,19 @@ export function OnboardingFlow({ step }: { step: number }) {
         {step === 6 && (
           <div className="flex flex-col gap-6">
             <div>
-              <p className="t-body-strong mb-3">Start with one of these, if it fits</p>
+              <p className="t-body-strong mb-3">{t("onboardingQuickStart")}</p>
               <div className="flex flex-wrap gap-2">
                 {QUICK_NOTES.map((note) => {
-                  const applied = note.chip
-                    ? profile.chips.includes(note.chip)
-                    : note.text
-                      ? profile.notes.includes(note.text)
+                    const translatedText = quickNoteText(note);
+                    const applied = note.chip
+                      ? profile.chips.includes(note.chip)
+                      : translatedText
+                      ? profile.notes.includes(translatedText)
                       : false;
                   return (
                     <ChoiceChip
                       key={note.label}
-                      label={note.label}
+                      label={display(note.label)}
                       pressed={applied}
                       onToggle={() => {
                         /* A message whose meaning is already a structured field
@@ -639,18 +709,18 @@ export function OnboardingFlow({ step }: { step: number }) {
                           dispatch({ type: "TOGGLE_CHIP", value: note.chip });
                           return;
                         }
-                        if (!note.text) return;
+                        if (!translatedText) return;
                         const current = profile.notes;
                         if (applied) {
                           setField(
                             "notes",
-                            current.replace(note.text, "").replace(/\s{2,}/g, " ").trim()
+                            current.replace(translatedText, "").replace(/\s{2,}/g, " ").trim()
                           );
                           return;
                         }
                         setField(
                           "notes",
-                          current.trim() ? `${current.trim()} ${note.text}` : note.text
+                          current.trim() ? `${current.trim()} ${translatedText}` : translatedText
                         );
                       }}
                     />
@@ -658,18 +728,17 @@ export function OnboardingFlow({ step }: { step: number }) {
                 })}
               </div>
               <p className="t-micro mt-3 max-w-[52ch] text-ink-mute text-pretty">
-                The first three set a field on your profile rather than writing a sentence —
-                we&apos;d rather store the reviewed answer than the paragraph.
+                {t("onboardingFirstThree")}
               </p>
             </div>
 
             <div className="grid gap-2.5">
-              <Label htmlFor="notes">In your own words</Label>
+              <Label htmlFor="notes">{t("onboardingOwnWords")}</Label>
               <Textarea
                 id="notes"
                 rows={6}
                 className="rounded-lg border-hairline bg-canvas p-4 text-base"
-                placeholder="For example: my father works overseas, I'm the first in my family to go to college, and I'm hoping to take nursing."
+                placeholder={language === "FIL" ? "Halimbawa: nagtatrabaho sa ibang bansa ang tatay ko, ako ang unang mag-aaral sa kolehiyo sa aming pamilya, at nais kong kumuha ng nursing." : "For example: my father works overseas, I'm the first in my family to go to college, and I'm hoping to take nursing."}
                 value={profile.notes}
                 onChange={(e) => setField("notes", e.target.value)}
               />
@@ -678,8 +747,7 @@ export function OnboardingFlow({ step }: { step: number }) {
             {canUseAiProfileHelper && (
               <div className="flex flex-col gap-3">
                 <p className="t-micro max-w-[58ch] text-ink-mute text-pretty">
-                  Mentioned a GWA or household circumstance you skipped earlier? We can pull out
-                  just those optional details.
+                  {t("onboardingAiHint")}
                 </p>
               <Button
                 type="button"
@@ -691,12 +759,12 @@ export function OnboardingFlow({ step }: { step: number }) {
                 {extracting ? (
                   <>
                     <Loader2Icon className="size-4 animate-spin" />
-                    Parsing with AI…
+                    {t("onboardingAiParsing")}
                   </>
                 ) : (
                   <>
                     <SparklesIcon className="size-4 text-brand" />
-                    Check optional details with AI
+                    {t("onboardingAiCheck")}
                   </>
                 )}
               </Button>
@@ -710,13 +778,12 @@ export function OnboardingFlow({ step }: { step: number }) {
                     <CheckIcon className="size-3" strokeWidth={3} />
                   </span>
                   <div>
-                    <p className="t-caption-strong text-ink">Optional details proposed</p>
+                    <p className="t-caption-strong text-ink">{t("onboardingOptionalProposed")}</p>
                     <p className="t-caption mt-0.5 text-ink-mute text-pretty">
                       {extractionResult}
                     </p>
                     <p className="t-micro mt-2 text-ink-mute text-pretty">
-                      These are proposals, not decisions. Nothing changes in your profile until
-                      you choose to add a suggestion.
+                      {t("onboardingAiCorrection")}
                     </p>
                     {extractionProposal && (
                       <div className="mt-3 flex flex-wrap gap-2">
@@ -752,7 +819,7 @@ export function OnboardingFlow({ step }: { step: number }) {
               )}
               <label className="flex items-start gap-2.5">
                 <input type="checkbox" checked={extractConsent} onChange={(event) => setExtractConsent(event.target.checked)} className="mt-1 size-4 accent-ink" />
-                <span className="t-micro max-w-[58ch] text-ink-mute">I agree to send this text to Tul.AI&apos;s configured AI provider to propose editable optional profile fields. Tul.AI will not use it to decide eligibility.</span>
+                <span className="t-micro max-w-[58ch] text-ink-mute">{t("onboardingConsent")}</span>
               </label>
               </div>
             )}
@@ -765,9 +832,7 @@ export function OnboardingFlow({ step }: { step: number }) {
                 <SparklesIcon className="size-3.5" />
               </span>
               <p className="t-caption text-ink-mute text-pretty">
-                Tul.AI reads this to propose structured details — an OFW parent,
-                first-generation student, an intended course — and you&apos;ll be able to
-                review and correct them. It never decides eligibility from a sentence.
+                {t("onboardingAiDescription")}
               </p>
             </div>
           </div>
@@ -783,7 +848,7 @@ export function OnboardingFlow({ step }: { step: number }) {
             onClick={() => goTo(step - 1)}
           >
             <ArrowLeftIcon />
-            Back
+            {t("onboardingBack")}
           </Button>
 
           <div className="ml-auto flex items-center gap-3 sm:gap-4">
@@ -793,7 +858,7 @@ export function OnboardingFlow({ step }: { step: number }) {
                 onClick={() => goTo(step + 1)}
                 className="ring-brand t-caption rounded-xs text-ink-mute underline decoration-hairline-dark/40 underline-offset-4 hover:text-ink"
               >
-                Skip this
+                {t("onboardingSkip")}
               </button>
             )}
             {isLast && (
@@ -802,7 +867,7 @@ export function OnboardingFlow({ step }: { step: number }) {
                 onClick={() => router.push(ROUTES.matching)}
                 className="ring-brand t-caption rounded-xs text-ink-mute underline decoration-hairline-dark/40 underline-offset-4 hover:text-ink"
               >
-                Skip for now
+                {t("onboardingSkipNow")}
               </button>
             )}
             <span className="t-micro t-num text-ink-mute">
@@ -814,7 +879,7 @@ export function OnboardingFlow({ step }: { step: number }) {
             disabled={!ready}
             onClick={advance}
           >
-              {isLast ? "Find my matches" : "Continue"}
+              {isLast ? t("onboardingFindMatches") : t("onboardingContinue")}
               {isLast ? <SparklesIcon /> : <ArrowRightIcon />}
           </Button>
         </div>
@@ -822,17 +887,17 @@ export function OnboardingFlow({ step }: { step: number }) {
         {!ready && (
           <p className="t-micro mt-3 text-right text-ink-mute">
             {step === 1
-              ? "Pick where you are in your studies to continue."
+              ? t("onboardingPickStudy")
               : step === 2
-                ? "Tell us where you're based to continue."
+                ? t("onboardingTellLocation")
                 : step === 3
-                  ? "Tell us what you're studying to continue."
-                  : "Fix the highlighted answer to continue."}
+                  ? t("onboardingTellStudy")
+                  : t("onboardingFixAnswer")}
           </p>
         )}
         <p className="t-micro mt-2 hidden text-right text-ink-mute sm:block">
-          Press <kbd className="rounded-xs border border-hairline px-1">Enter</kbd> to
-          continue{shortcuts.length > 0 && <> · number keys pick an answer</>}
+          {t("onboardingPressEnter")} <kbd className="rounded-xs border border-hairline px-1">Enter</kbd> {t("onboardingToContinue")}
+          {shortcuts.length > 0 && <> · {t("onboardingNumberKeys")}</>}
         </p>
       </div>
     </div>
