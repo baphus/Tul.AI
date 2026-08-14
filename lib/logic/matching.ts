@@ -348,7 +348,17 @@ function gwaCheck(gwaMin: number, profile: Profile): RequirementCheck {
  */
 function specialCheck(special: string[], profile: Profile): RequirementCheck {
   const picked = profile.chips;
-  const matched = picked.filter((chip) => special.includes(chip));
+  const matched = picked.filter((chip) =>
+    special.some(
+      (s) =>
+        s === chip ||
+        s.toLowerCase().includes(chip.toLowerCase()) ||
+        (chip === "OFW parent" && (s.toLowerCase().includes("ofw") || s.toLowerCase().includes("owwa"))) ||
+        (chip === "4Ps household" && s.toLowerCase().includes("4ps")) ||
+        (chip === "PWD" && s.toLowerCase().includes("pwd")) ||
+        (chip === "Indigenous community" && (s.toLowerCase().includes("indigenous") || s.toLowerCase().includes("ip")))
+    )
+  );
 
   if (matched.length > 0) {
     return {
