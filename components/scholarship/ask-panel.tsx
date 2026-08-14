@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowUpIcon } from "lucide-react";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,6 +27,7 @@ export function AskPanel({ card }: { card: Scholarship }) {
   const [thread, setThread] = useState<Entry[]>([]);
   const [input, setInput] = useState("");
   const [pending, setPending] = useState(false);
+  const requestInFlight = useRef(false);
   const language = useLanguage();
   const { t } = useTranslation();
   useTulAiOptional();
@@ -34,7 +35,8 @@ export function AskPanel({ card }: { card: Scholarship }) {
   const ask = useCallback(
     (question: string) => {
       const q = question.trim();
-      if (!q || pending) return;
+      if (!q || pending || requestInFlight.current) return;
+      requestInFlight.current = true;
       setThread((current) => [...current, { q, a: null }]);
       setInput("");
       setPending(true);
@@ -71,7 +73,10 @@ export function AskPanel({ card }: { card: Scholarship }) {
             )
           );
         })
-        .finally(() => setPending(false));
+        .finally(() => {
+          requestInFlight.current = false;
+          setPending(false);
+        });
     },
     [card, language, pending]
   );

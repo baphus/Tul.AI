@@ -56,8 +56,19 @@ AI assists; verified information decides. Never determine eligibility, change a 
 For deadlines, eligibility, required documents, application links, or availability, state only facts supported by an official provider page or official document. If the available evidence is not official, say that Tul.AI cannot confirm it. Keep answers concise, caring, and clear that applications and decisions belong to the provider.`;
 
 const WINDOW_MS = 60_000;
-const MAX_REQUESTS_PER_WINDOW = 12;
-const requestWindows = new Map<string, { count: number; began: number }>();
+// Gemini's configured free tier permits five generation requests per minute.
+// Reserve one request for provider/tool overhead rather than consuming the full quota.
+const MAX_REQUESTS_PER_WINDOW = 4;
+type RequestWindow = { count: number; began: number };
+
+// Preserve the limiter while Next refreshes server modules in development.
+// A module-local Map is recreated on hot reload, which can accidentally turn a
+// nominal per-minute limit into an unbounded burst.
+const aiRateLimitStore = globalThis as typeof globalThis & {
+  __tulAiRequestWindows?: Map<string, RequestWindow>;
+};
+const requestWindows = aiRateLimitStore.__tulAiRequestWindows ?? new Map<string, RequestWindow>();
+aiRateLimitStore.__tulAiRequestWindows = requestWindows;
 
 /** Lightweight deployment-local safety valve. Production should also enforce this at the edge. */
 export function allowAiRequest(request: Request): boolean {
@@ -196,18 +207,10 @@ export async function generateTulAIResponse(
     };
 
     // First attempt — with live search if requested.
+    // One student action gets one provider call. Retrying a failed search without
+    // the tool doubles quota use and can turn a transient quota error into a burst.
     const first = await callGemini(liveResearch);
-    if (first.success) return trustedResearchResult(first);
-
-    // If live-search was on and it failed, retry without it (tool may be unavailable
-    // on this key tier; a plain text answer is better than nothing).
-    if (liveResearch) {
-      console.warn("[ai-config] Live-search attempt failed; retrying without googleSearch.");
-      const retry = await callGemini(false);
-      if (retry.success) return trustedResearchResult({ ...retry, searched: false });
-    }
-
-    return first; // propagate the original failure
+    return first.success ? trustedResearchResult(first) : first;
   }
 
 

@@ -21,9 +21,6 @@ export async function POST(request: Request) {
     );
     const groundTruth = chatFor(question, safeProfile, matchedCards);
     const liveResearch = shouldUseLiveResearch(question) && canUseLiveResearch();
-    if (!liveResearch) {
-      return NextResponse.json({ answer: groundTruth, liveResearch: "not-needed" });
-    }
     const officialDomains = matchedCards.flatMap((card) =>
       card.sources.flatMap((source) => {
         try {
@@ -33,19 +30,53 @@ export async function POST(request: Request) {
         }
       })
     );
+    const publishedMatches = matchedCards.map((card) => ({
+      provider: card.provider,
+      program: card.title,
+      deadline: card.deadline,
+      verification: card.verification,
+      lastVerified: card.lastVerified,
+      source: card.sources[0]?.url ?? card.host,
+    }));
     const result = await generateTulAIResponse(
-      `Student question: ${question}\n\nLocal, deterministic guidance about the student's eligible or possible matches: ${groundTruth.text}\n\nWrite only any additional, fresh research context. Do not restate, revise, or determine eligibility, match buckets, or acceptance likelihood. The local guidance remains authoritative for this student's match. ${responseLanguageInstruction(responseLanguage)} Research only updates from the official provider domains for the matched records. Cite every source, and use it only for eligibility, deadlines, documents, application links, or availability.`,
-      { liveResearch, officialDomains, language: responseLanguage }
+      `You are Tul.AI's student opportunity assistant. Answer the student's question clearly and warmly using the authoritative deterministic guidance and published records below.
+
+Student question: ${question}
+
+=== AUTHORITATIVE MATCH GUIDANCE ===
+${groundTruth.text}
+=== END AUTHORITATIVE MATCH GUIDANCE ===
+
+=== MATCHED PUBLISHED RECORDS ===
+${JSON.stringify(publishedMatches)}
+=== END MATCHED PUBLISHED RECORDS ===
+
+Rules:
+- The authoritative match guidance is final. Do not revise eligibility, match buckets, ranking, or acceptance likelihood.
+- Explain that guidance in 2–4 sentences; never invent facts absent from the records.
+- Unknown details stay unknown, not ineligible.
+- Never guarantee an award or application outcome.
+- Applications and official decisions belong to the provider.
+${liveResearch ? "- You may add current facts only from official provider domains and must cite them." : "- Do not add facts beyond the supplied guidance and records."}
+
+${responseLanguageInstruction(responseLanguage)}`,
+      { liveResearch, officialDomains, language: responseLanguage, maxTokens: 700 }
     );
     if (!result.success || !result.text) {
-      return NextResponse.json({ answer: groundTruth, liveResearch: "unavailable" });
+      if (result.error) console.error("[/api/ai/chat] AI unavailable:", result.error);
+      return NextResponse.json({
+        answer: groundTruth,
+        answerOrigin: "published-record",
+        liveResearch: "unavailable",
+      });
     }
     return NextResponse.json({
       answer: {
-        text: `${groundTruth.text}\n\nFresh research: ${result.text}`,
+        text: result.text,
         src: groundTruth.src,
         citations: result.citations,
       },
+      answerOrigin: "ai",
       liveResearch: result.searched ? "used" : "not-needed",
     });
   } catch {

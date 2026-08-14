@@ -2,7 +2,7 @@
 
 import { ArrowRightIcon, SparklesIcon } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 
 import { NeedsAnswers } from "@/components/app/matching-run";
 import { DeadlineChip } from "@/components/scholarship/deadline-chip";
@@ -12,10 +12,8 @@ import { ButtonLink } from "@/components/ui/button";
 import { usePrefersReducedMotion } from "@/hooks/use-media-query";
 import { useToday } from "@/hooks/use-today";
 import { useTulAi } from "@/hooks/use-tul-ai";
-import { useLanguage } from "@/lib/logic/language";
 import { formatPeso } from "@/lib/logic/format";
 import { isDeadlineOpen } from "@/lib/logic/deadlines";
-import { aiReRank } from "@/lib/logic/matching.ai";
 import { countsOf, rankScholarships, type MatchTone4, type RankedMatch } from "@/lib/logic/matching";
 import { ROUTES } from "@/lib/logic/routes";
 import { isProfileReady } from "@/lib/logic/validation";
@@ -34,10 +32,8 @@ import { cn } from "@/lib/utils";
  */
 export function MatchResults() {
   const { state, cards, ready } = useTulAi();
-  const language = useLanguage();
   const reduced = usePrefersReducedMotion();
   const today = useToday();
-  const [aiExplanations, setAiExplanations] = useState<Record<string, string>>({});
 
   const profileReady = isProfileReady(state.profile);
 
@@ -57,22 +53,6 @@ export function MatchResults() {
   /* Advisory only (AGENTS.md §7): the explanation is prose about a result the
      deterministic engine already decided. It reorders nothing and it overrides
      no state. */
-  useEffect(() => {
-    if (!profileReady) return;
-    let cancelled = false;
-    aiReRank(ranked, state.profile, language).then((res) => {
-      if (cancelled || !res.explanations) return;
-      const map: Record<string, string> = {};
-      res.explanations.forEach((e) => {
-        if (e.reason) map[e.id] = e.reason;
-      });
-      setAiExplanations(map);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [language, profileReady, ranked, state.profile]);
-
   if (ready && !profileReady) return <NeedsAnswers profile={state.profile} />;
 
   return (
@@ -120,7 +100,6 @@ export function MatchResults() {
               index={index}
               result={result}
               rank={i + 1}
-              aiExplanation={aiExplanations[result.id]}
               delay={reduced ? undefined : `${80 + i * 90}ms`}
             />
           );

@@ -15,17 +15,16 @@ import { useTulAi } from "@/hooks/use-tul-ai";
 interface Entry {
   q: string;
   a: Answer | null;
+  origin?: "ai" | "published-record";
 }
 
 /**
  * The floating "Ask Tul.AI" widget — a small chatbot that answers from the
  * student's own onboarding answers and the published records.
  *
- * The reply is always composed by the deterministic engine (`chatFor`), which
- * reads the same profile, matching logic and rule set the rest of the app
- * uses. It calls the API first so a configured LLM can rephrase for a friendlier
- * voice; without a key the deterministic answer is returned unchanged — so the
- * widget works everywhere, even with no env vars at all.
+ * The API gives the model a deterministic match result and the published records
+ * to explain. Eligibility and match buckets remain deterministic; when the model
+ * is unavailable, the same grounded result is shown without an AI claim.
  */
 export function TulAiChat({
   complete,
@@ -42,6 +41,7 @@ export function TulAiChat({
   const [thread, setThread] = useState<Entry[]>([]);
   const [input, setInput] = useState("");
   const [pending, setPending] = useState(false);
+  const requestInFlight = useRef(false);
   const [seenMatchGreeting, setSeenMatchGreeting] = useState(
     () => typeof window !== "undefined" && window.sessionStorage.getItem("tul-ai:chat-match-seen") === "1"
   );
@@ -59,7 +59,8 @@ export function TulAiChat({
   const ask = useCallback(
     (question: string) => {
       const q = question.trim();
-      if (!q || pending) return;
+      if (!q || pending || requestInFlight.current) return;
+      requestInFlight.current = true;
       setThread((current) => [...current, { q, a: null }]);
       setInput("");
       setPending(true);
@@ -69,20 +70,31 @@ export function TulAiChat({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question: q, profile, language }),
       })
-        .then((r) => r.json())
-        .then((json) => {
+        .then(async (r) => ({ ok: r.ok, json: await r.json() }))
+        .then(({ json }) => {
           const ans = (json?.answer as Answer | null) ?? chatFor(q, profile, matchedCards);
           setThread((current) =>
-            current.map((entry, i) => (i === current.length - 1 ? { ...entry, a: ans } : entry))
+            current.map((entry, i) =>
+              i === current.length - 1
+                ? { ...entry, a: ans, origin: json?.answerOrigin === "ai" ? "ai" : "published-record" }
+                : entry
+            )
           );
         })
         .catch(() => {
           const ans = chatFor(q, profile, matchedCards);
           setThread((current) =>
-            current.map((entry, i) => (i === current.length - 1 ? { ...entry, a: ans } : entry))
+            current.map((entry, i) =>
+              i === current.length - 1
+                ? { ...entry, a: ans, origin: "published-record" }
+                : entry
+            )
           );
         })
-        .finally(() => setPending(false));
+        .finally(() => {
+          requestInFlight.current = false;
+          setPending(false);
+        });
     },
     [language, matchedCards, pending, profile]
   );
@@ -152,8 +164,13 @@ export function TulAiChat({
                 {entry.a && (
                   <div className="t-caption max-w-[90%] self-start rounded-lg rounded-bl-xs border border-hairline bg-canvas px-3.5 py-2.5 text-ink [animation:rise_260ms_cubic-bezier(.2,.8,.3,1)_both]">
                     <p>{entry.a.text}</p>
+                    <p className="t-micro mt-2 border-t border-hairline pt-2 text-ink-mute">
+                      {entry.origin === "ai"
+                        ? "AI response grounded in your published matches"
+                        : "Published-match answer — AI is unavailable right now"}
+                    </p>
                     {entry.a.src && (
-                      <p className="t-micro mt-2 border-t border-hairline pt-2 text-ink-mute">
+                      <p className="t-micro mt-2 text-ink-mute">
                         Source: {entry.a.src}
                       </p>
                     )}
