@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { DATA } from "@/lib/scholarships";
 import { answerFor } from "@/lib/logic/answerFor";
-import { allowAiRequest, canUseLiveResearch, generateTulAIResponse, shouldUseLiveResearch } from "@/lib/logic/ai-config";
+import { allowAiRequest, canUseLiveResearch, generateTulAIResponse } from "@/lib/logic/ai-config";
 import { requestedLanguage } from "@/lib/logic/locale";
 
 export async function POST(request: Request) {
@@ -20,8 +20,12 @@ export async function POST(request: Request) {
     if (!card) return NextResponse.json({ error: "Scholarship not found." }, { status: 404 });
 
     const responseLanguage = requestedLanguage(language);
-    const liveResearch = shouldUseLiveResearch(question) && canUseLiveResearch();
-    const domains = card.sources
+    // The scholarship-detail Ask panel always researches when a provider is
+    // configured. Other chat surfaces retain their more selective behavior.
+    const liveResearch = canUseLiveResearch();
+    const sourceUrls = card.sources.map((source) => source.url).filter(Boolean);
+    const domains = [
+      ...card.sources
       .map((source) => {
         try {
           return new URL(source.url).hostname;
@@ -29,7 +33,9 @@ export async function POST(request: Request) {
           return null;
         }
       })
-      .filter((domain): domain is string => Boolean(domain));
+      .filter((domain): domain is string => Boolean(domain)),
+      card.host,
+    ].filter((domain, index, all) => Boolean(domain) && all.indexOf(domain) === index);
 
     // ── Build full structured context from the scholarship record ──
     // Gemini answers directly from this data — no keyword matching needed.
@@ -83,6 +89,10 @@ ${card.back.facts.map(([k, v]) => "- " + k + ": " + v).join("\n")}
 Sources: ${card.sources.map((s) => s.url || s.name).join(", ")}
 === END RECORD ===
 
+Research order when live research is available:
+1. Start with the record's listed source URL(s): ${sourceUrls.join(", ") || "None listed"}
+2. If they do not answer the question, check ${card.provider}'s official site: ${card.host}
+
 Student question: "${question}"
 
 Rules:
@@ -90,7 +100,7 @@ Rules:
 - Never estimate acceptance odds or guarantee an award.
 - If the record doesn't cover the question, say so and direct the student to ${card.provider} at ${card.host}.
 - Unknown eligibility details stay unknown — never treat a missing answer as ineligible.
-${liveResearch ? "- You may search the web for current provider updates; cite official URLs." : "- Do not add any facts beyond the record above."}`;
+${liveResearch ? "- Follow the research order above. Cite every current fact you use." : "- Do not add any facts beyond the record above."}`;
 
     const result = await generateTulAIResponse(prompt, {
       liveResearch,

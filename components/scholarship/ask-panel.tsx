@@ -103,7 +103,9 @@ export function AskPanel({ card }: { card: Scholarship }) {
                   <p className="t-caption text-ink">{entry.a.text}</p>
                   <p className="t-micro mt-3 border-t border-hairline pt-2.5 text-ink-mute">
                     {entry.origin === "ai"
-                      ? "AI response grounded in the published record"
+                      ? entry.a.citations?.length
+                        ? "AI response grounded in the published record and official web sources"
+                        : "AI response grounded in the published record"
                       : "Published-record answer — AI is unavailable right now"}
                   </p>
                   {entry.a.src ? (
