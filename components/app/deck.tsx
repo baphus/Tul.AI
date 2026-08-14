@@ -195,7 +195,7 @@ export function Deck({ detailOpen }: { detailOpen: boolean }) {
         </p>
       </div>
 
-      <div className="relative min-h-[29rem] flex-1">
+      <div className="relative min-h-[31rem] flex-1">
         {card ? (
           <div
             ref={wrap}

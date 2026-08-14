@@ -14,6 +14,8 @@ import {
 } from "@/components/scholarship/verification-badge";
 import { VerifyDialog } from "@/components/scholarship/verify-dialog";
 import { formatPeso } from "@/lib/logic/format";
+import { detailRequirements } from "@/lib/logic/detail-match";
+import type { RankedMatch } from "@/lib/logic/matching";
 import type { Scholarship } from "@/lib/scholarships";
 import { cn } from "@/lib/utils";
 
@@ -33,9 +35,13 @@ export function ScholarshipDetail({
   index: number;
   topSlot?: ReactNode;
   className?: string;
+  /** The live deterministic result when a student is viewing this record in-app. */
+  result?: RankedMatch;
 }) {
-  const unknowns = card.rows.filter((r) => r.state === "none").length;
-  const attention = card.rows.filter((r) => r.state === "warn").length;
+  const rows = result ? detailRequirements(result) : card.rows;
+  const match = result ?? card;
+  const unknowns = rows.filter((r) => r.state === "none").length;
+  const attention = rows.filter((r) => r.state === "warn").length;
 
   return (
     <article className={cn("pb-16", className)}>
@@ -51,7 +57,7 @@ export function ScholarshipDetail({
         </div>
         <h1 className="t-display-xl mt-4 text-balance">{card.title}</h1>
         <div className="mt-5 flex flex-wrap items-center gap-2">
-          <MatchBadge card={card} />
+          <MatchBadge card={match} />
           <DeadlineChip deadline={card.deadline} deadlineIso={card.deadlineIso} />
           <VerificationBadge status={card.verification} />
         </div>
@@ -95,11 +101,11 @@ export function ScholarshipDetail({
             to read the requirement behind it.
           </p>
 
-          <MatchMetric card={card} className="mt-5" />
+          <MatchMetric card={match} className="mt-5" />
 
           <ul className="mt-5 overflow-hidden rounded-lg border border-hairline bg-canvas">
-            {card.rows.map((row, i) => (
-              <li key={row.label} className={cn(i < card.rows.length - 1 && "border-b border-hairline")}>
+            {rows.map((row, i) => (
+              <li key={row.label} className={cn(i < rows.length - 1 && "border-b border-hairline")}>
                 <details className="group">
                   <summary className="ring-brand flex cursor-pointer list-none items-center gap-3 px-4 py-4 transition-colors hover:bg-canvas-soft">
                     <RequirementMark state={row.state} />

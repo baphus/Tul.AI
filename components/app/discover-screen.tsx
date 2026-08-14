@@ -16,6 +16,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { useTulAi } from "@/hooks/use-tul-ai";
+import { matchScholarship } from "@/lib/logic/matching";
 import { cardIndexOf, ROUTES } from "@/lib/logic/routes";
 
 /**
@@ -25,10 +26,11 @@ import { cardIndexOf, ROUTES } from "@/lib/logic/routes";
  */
 export function DiscoverScreen({ cardId }: { cardId: string | null }) {
   const router = useRouter();
-  const { cards } = useTulAi();
+  const { cards, state } = useTulAi();
 
   const index = cardIndexOf(cardId);
   const card = index >= 0 ? cards[index] : null;
+  const result = card ? matchScholarship(card, state.profile) : undefined;
 
   const close = useCallback(() => {
     router.push(ROUTES.discover, { scroll: false });
@@ -69,6 +71,7 @@ export function DiscoverScreen({ cardId }: { cardId: string | null }) {
             <ScholarshipDetail
               card={card}
               index={index}
+              result={result}
               topSlot={
                 <div className="flex items-center justify-between gap-3">
                   <Link
