@@ -113,6 +113,7 @@ export async function generateTulAIResponse(
     language?: Language;
     maxTokens?: number;
     systemInstruction?: string;
+    jsonObject?: boolean;
   } = {}
 ): Promise<AiTextResult> {
   const provider = resolveAiProvider(process.env);
@@ -190,6 +191,7 @@ export async function generateTulAIResponse(
           ],
           max_tokens: options.maxTokens ?? 500,
           temperature: 0.2,
+          ...(options.jsonObject ? { response_format: { type: "json_object" } } : {}),
         }),
         signal: AbortSignal.timeout(20_000),
       });
@@ -244,6 +246,7 @@ export async function generateTulAIJson<T>(
   const result = await generateTulAIResponse(`${prompt}\nReturn valid JSON only.`, {
     liveResearch: false,
     systemInstruction,
+    jsonObject: true,
   });
   if (!result.success || !result.text) return { success: false, error: result.error };
   try {
