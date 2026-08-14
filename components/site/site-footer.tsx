@@ -1,41 +1,45 @@
+"use client";
+
 import Link from "next/link";
 
 import { BrandMark } from "@/components/site/brand";
 import { Container } from "@/components/site/layout-primitives";
 import { ROUTES } from "@/lib/logic/routes";
+import { useTranslation } from "@/lib/logic/language";
+import type { TranslationKey } from "@/lib/logic/translations";
 
-const COLUMNS: { title: string; links: { href: string; label: string }[] }[] = [
+const COLUMNS: { title: TranslationKey; links: { href: string; label: TranslationKey }[] }[] = [
   {
-    title: "Discover",
+    title: "footerDiscover",
     links: [
-      { href: ROUTES.scholarships, label: "All scholarships" },
-      { href: ROUTES.onboarding, label: "Build your profile" },
-      { href: ROUTES.discover, label: "Swipe deck" },
-      { href: ROUTES.saved, label: "Saved & deadlines" },
+      { href: ROUTES.scholarships, label: "footerAllScholarships" },
+      { href: ROUTES.onboarding, label: "footerBuildProfile" },
+      { href: ROUTES.discover, label: "footerSwipeDeck" },
+      { href: ROUTES.saved, label: "footerSavedDeadlines" },
     ],
   },
   {
-    title: "Understand",
+    title: "footerUnderstand",
     links: [
-      { href: ROUTES.howItWorks, label: "How it works" },
-      { href: `${ROUTES.howItWorks}#matching`, label: "How matching works" },
-      { href: `${ROUTES.howItWorks}#verification`, label: "How we verify" },
-      { href: `${ROUTES.howItWorks}#limits`, label: "What we don't do" },
+      { href: ROUTES.howItWorks, label: "footerHowItWorks" },
+      { href: `${ROUTES.howItWorks}#matching`, label: "footerHowMatchingWorks" },
+      { href: `${ROUTES.howItWorks}#verification`, label: "footerHowVerify" },
+      { href: `${ROUTES.howItWorks}#limits`, label: "footerWhatWeDoNotDo" },
     ],
   },
   {
-    title: "Roadmap",
+    title: "roadmap",
     links: [
-      { href: ROUTES.roadmap, label: "What’s next" },
-      { href: "mailto:hello@tul.ai?subject=Publish%20an%20opportunity%20with%20Tul.AI", label: "For providers" },
+      { href: ROUTES.roadmap, label: "footerWhatsNext" },
+      { href: "mailto:hello@tul.ai?subject=Publish%20an%20opportunity%20with%20Tul.AI", label: "footerForProviders" },
     ],
   },
   {
-    title: "Trust",
+    title: "footerTrust",
     links: [
-      { href: ROUTES.privacy, label: "Privacy" },
-      { href: `${ROUTES.privacy}#data`, label: "Your data" },
-      { href: ROUTES.profile, label: "Edit or delete your profile" },
+      { href: ROUTES.privacy, label: "footerPrivacy" },
+      { href: `${ROUTES.privacy}#data`, label: "footerYourData" },
+      { href: ROUTES.profile, label: "footerEditProfile" },
     ],
   },
 ];
@@ -46,15 +50,17 @@ const COLUMNS: { title: string; links: { href: string; label: string }[] }[] = [
  * disclosure that Tul.AI is not the application portal belongs here rather
  * than only in the fine print.
  */
-const LEGAL: { href: string; label: string }[] = [
-  { href: ROUTES.privacy, label: "Privacy policy" },
-  { href: `${ROUTES.privacy}#data`, label: "Your data" },
-  { href: `${ROUTES.howItWorks}#limits`, label: "What Tul.AI does not do" },
-  { href: ROUTES.profile, label: "Edit or delete your data" },
+const LEGAL: { href: string; label: TranslationKey }[] = [
+  { href: ROUTES.privacy, label: "footerPrivacyPolicy" },
+  { href: `${ROUTES.privacy}#data`, label: "footerYourData" },
+  { href: `${ROUTES.howItWorks}#limits`, label: "footerWhatTulDoesNotDo" },
+  { href: ROUTES.profile, label: "footerEditData" },
 ];
 
 /** DESIGN.md `footer`: the dark band. Ink surface, sage text, body-sm links. */
 export function SiteFooter() {
+  const { t } = useTranslation();
+
   return (
     <footer className="canvas-ink border-t border-white/10 py-16 md:py-20">
       <Container>
@@ -62,18 +68,17 @@ export function SiteFooter() {
           <div>
             <BrandMark tone="on-dark" />
             <p className="t-body mt-4 max-w-xs text-on-dark-mute text-pretty">
-              Tul.AI bridges students to opportunities. From scholarships to what&apos;s
-              next.
+              {t("footerDescription")}
             </p>
             <p className="t-micro mt-6 text-brand">
-              AI assists. Verified information decides.
+              {t("footerTagline")}
             </p>
           </div>
 
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
             {COLUMNS.map((column) => (
               <div key={column.title}>
-                <h2 className="t-micro text-white">{column.title}</h2>
+                <h2 className="t-micro text-white">{t(column.title)}</h2>
                 <ul className="mt-4 flex flex-col gap-3">
                   {column.links.map((link) => (
                     <li key={link.href + link.label}>
@@ -81,7 +86,7 @@ export function SiteFooter() {
                         href={link.href}
                         className="ring-brand t-caption rounded-xs text-on-dark-mute hover:text-white hover:underline hover:underline-offset-4"
                       >
-                        {link.label}
+                        {t(link.label)}
                       </Link>
                     </li>
                   ))}
@@ -102,7 +107,7 @@ export function SiteFooter() {
                   href={link.href}
                   className="ring-brand t-caption rounded-xs text-on-dark-mute hover:text-white hover:underline hover:underline-offset-4"
                 >
-                  {link.label}
+                  {t(link.label)}
                 </Link>
               </li>
             ))}
@@ -110,10 +115,10 @@ export function SiteFooter() {
 
           <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p className="t-caption text-on-dark-mute">
-              © {new Date().getFullYear()} Tul.AI · Made for Filipino students
+              © {new Date().getFullYear()} Tul.AI · {t("footerMadeFor")}
             </p>
             <p className="t-caption text-on-dark-mute">
-              Prototype · demo scholarship data · not an official application portal
+              {t("footerPrototype")}
             </p>
           </div>
         </div>

@@ -7,18 +7,20 @@ import { BrandMark } from "@/components/site/brand";
 import { useTulAi } from "@/hooks/use-tul-ai";
 import { savedCount } from "@/lib/logic/state";
 import { ROUTES } from "@/lib/logic/routes";
+import { useTranslation } from "@/lib/logic/language";
 import { cn } from "@/lib/utils";
 
 const NAV = [
-  { href: ROUTES.discover, label: "Discover" },
-  { href: ROUTES.review, label: "Review" },
-  { href: ROUTES.saved, label: "Saved" },
-  { href: ROUTES.profile, label: "Profile" },
-];
+  { href: ROUTES.discover, label: "discover" },
+  { href: ROUTES.review, label: "review" },
+  { href: ROUTES.saved, label: "saved" },
+  { href: ROUTES.profile, label: "profile" },
+] as const;
 
 export function AppHeader() {
   const pathname = usePathname();
   const { state, ready } = useTulAi();
+  const { t } = useTranslation();
   const saved = savedCount(state);
 
   return (
@@ -28,7 +30,7 @@ export function AppHeader() {
 
         <nav
           className="sc -mx-1 ml-auto flex items-center gap-1 overflow-x-auto px-1"
-          aria-label="App sections"
+          aria-label={t("appSections")}
         >
           {NAV.map((item) => {
             const active = pathname === item.href;
@@ -44,7 +46,7 @@ export function AppHeader() {
                     : "text-ink-mute hover:bg-canvas-soft hover:text-ink"
                 )}
               >
-                {item.label}
+                {t(item.label)}
                 {item.href === ROUTES.saved && ready && saved > 0 && (
                   <span className="t-num ml-1.5 text-ink-mute">{saved}</span>
                 )}
@@ -59,6 +61,7 @@ export function AppHeader() {
 
 /** Calm chrome for the onboarding conversation: mark, and a way out. */
 export function OnboardingHeader() {
+  const { t } = useTranslation();
   return (
     <header className="flex-none">
       <div className="mx-auto flex h-16 w-full max-w-[46rem] items-center px-5 sm:h-18 sm:px-8">
@@ -67,7 +70,7 @@ export function OnboardingHeader() {
           href={ROUTES.home}
           className="ring-brand t-caption ml-auto rounded-xs text-ink-mute hover:text-ink"
         >
-          Save &amp; exit
+          {t("saveExit")}
         </Link>
       </div>
     </header>

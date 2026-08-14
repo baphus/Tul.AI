@@ -37,6 +37,8 @@ export function BandPicker({
   exactInputMode = "decimal",
   withheldLabel,
   disclosureLabel,
+  displayValue = (value) => value,
+  displayNote = (note) => note,
 }: {
   name: string;
   bands: Band[];
@@ -53,6 +55,8 @@ export function BandPicker({
   /** Set to offer "Prefer not to say" as a final card. */
   withheldLabel?: string;
   disclosureLabel: string;
+  displayValue?: (value: string) => string;
+  displayNote?: (note: string) => string;
 }) {
   const exactId = useId();
   const errorId = `${exactId}-error`;
@@ -71,8 +75,8 @@ export function BandPicker({
               key={option.value}
               name={name}
               value={option.value}
-              label={option.value}
-              note={option.note}
+              label={displayValue(option.value)}
+              note={option.note ? displayNote(option.note) : undefined}
               shortcut={i + 1}
               checked={band === option.value}
               onSelect={onBandChange}
@@ -83,7 +87,7 @@ export function BandPicker({
               name={name}
               value={WITHHELD}
               label={withheldLabel}
-              note="Treated as unknown — never as a requirement you failed"
+              note={displayNote("Treated as unknown — never as a requirement you failed")}
               shortcut={bands.length + 1}
               checked={band === WITHHELD}
               onSelect={onBandChange}

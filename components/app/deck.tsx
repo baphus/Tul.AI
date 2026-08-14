@@ -13,6 +13,7 @@ import { useTulAi } from "@/hooks/use-tul-ai";
 import { isDeadlineOpen } from "@/lib/logic/deadlines";
 import { rankScholarships } from "@/lib/logic/matching";
 import { ROUTES } from "@/lib/logic/routes";
+import { useTranslation } from "@/lib/logic/language";
 import { savedCount } from "@/lib/logic/state";
 import { cn } from "@/lib/utils";
 
@@ -37,6 +38,7 @@ const IDLE: DragState = { active: false, x0: 0, dx: 0, moved: 0 };
 export function Deck({ detailOpen }: { detailOpen: boolean }) {
   const router = useRouter();
   const { state, dispatch, cards } = useTulAi();
+  const { t } = useTranslation();
   const reduced = usePrefersReducedMotion();
   const today = useToday();
 
@@ -186,7 +188,7 @@ export function Deck({ detailOpen }: { detailOpen: boolean }) {
       <div className="mb-6 flex flex-none items-end justify-between gap-4">
         <div>
           <h1 id="deck-heading" className="t-display-lg">
-            Your scholarships
+            {t("yourScholarships")}
           </h1>
           <p className="t-caption mt-1 text-ink-mute">One opportunity at a time.</p>
         </div>
@@ -235,7 +237,7 @@ export function Deck({ detailOpen }: { detailOpen: boolean }) {
             </p>
             <div className="mt-7 flex flex-wrap justify-center gap-3">
               <ButtonLink className="h-12 px-6" href={ROUTES.review}>
-                Review saved opportunities
+                {t("review")} saved opportunities
               </ButtonLink>
               <Button variant="tertiary" className="h-12 px-5" onClick={() => dispatch({ type: "RESET_DECK" })}>
                 Start again
@@ -254,7 +256,7 @@ export function Deck({ detailOpen }: { detailOpen: boolean }) {
             disabled={exiting}
           >
             <XIcon />
-            Pass
+            {t("pass")}
           </Button>
           <Button
             variant="outline"
@@ -262,11 +264,11 @@ export function Deck({ detailOpen }: { detailOpen: boolean }) {
             onClick={openDetail}
             disabled={exiting}
           >
-            Details
+            {t("details")}
           </Button>
           <Button className="h-12 gap-2 px-4" onClick={() => fling(1)} disabled={exiting}>
             <CheckIcon />
-            Save
+            {t("saved")}
           </Button>
         </div>
       )}
@@ -279,7 +281,7 @@ export function Deck({ detailOpen }: { detailOpen: boolean }) {
           <p className="t-caption">Opportunity passed.</p>
           <Button variant="link" className="h-auto p-0 text-brand hover:text-brand-active" onClick={undo}>
             <Undo2Icon />
-            Undo
+              {t("undo")}
           </Button>
         </div>
       )}
