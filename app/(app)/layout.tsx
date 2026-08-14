@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
+
 import { TulAiProvider } from "@/hooks/use-tul-ai";
 import { getScholarships } from "@/lib/scholarships";
+
+/** Personalised flows must not be indexed or appear in search results. */
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 /**
  * The product shell. `getScholarships()` is the swap seam — today the verified

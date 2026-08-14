@@ -1,5 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Anton, Inter, Manrope, Geist_Mono } from "next/font/google";
+
+import { SITE_URL } from "@/lib/site";
 
 import "./globals.css";
 
@@ -61,6 +63,7 @@ const mono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: SITE_URL,
   title: {
     default: "Tul.AI — Bridge to your next opportunity",
     template: "%s · Tul.AI",
@@ -68,6 +71,27 @@ export const metadata: Metadata = {
   description:
     "Tul.AI bridges Filipino students to scholarships and financial aid. Tell us who you are, and see verified opportunities that fit — with the published requirements behind every match.",
   applicationName: "Tul.AI",
+  authors: [{ name: "Tul.AI", url: SITE_URL.toString() }],
+  creator: "Tul.AI",
+  publisher: "Tul.AI",
+  category: "Education",
+  classification: "Education",
+  alternates: { canonical: "/" },
+  manifest: "/manifest.webmanifest",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/tul-ai-icon.svg", type: "image/svg+xml" },
+    ],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
+  },
+  referrer: "strict-origin-when-cross-origin",
+  formatDetection: { telephone: false, address: false, email: false },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 },
+  },
   keywords: [
     "scholarships Philippines",
     "CHED scholarship",
@@ -83,7 +107,20 @@ export const metadata: Metadata = {
     siteName: "Tul.AI",
     type: "website",
     locale: "en_PH",
+    url: "/",
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Tul.AI — Bridge to your next opportunity" }],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Tul.AI — Bridge to your next opportunity",
+    description: "Discover verified scholarships and financial aid for Filipino students.",
+    images: ["/opengraph-image"],
+  },
+};
+
+export const viewport: Viewport = {
+  colorScheme: "light",
+  themeColor: "#9fe870",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

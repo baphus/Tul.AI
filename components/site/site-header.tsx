@@ -4,7 +4,7 @@ import { MenuIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ReactCountryFlag from "react-country-flag";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { BrandMark } from "@/components/site/brand";
 import { Button, ButtonLink } from "@/components/ui/button";
@@ -22,6 +22,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { ROUTES } from "@/lib/logic/routes";
+import { homeTranslations } from "@/lib/logic/home-translations";
 import { setLanguage, type Language, useLanguage, useTranslation } from "@/lib/logic/language";
 import { cn } from "@/lib/utils";
 
@@ -114,15 +115,50 @@ export function SiteHeader({
 }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [visible, setVisible] = useState(true);
+  const [hasScrolled, setHasScrolled] = useState(false);
+  const lastScrollY = useRef(0);
+  const language = useLanguage();
   const { t } = useTranslation();
   const onBrand = tone === "brand";
+  const heroCta = homeTranslations[language].heroCta;
+
+  useEffect(() => {
+    lastScrollY.current = window.scrollY;
+
+    let frame: number | null = null;
+    function onScroll() {
+      if (frame !== null) return;
+      frame = window.requestAnimationFrame(() => {
+        const currentY = window.scrollY;
+        const delta = currentY - lastScrollY.current;
+
+        setHasScrolled(currentY > 8);
+        if (currentY <= 8) {
+          setVisible(true);
+        } else if (Math.abs(delta) >= 8) {
+          setVisible(delta < 0);
+        }
+
+        lastScrollY.current = currentY;
+        frame = null;
+      });
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (frame !== null) window.cancelAnimationFrame(frame);
+    };
+  }, []);
 
   return (
     <header
       className={cn(
-        "z-50 w-full",
-        onBrand ? "relative" : "sticky top-0",
-        onBrand && "bg-transparent",
+        "sticky top-0 z-50 w-full transition-transform duration-200 ease-out motion-reduce:transition-none",
+        !visible && !open && "-translate-y-full",
+        onBrand && !hasScrolled && "bg-transparent",
+        onBrand && hasScrolled && "bg-canvas/95 backdrop-blur-md",
         tone === "over" && "bg-canvas-soft/95 backdrop-blur-md",
         tone === "light" && "border-b border-hairline bg-canvas/95 backdrop-blur-md"
       )}
@@ -157,11 +193,11 @@ export function SiteHeader({
         <div className="flex items-center gap-2 md:ml-8">
           <LanguageSelector />
           <ButtonLink
-            variant={onBrand ? "onBrand" : "default"}
-            className="t-body-strong hidden h-12 px-6 text-base md:inline-flex"
+            variant={onBrand && !hasScrolled ? "onBrand" : "default"}
+            className="t-body-strong hidden h-13 px-7 text-base md:inline-flex"
             href={ROUTES.onboarding}
           >
-            {t("findScholarships")}
+            {heroCta}
           </ButtonLink>
 
           <Sheet open={open} onOpenChange={setOpen}>
@@ -199,7 +235,7 @@ export function SiteHeader({
                 className="t-body-strong mt-8 h-12 text-base"
                 href={ROUTES.onboarding} onClick={() => setOpen(false)}
               >
-                {t("findScholarships")}
+                {heroCta}
               </ButtonLink>
               <p className="t-caption mt-4 text-ink-mute">
                 {t("freeForStudents")}
