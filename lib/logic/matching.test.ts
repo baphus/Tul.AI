@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { DATA, type Scholarship } from "@/lib/scholarships";
 import { emptyProfile, type Profile } from "./state";
-import { countsOf, matchLocation, matchScholarship, rankScholarships } from "./matching";
+import { compactMatchReason, countsOf, matchLocation, matchScholarship, rankScholarships } from "./matching";
 
 const DEMO: Profile = {
   ...emptyProfile(),
@@ -258,5 +258,15 @@ describe("rankScholarships", () => {
     const counts = countsOf(rankScholarships(DATA, DEMO));
     expect(counts.reviewed).toBe(DATA.length);
     expect(counts.relevant + counts.reviewed - counts.relevant).toBe(DATA.length);
+  });
+
+  it("breaks equal compatibility ties with fewer unknowns before deadline", () => {
+    const confirmed = { ...fixture({ gwaMin: 85 }), id: "confirmed", deadlineIso: "2026-12-31" };
+    const unknown = { ...fixture({ gwaMin: 85, incomeMax: 10000 }), id: "unknown", deadlineIso: "2026-01-01" };
+    expect(rankScholarships([unknown, confirmed], DEMO).map((match) => match.id)).toEqual(["confirmed", "unknown"]);
+  });
+
+  it("produces a deterministic compact reason from published checks", () => {
+    expect(compactMatchReason(matchScholarship(fixture({ gwaMin: 85, incomeMax: 10000 }), DEMO))).toContain("GWA matches");
   });
 });

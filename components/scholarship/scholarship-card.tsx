@@ -8,6 +8,7 @@ import { RequirementMark } from "@/components/scholarship/requirement-mark";
 import { VerificationBadge } from "@/components/scholarship/verification-badge";
 import { DeadlineCountdown } from "@/components/scholarship/deadline-chip";
 import { formatPeso } from "@/lib/logic/format";
+import { compactMatchReason } from "@/lib/logic/matching";
 import type { RankedMatch } from "@/lib/logic/matching";
 import type { Scholarship } from "@/lib/scholarships";
 import { cn } from "@/lib/utils";
@@ -61,7 +62,7 @@ export function ScholarshipCard({ card, index, flipped, reduced, onFlip, result 
           <p className="t-micro text-ink-deep">Potential grant</p>
           <p className="mb-4 flex flex-wrap items-baseline gap-2"><CountUp key={card.id} value={card.amount} reduced={reduced} format={formatPeso} /><span className="t-caption text-ink-mute">{card.amountNote}</span></p>
           <div className="mb-3.5 h-px bg-hairline" />
-          <p className="t-caption mb-auto text-ink-mute text-pretty">{result.match}. Flip this card to inspect each published requirement before you save it.</p>
+          <p className="t-caption mb-auto text-ink-mute text-pretty">{compactMatchReason(result)} Flip this card to inspect each published requirement, then open the full details when you are ready.</p>
           <div className="mt-4 flex items-end justify-between border-t border-hairline pt-3.5"><div><p className="t-micro text-ink-mute">Deadline</p><p className="t-body-strong">{card.deadline}</p><DeadlineCountdown deadlineIso={card.deadlineIso} /></div><p className={cn("t-body-strong", card.tone === "strong" ? "text-met" : "text-attention-ink")}>{result.match}</p></div>
         </article>
         <article className={cn(faceClass, "[transform:rotateY(180deg)]")} style={{ background: "var(--tint-face-back)" }} aria-hidden={!flipped}>

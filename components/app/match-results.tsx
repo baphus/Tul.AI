@@ -51,6 +51,7 @@ export function MatchResults() {
   const counts = useMemo(() => countsOf(ranked), [ranked]);
 
   const relevant = useMemo(() => ranked.filter((r) => r.tone !== "none"), [ranked]);
+  const notCurrentlyEligible = useMemo(() => ranked.filter((r) => r.tone === "none"), [ranked]);
   const top = relevant.slice(0, 5);
 
   /* Advisory only (AGENTS.md §7): the explanation is prose about a result the
@@ -95,7 +96,7 @@ export function MatchResults() {
           </h1>
           <p className="t-body enter enter-d1 mt-4 max-w-[42ch] text-ink-deep/80 text-pretty">
             {top.length > 0
-              ? "Ranked by the published requirements you already meet, with the soonest deadlines first. Unknowns are never counted as failures."
+              ? "Ranked by confirmed published requirements, then fewer unknowns, verification and source reliability, deadline, and published benefit. Unknowns are never counted as failures."
               : "Nothing here resolves without a conflict on your current profile. Add what you know, or browse the full set — every programme is listed regardless."}
           </p>
 
@@ -137,9 +138,23 @@ export function MatchResults() {
         its own.
       </p>
 
+      {notCurrentlyEligible.length > 0 && (
+        <section className="mt-10 border-t border-hairline pt-8" aria-labelledby="not-a-fit">
+          <h2 id="not-a-fit" className="t-display-lg">Not a fit right now</h2>
+          <p className="t-body mt-2 text-ink-mute text-pretty">These options have a known conflict with your current profile. They stay separate from matched options, and their details show the published requirement behind that result.</p>
+          <ul className="mt-5 flex flex-col gap-2">
+            {notCurrentlyEligible.map((result) => {
+              const card = cards.find((item) => item.id === result.id);
+              const reason = result.checks.find((check) => check.state === "not-met")?.detail;
+              return card ? <li key={result.id}><Link href={ROUTES.discoverCard(card.id)} className="ring-brand flex rounded-lg border border-hairline bg-canvas p-4 transition-colors hover:bg-canvas-soft"><span className="min-w-0 flex-1"><span className="t-body-strong block">{card.title}</span><span className="t-caption mt-1 block text-ink-mute">{reason}</span></span><ArrowRightIcon className="mt-1 size-4 flex-none text-ink-mute" /></Link></li> : null;
+            })}
+          </ul>
+        </section>
+      )}
+
       <div className="mt-8 flex flex-wrap items-center gap-3">
         <ButtonLink className="h-12 rounded-md px-6" href={ROUTES.discover}>
-          Sort your full list
+          View matched options
           <ArrowRightIcon />
         </ButtonLink>
         <ButtonLink

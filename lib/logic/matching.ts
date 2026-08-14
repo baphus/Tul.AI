@@ -451,10 +451,29 @@ function compare(
   const bRatio = b.tone === "none" || b.total === 0 ? 0 : b.met / b.total;
   if (aRatio !== bRatio) return bRatio - aRatio;
 
+  if (a.unknown !== b.unknown) return a.unknown - b.unknown;
+
+  const verification = verificationPriority(aCard.verification) - verificationPriority(bCard.verification);
+  if (verification !== 0) return verification;
+
+  if (aCard.sourceTier !== bCard.sourceTier) return aCard.sourceTier - bCard.sourceTier;
+
   const byDeadline = aCard.deadlineIso.localeCompare(bCard.deadlineIso);
   if (byDeadline !== 0) return byDeadline;
 
   return bCard.amount - aCard.amount;
+}
+
+function verificationPriority(status: Scholarship["verification"]): number {
+  return status === "Verified" ? 0 : status === "Updated" ? 1 : status === "Needs Verification" ? 2 : status === "Unknown" ? 3 : 4;
+}
+
+/** A compact, deterministic explanation for a matched option. */
+export function compactMatchReason(result: RankedMatch): string {
+  const met = result.checks.filter((check) => check.state === "met").map((check) => check.label);
+  const unknown = result.checks.filter((check) => check.state === "unknown").map((check) => check.label);
+  const confirmed = met.length ? `${met.join(", ")} match${met.length === 1 ? "es" : ""}` : "No published requirements are confirmed yet";
+  return `${confirmed}.${unknown.length ? ` Confirm ${unknown.join(", ")}.` : ""}`;
 }
 
 export interface MatchCounts {
