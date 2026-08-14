@@ -212,12 +212,6 @@ export function matchScholarship(card: Scholarship, profile: Profile): RankedMat
   const unknown = checks.filter((check) => check.state === "unknown").length;
   const tone = toneFor(checks, met, total);
 
-<<<<<<< HEAD
-=======
-<<<<<<< Updated upstream
-  return { id: card.id, met, total, tone, match: TONE_LABEL[tone], checks };
-=======
->>>>>>> parent of 70f1a01 (Revert "Temp fix")
   return {
     id: card.id,
     met,
@@ -296,9 +290,6 @@ function gwaCheck(gwaMin: number, profile: Profile): RequirementCheck {
  */
 function specialCheck(special: string[], profile: Profile): RequirementCheck {
   const picked = profile.chips;
-<<<<<<< HEAD
-  const matched = picked.filter((chip) => special.includes(chip));
-=======
   const matched = picked.filter((chip) =>
     special.some(
       (s) =>
@@ -310,7 +301,6 @@ function specialCheck(special: string[], profile: Profile): RequirementCheck {
         (chip === "Indigenous community" && (s.toLowerCase().includes("indigenous") || s.toLowerCase().includes("ip")))
     )
   );
->>>>>>> parent of 70f1a01 (Revert "Temp fix")
 
   if (matched.length > 0) {
     return {
@@ -343,10 +333,6 @@ function describeCohort(profile: Profile): string | null {
   if (!stage || stage === PLANNING) return null;
   if (stage === "College Student" && year) return `${year} (${stage.toLowerCase()})`;
   return stage;
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
->>>>>>> parent of 70f1a01 (Revert "Temp fix")
 }
 
 /**
