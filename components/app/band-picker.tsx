@@ -4,6 +4,7 @@ import { ChevronDownIcon } from "lucide-react";
 import { useId, useState } from "react";
 
 import { ChoiceCard } from "@/components/app/choice-card";
+import { InfoHint } from "@/components/app/choice-card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { WITHHELD, type Band } from "@/lib/reference/bands";
@@ -39,6 +40,7 @@ export function BandPicker({
   disclosureLabel,
   displayValue = (value) => value,
   displayNote = (note) => note,
+  hintLabel = "Show more information",
 }: {
   name: string;
   bands: Band[];
@@ -57,6 +59,7 @@ export function BandPicker({
   disclosureLabel: string;
   displayValue?: (value: string) => string;
   displayNote?: (note: string) => string;
+  hintLabel?: string;
 }) {
   const exactId = useId();
   const errorId = `${exactId}-error`;
@@ -132,9 +135,7 @@ export function BandPicker({
               </p>
             ) : (
               exactHint && (
-                <p id={hintId} className="t-micro text-ink-mute text-pretty">
-                  {exactHint}
-                </p>
+                <InfoHint label={hintLabel}>{exactHint}</InfoHint>
               )
             )}
           </div>
