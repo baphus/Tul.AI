@@ -3,9 +3,14 @@
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
+  Building2Icon,
   CheckIcon,
+  ChurchIcon,
+  GraduationCapIcon,
+  LandmarkIcon,
   SparklesIcon,
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
@@ -29,7 +34,7 @@ import { canAdvance, dependentsError, gwaError, isPlanning } from "@/lib/logic/v
 import { GWA_BANDS, HOUSEHOLD_BANDS } from "@/lib/reference/bands";
 import { COURSE_GROUPS, type CourseOption } from "@/lib/reference/courses";
 import { LOCATION_OPTIONS } from "@/lib/reference/locations";
-import { schoolMark, schoolsFor, type SchoolKind } from "@/lib/reference/schools";
+import { schoolsFor, type SchoolKind } from "@/lib/reference/schools";
 import {
   CHIP_EXCLUSIVE,
   CHIP_NONE,
@@ -129,13 +134,26 @@ const schoolKindLabels: Record<SchoolKind, string> = {
   sectarian: "Sectarian institution",
 };
 
-function SchoolMark({ name }: { name: string }) {
+/*
+ * Generic institution icon per `kind`, in place of per-school monograms or
+ * official seals. One stable glyph covers the whole selector — the kind text
+ * beside it carries the distinction — and no unlicensed crest is claimed.
+ */
+const schoolKindIcons: Record<SchoolKind, LucideIcon> = {
+  state: LandmarkIcon,
+  local: Building2Icon,
+  private: GraduationCapIcon,
+  sectarian: ChurchIcon,
+};
+
+function SchoolMark({ kind }: { kind: SchoolKind }) {
+  const Icon = schoolKindIcons[kind];
   return (
     <span
-      className="t-micro flex size-8 flex-none items-center justify-center rounded-full bg-ink px-0.5 text-center text-white group-data-highlighted:bg-white group-data-highlighted:text-ink"
+      className="flex size-8 flex-none items-center justify-center rounded-full bg-ink text-white group-data-highlighted:bg-white group-data-highlighted:text-ink"
       aria-hidden="true"
     >
-      {schoolMark(name)}
+      <Icon className="size-4" strokeWidth={2} />
     </span>
   );
 }
@@ -556,7 +574,7 @@ export function OnboardingFlow({ step }: { step: number }) {
 
                     return (
                       <span className="flex min-w-0 items-center gap-3">
-                        <SchoolMark name={school.name} />
+                        <SchoolMark kind={school.kind} />
                         <span className="min-w-0 flex-1">
                           <span className="t-body block truncate">{school.name}</span>
                           <span className="t-micro block truncate text-ink-faint group-data-highlighted:text-white/70">
