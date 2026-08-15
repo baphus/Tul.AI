@@ -624,7 +624,7 @@ export function OnboardingFlow({ step }: { step: number }) {
             <fieldset className="mx-auto w-full max-w-md text-center lg:col-start-2 lg:row-span-2 lg:row-start-1">
               <legend className="t-body-strong">{t("onboardingCircumstances")}</legend>
               <p className="t-caption mt-1 mb-3.5 text-ink-mute text-pretty">
-                Pumili ng ilan hangga't gusto mo — bawat isa ay nagbubukas ng partikular na programa. Ang dalawang nasa ibaba ng linya ay sagot tungkol sa buong listahan, kaya lilinisin ng pagpili sa alinman ang iba.
+                {t("onboardingCircumstancesHint")}
               </p>
               <div className="flex flex-wrap justify-center gap-2">
                 {CIRCUMSTANCE_CHIPS.map((option) => (
