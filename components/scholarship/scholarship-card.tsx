@@ -1,5 +1,6 @@
 "use client";
 
+import { SparklesIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { MatchBadge } from "@/components/scholarship/match-metric";
@@ -16,10 +17,12 @@ function CountUp({
   value,
   reduced,
   format,
+  className,
 }: {
   value: number;
   reduced: boolean;
   format: (value: number) => string;
+  className?: string;
 }) {
   const [progress, setProgress] = useState(0);
   useEffect(() => {
@@ -35,7 +38,7 @@ function CountUp({
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
   }, [reduced, value]);
-  return <span className="t-figure text-ink-deep">{format(Math.round(value * (reduced ? 1 : progress)))}</span>;
+  return <span className={cn("t-figure text-ink-deep", className)}>{format(Math.round(value * (reduced ? 1 : progress)))}</span>;
 }
 
 const faceClass = "absolute inset-0 flex flex-col overflow-hidden rounded-xl border border-[color:var(--tint-border)] p-4 shadow-[0_8px_24px_rgba(14,15,12,0.1)] [backface-visibility:hidden] sm:p-5 lg:p-5";
@@ -64,7 +67,7 @@ export function ScholarshipCard({
             {!compact && (
               <div>
                 <p className="t-micro text-ink-deep">Your match</p>
-                <p className="mt-1">{result.percent === null ? <span className="t-figure">-</span> : <CountUp key={card.id} value={result.percent} reduced={reduced} format={(value) => `${value}%`} />}</p>
+                <p className="mt-1">{result.percent === null ? <span className="t-figure text-ink-deep">-</span> : <CountUp key={card.id} value={result.percent} reduced={reduced} format={(value) => `${value}%`} className="text-[clamp(2.5rem,5vw,3.125rem)] leading-none" />}</p>
               </div>
             )}
             <MatchBadge card={result} className={cn("shrink-0", compact ? "px-1.5 py-0.5 text-[0.625rem] leading-3 [&>span]:size-1" : "mt-1")} />
@@ -80,13 +83,18 @@ export function ScholarshipCard({
                 <p className="t-body-strong mt-1">{card.deadline}</p>
                 <DeadlineCountdown deadlineIso={card.deadlineIso} />
               </div>
+              <div className="relative mt-4 border-t border-hairline pt-4 lg:mt-3 lg:pt-3">
+                <p className="t-micro flex items-center gap-1.5 text-ink-deep"><SparklesIcon className="size-3.5 shrink-0" aria-hidden="true" />Why this matched you</p>
+                <p className="t-caption mt-1.5 text-ink-mute text-pretty line-clamp-3">{compactMatchReason(result)}</p>
+              </div>
             </>
           )}
           <h2 className={cn(
             "relative mt-auto text-balance",
             compact
               ? "t-heading pt-4 text-[clamp(0.95rem,3.6vw,1.25rem)] leading-[1.08] sm:text-[1.1rem] lg:text-[1.2rem]"
-              : "t-display-lg pt-5 text-[clamp(1.85rem,7.5vw,2.4rem)] leading-[0.96] lg:pt-4 lg:text-[2rem]"
+              : "t-display-lg pt-5 text-[clamp(1.85rem,7.5vw,2.4rem)] leading-[0.96] lg:pt-4 lg:text-[2rem]",
+            "[overflow-wrap:anywhere]"
           )}>{card.title}</h2>
           {compact && (
             <div className="relative mt-3 grid grid-cols-2 gap-x-3 gap-y-1 border-t border-hairline pt-2 text-ink-deep">
@@ -123,11 +131,7 @@ export function ScholarshipCard({
           <h2 className="t-display-md mb-3 text-balance">{card.title}</h2>
           <p className="t-eyebrow mb-2 text-ink-mute">Published requirements</p><div className="mb-3 h-px bg-hairline" />
           <ul className="flex flex-col gap-2.5">{result.checks.map((check) => <li key={check.label} className="flex gap-2.5"><RequirementMark state={check.state === "met" ? "ok" : check.state === "not-met" ? "warn" : "none"} /><div><p className="t-caption-strong text-ink">{check.label}</p><p className="t-micro mt-0.5 text-ink-mute">{check.detail}</p></div></li>)}</ul>
-          <div className="mt-auto border-t border-hairline pt-3">
-            <p className="t-micro text-ink-mute">Why this matched you</p>
-            <p className="t-caption mt-1 text-ink-mute text-pretty">{compactMatchReason(result)}</p>
-          </div>
-          <div className="mt-3 flex items-center justify-between border-t border-hairline pt-3"><p className="t-micro text-ink-mute">Tap to flip back</p><p className="t-micro text-ink-mute">Your match</p></div>
+          <div className="mt-auto flex items-center justify-between border-t border-hairline pt-3"><p className="t-micro text-ink-mute">Tap to flip back</p><p className="t-micro text-ink-mute">Your match</p></div>
         </article>
       </div>
     </div>

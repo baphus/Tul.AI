@@ -266,7 +266,16 @@ describe("rankScholarships", () => {
     expect(rankScholarships([unknown, confirmed], DEMO).map((match) => match.id)).toEqual(["confirmed", "unknown"]);
   });
 
-  it("produces a deterministic compact reason from published checks", () => {
-    expect(compactMatchReason(matchScholarship(fixture({ gwaMin: 85, incomeMax: 10000 }), DEMO))).toContain("GWA matches");
+it("produces a deterministic compact reason that varies with the checks", () => {
+    const good = compactMatchReason(matchScholarship(fixture({ gwaMin: 85, incomeMax: 10000 }), DEMO));
+    expect(good).toContain("GWA is confirmed");
+    expect(good).toContain("undecided: Household income");
+
+    const strong = compactMatchReason(matchScholarship(fixture({ gwaMin: 85 }), DEMO));
+    expect(strong).toContain("Every published requirement checks out");
+    expect(strong).toContain("GWA clears the bar");
+
+    const none = compactMatchReason(matchScholarship(fixture({ gwaMin: 99 }), DEMO));
+    expect(none).toContain("GWA isn't met under the published rules");
   });
 });

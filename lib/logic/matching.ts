@@ -468,12 +468,56 @@ function verificationPriority(status: Scholarship["verification"]): number {
   return status === "Verified" ? 0 : status === "Updated" ? 1 : status === "Needs Verification" ? 2 : status === "Unknown" ? 3 : 4;
 }
 
-/** A compact, deterministic explanation for a matched option. */
+/** Joins requirement labels into a prose list: "GWA", "GWA and Course", "GWA, Course, and Location". */
+function proseList(labels: string[]): string {
+  const [head, ...rest] = labels;
+  if (!head) return "";
+  if (rest.length === 0) return head;
+  if (rest.length === 1) return `${head} and ${rest[0]}`;
+  return `${head}, ${rest.slice(0, -1).join(", ")}, and ${rest[rest.length - 1]}`;
+}
+
+/**
+ * A compact, deterministic explanation for a matched option, written to read
+ * like an AI briefing but composed only from the structured checks. Wording is
+ * varied by the shape of the result ΓÇö tone, counts, and the labels that
+ * actually matched ΓÇö so each option reads differently, and nothing is ever
+ * invented, promised, or scored by a model (AGENTS.md ┬º3).
+ */
 export function compactMatchReason(result: RankedMatch): string {
-  const met = result.checks.filter((check) => check.state === "met").map((check) => check.label);
-  const unknown = result.checks.filter((check) => check.state === "unknown").map((check) => check.label);
-  const confirmed = met.length ? `${met.join(", ")} match${met.length === 1 ? "es" : ""}` : "No published requirements are confirmed yet";
-  return `${confirmed}.${unknown.length ? ` Confirm ${unknown.join(", ")}.` : ""}`;
+  const { checks, tone, total } = result;
+  const met = checks.filter((check) => check.state === "met").map((check) => check.label);
+  const unknown = checks.filter((check) => check.state === "unknown").map((check) => check.label);
+  const notMet = checks.filter((check) => check.state === "not-met").map((check) => check.label);
+
+  if (notMet.length > 0) {
+    const wall = proseList(notMet);
+    const alongside = met.length > 0 ? ` even though ${proseList(met)} ${met.length === 1 ? "is" : "are"} on your side` : "";
+    return `${wall} ${notMet.length === 1 ? "isn't" : "aren't"} met under the published rules${alongside} ΓÇö so this cycle is ${result.match.toLowerCase()}. Revisit it if your situation changes.`;
+  }
+
+  if (total === 0) {
+    return "This provider publishes no checks we can run, so nothing counts against you ΓÇö treated as open, not yet confirmed.";
+  }
+
+  if (tone === "strong") {
+    const which = proseList(met);
+    return `Every published requirement checks out ΓÇö ${which} ${met.length === 1 ? "clears" : "clear"} the bar. It's the most direct fit in your list right now.`;
+  }
+
+  const confirm = unknown.length > 0
+    ? ` ${unknown.length === 1 ? "One requirement stays" : `${unknown.length} requirements stay`} undecided: ${proseList(unknown)}.`
+    : "";
+
+  if (met.length === 0) {
+    return `Nothing we can check has failed ΓÇö the published criteria just can't be confirmed for you yet.${confirm}`;
+  }
+
+  if (tone === "good") {
+    return `${proseList(met)} ${met.length === 1 ? "is confirmed" : "are confirmed"} against the published rules, and nothing rules you out.${confirm}`;
+  }
+
+  return `${proseList(met)} ${met.length === 1 ? "is" : "are"} a confirmed match, but that's a partial picture.${confirm}`;
 }
 
 export interface MatchCounts {

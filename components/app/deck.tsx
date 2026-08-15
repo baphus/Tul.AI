@@ -11,16 +11,14 @@ import { usePrefersReducedMotion } from "@/hooks/use-media-query";
 import { useToday } from "@/hooks/use-today";
 import { useTulAi } from "@/hooks/use-tul-ai";
 import { isDeadlineOpen } from "@/lib/logic/deadlines";
-import { useTranslation } from "@/lib/logic/language";
 import { rankScholarships } from "@/lib/logic/matching";
 import { ROUTES } from "@/lib/logic/routes";
 import { cn } from "@/lib/utils";
 
 /** A browsable set of deterministic matches, never a pass/save sorter. */
-export function Deck({ detailOpen, onCardChange }: { detailOpen: boolean; onCardChange?: (id: string) => void }) {
+export function Deck({ detailOpen, onCardChange, onPositionChange }: { detailOpen: boolean; onCardChange?: (id: string) => void; onPositionChange?: (position: number, total: number) => void }) {
   const router = useRouter();
   const { state, dispatch, cards } = useTulAi();
-  const { t } = useTranslation();
   const reduced = usePrefersReducedMotion();
   const today = useToday();
   const [storedPosition, setPosition] = useState(0);
@@ -59,6 +57,19 @@ export function Deck({ detailOpen, onCardChange }: { detailOpen: boolean; onCard
   const canGoBack = position > 0;
   const canGoForward = position < deck.length - 1;
 
+  /* Keep whichever surface is listening in step with the deck: the desktop
+     detail pane follows the initial top-ranked card as well as every swipe
+     and arrow-key move, so it can never lag on the raw first record. */
+  const currentId = card?.id ?? null;
+  useEffect(() => {
+    if (currentId) onCardChange?.(currentId);
+  }, [currentId, onCardChange]);
+
+  /* The page-level heading shows the deck's position, so report every change. */
+  useEffect(() => {
+    onPositionChange?.(position, deck.length);
+  }, [onPositionChange, position, deck.length]);
+
   useEffect(() => () => window.clearTimeout(swipeTimer.current), []);
 
   const move = useCallback((direction: 1 | -1) => {
@@ -69,11 +80,10 @@ export function Deck({ detailOpen, onCardChange }: { detailOpen: boolean; onCard
     swipeTimer.current = window.setTimeout(() => {
       const nextPosition = position + direction;
       setPosition(nextPosition);
-      onCardChange?.(deck[nextPosition]!.card.id);
       setDragX(0);
       setExiting(null);
     }, reduced ? 1 : 320);
-  }, [canGoBack, canGoForward, deck, exiting, onCardChange, position, reduced]);
+  }, [canGoBack, canGoForward, exiting, position, reduced]);
 
   const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
     if (exiting || (event.target as HTMLElement).closest("button, a")) return;
@@ -161,16 +171,8 @@ export function Deck({ detailOpen, onCardChange }: { detailOpen: boolean; onCard
   }, [canGoBack, canGoForward, detailOpen, dispatch]);
 
   return (
-    <section className="relative mx-auto flex min-h-0 w-full max-w-[31rem] flex-1 flex-col px-5 pt-7 pb-[max(2rem,env(safe-area-inset-bottom))] sm:px-6 lg:max-w-[25rem] lg:pt-6 lg:pb-5" aria-labelledby="deck-heading">
-      <div className="mb-6 flex flex-none items-end justify-between gap-4 lg:mb-4">
-        <div>
-          <h1 id="deck-heading" className="t-display-lg">{t("yourScholarships")}</h1>
-          <p className="t-caption mt-1 text-ink-mute">Explore each published scholarship and its requirements.</p>
-        </div>
-        {deck.length > 0 && <p className="t-caption t-num whitespace-nowrap text-ink-mute">{position + 1} of {deck.length}</p>}
-      </div>
-
-      <div className="relative min-h-[31rem] flex-1 lg:min-h-0">
+    <section className="relative mx-auto flex min-h-0 w-full max-w-[31rem] flex-1 flex-col px-5 pb-[max(2rem,env(safe-area-inset-bottom))] sm:px-6 lg:max-w-[25rem] lg:pb-5" aria-labelledby="deck-heading">
+      <div className="relative min-h-[31rem] flex-1 lg:min-h-[33rem]">
         {card && current ? (
           <div onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp} className={cn("absolute inset-0 touch-pan-y origin-top will-change-transform [animation:rise_220ms_cubic-bezier(.2,.8,.3,1)_both]", dragging ? "transition-none" : "transition-[transform,opacity] duration-[320ms] ease-[cubic-bezier(.22,.85,.28,1)]")} style={{ transform: `translate3d(${dragX}px, ${exiting ? 28 : 0}px, 0) rotate(${reduced ? 0 : dragX / 28}deg)`, opacity: exiting ? 0 : 1 }} key={card.id}>
             <ScholarshipCard card={card} index={current.rawIndex} flipped={state.flipped} reduced={reduced} result={current.result} />

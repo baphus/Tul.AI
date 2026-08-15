@@ -193,7 +193,7 @@ export function ReviewList({ cardId }: { cardId: string | null }) {
         <SheetContent
           side="center"
           showCloseButton={false}
-          className="max-h-[calc(100dvh-2rem)] w-[min(20rem,calc(100vw-2rem))] gap-0 overflow-y-auto rounded-xl border border-ink bg-canvas p-4 text-ink sm:p-5"
+          className="h-auto max-h-[calc(100dvh-2rem)] w-[min(20rem,calc(100vw-2rem))] gap-0 overflow-y-auto rounded-xl border border-ink bg-canvas p-4 text-ink sm:p-5"
         >
           <SheetTitle className="t-heading">Your review deck is ready.</SheetTitle>
           <SheetDescription className="t-caption mt-2.5 text-ink-mute text-pretty">
