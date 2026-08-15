@@ -52,6 +52,8 @@ export interface AppState {
   decisions: Decision[];
   history: DeckSnapshot[];
   flipped: boolean;
+  /** Dismisses the first-use card interaction cue after a student taps a card. */
+  hasTappedCard: boolean;
   advice: Advice | null;
   shownAdvice: Record<string, boolean>;
 
@@ -107,6 +109,7 @@ export function createInitialState(): AppState {
     decisions: Array(DATA.length).fill(undefined) as Decision[],
     history: [],
     flipped: false,
+    hasTappedCard: false,
     advice: null,
     shownAdvice: {},
     stageN: 0,
@@ -261,7 +264,7 @@ export function reducer(state: AppState, action: Action): AppState {
     }
 
     case "TAP_CARD":
-      return { ...state, flipped: !state.flipped };
+      return { ...state, flipped: !state.flipped, hasTappedCard: true };
 
     case "SET_FLIPPED":
       return state.flipped === action.value ? state : { ...state, flipped: action.value };

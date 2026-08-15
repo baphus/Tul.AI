@@ -29,6 +29,7 @@ const persisted = (over: Partial<PersistedState> = {}): PersistedState => ({
   idx: 0,
   decisions: [],
   docs: {},
+  hasTappedCard: false,
   ...over,
 });
 
@@ -40,6 +41,7 @@ describe("toPersistable", () => {
       decisions: ["yes", "no", undefined, undefined, undefined, undefined],
       docs: { [DATA[0].id]: [DATA[0].needs[0]] },
       flipped: true,
+      hasTappedCard: true,
       stageN: 5,
       advice: { id: "x", title: "t", text: "b" },
     };
@@ -49,6 +51,7 @@ describe("toPersistable", () => {
       idx: 2,
       decisions: state.decisions,
       docs: state.docs,
+      hasTappedCard: true,
     });
   });
 });

@@ -156,19 +156,23 @@ describe("deck sorting", () => {
   });
 
   it("resets the deck but keeps the profile", () => {
-    const s = swipe(reducer(createInitialState(), { type: "DEMO_FILL" }), 1);
+    const tapped = reducer(createInitialState(), { type: "TAP_CARD" });
+    const s = swipe(reducer(tapped, { type: "DEMO_FILL" }), 1);
     const reset = reducer(s, { type: "RESET_DECK" });
     expect(reset.idx).toBe(0);
     expect(savedCount(reset)).toBe(0);
     expect(reset.history).toHaveLength(0);
     expect(reset.profile.city).toBe("Cebu City");
+    expect(reset.hasTappedCard).toBe(true);
   });
 
   it("flips the card and can be forced back", () => {
     const flipped = reducer(createInitialState(), { type: "TAP_CARD" });
     expect(flipped.flipped).toBe(true);
+    expect(flipped.hasTappedCard).toBe(true);
     const back = reducer(flipped, { type: "SET_FLIPPED", value: false });
     expect(back.flipped).toBe(false);
+    expect(back.hasTappedCard).toBe(true);
     expect(reducer(back, { type: "SET_FLIPPED", value: false })).toBe(back);
   });
 

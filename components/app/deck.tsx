@@ -174,7 +174,7 @@ export function Deck({ detailOpen, onCardChange }: { detailOpen: boolean; onCard
         {card && current ? (
           <div onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp} className={cn("absolute inset-0 touch-pan-y origin-top will-change-transform [animation:rise_220ms_cubic-bezier(.2,.8,.3,1)_both]", dragging ? "transition-none" : "transition-[transform,opacity] duration-[320ms] ease-[cubic-bezier(.22,.85,.28,1)]")} style={{ transform: `translate3d(${dragX}px, ${exiting ? 28 : 0}px, 0) rotate(${reduced ? 0 : dragX / 28}deg)`, opacity: exiting ? 0 : 1 }} key={card.id}>
             <ScholarshipCard card={card} index={current.rawIndex} flipped={state.flipped} reduced={reduced} result={current.result} />
-            {!state.flipped && <TapCardIndicator />}
+            {!state.hasTappedCard && <TapCardIndicator />}
           </div>
         ) : (
           <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center">
@@ -186,16 +186,15 @@ export function Deck({ detailOpen, onCardChange }: { detailOpen: boolean; onCard
       </div>
 
       {card && (
-        <div className={cn("mt-6 grid flex-none items-center gap-3 lg:mt-4", canGoForward ? "grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]" : "grid-cols-[minmax(0,1fr)_minmax(0,1fr)]")}>
+        <div className="mt-6 grid flex-none grid-cols-2 items-center gap-3 lg:mt-4">
           <Button variant="tertiary" className="h-12 w-full justify-center gap-2 px-3" onClick={() => move(-1)} disabled={!canGoBack || Boolean(exiting)}><ArrowLeftIcon />Previous</Button>
-          <ButtonLink
-            variant={canGoForward ? "tertiary" : "default"}
-            className={cn("h-12 justify-center px-4", !canGoForward && "w-full")}
-            href={ROUTES.review}
-          >
-            Browse all
-          </ButtonLink>
-          {canGoForward && <Button className="h-12 w-full justify-center gap-2 px-3" onClick={() => move(1)} disabled={Boolean(exiting)}>Next<ArrowRightIcon /></Button>}
+          {canGoForward ? (
+            <Button className="h-12 w-full justify-center gap-2 px-3" onClick={() => move(1)} disabled={Boolean(exiting)}>Next<ArrowRightIcon /></Button>
+          ) : (
+            <ButtonLink className="h-12 w-full justify-center px-4" href={ROUTES.review}>
+              Browse all
+            </ButtonLink>
+          )}
           <button
             type="button"
             aria-label="Open scholarship details"

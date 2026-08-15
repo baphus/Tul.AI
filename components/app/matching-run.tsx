@@ -92,7 +92,7 @@ export function MatchingRun() {
     const openDiscover = () => {
       window.sessionStorage.setItem("tul-ai:match-celebration", "1");
       window.sessionStorage.removeItem("tul-ai:chat-match-seen");
-      router.replace(ROUTES.review);
+      router.replace(ROUTES.discover);
     };
 
     if (reduced) {

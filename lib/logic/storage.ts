@@ -6,7 +6,8 @@ const KEY = "tul-ai:state:v1";
 
 /**
  * What survives a reload: who the student is, how far through the deck they
- * got, how they sorted it, and their document checklist. Nothing transient, and
+ * got, how they sorted it, their document checklist, and first-use cues they
+ * have already completed. Nothing transient, and
  * no screen — the URL decides that.
  */
 export interface PersistedState {
@@ -14,6 +15,7 @@ export interface PersistedState {
   idx: number;
   decisions: Decision[];
   docs: Record<string, string[]>;
+  hasTappedCard: boolean;
 }
 
 export function toPersistable(state: AppState): PersistedState {
@@ -22,6 +24,7 @@ export function toPersistable(state: AppState): PersistedState {
     idx: state.idx,
     decisions: state.decisions,
     docs: state.docs,
+    hasTappedCard: state.hasTappedCard,
   };
 }
 
@@ -57,6 +60,7 @@ export function hydrateState(p: PersistedState | null): AppState {
     idx: Math.max(0, Math.min(p.idx, DATA.length)),
     decisions: DATA.map((_, i) => normalizeDecision(p.decisions?.[i])),
     docs: normalizeDocs(p.docs),
+    hasTappedCard: p.hasTappedCard === true,
   };
 }
 
@@ -72,6 +76,7 @@ export function loadPersisted(): PersistedState | null {
       idx: typeof parsed.idx === "number" ? parsed.idx : 0,
       decisions: Array.isArray(parsed.decisions) ? parsed.decisions : [],
       docs: normalizeDocs(parsed.docs),
+      hasTappedCard: parsed.hasTappedCard === true,
     };
   } catch {
     return null;
