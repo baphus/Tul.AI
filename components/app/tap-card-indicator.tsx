@@ -6,7 +6,7 @@ export function TapCardIndicator() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none absolute right-[-1.55rem] bottom-[-1.15rem] z-10 flex items-end gap-1.5 motion-safe:animate-[tap-card-wiggle_2.4s_cubic-bezier(.16,1,.3,1)_infinite]"
+      className="pointer-events-none absolute right-[-1.55rem] top-1/2 z-10 flex -translate-y-1/2 items-end gap-1.5 motion-safe:animate-[tap-card-wiggle_2.4s_cubic-bezier(.16,1,.3,1)_infinite]"
     >
       <span className="t-caption-strong rounded-lg border-[3px] border-ink bg-warning px-2.5 py-1 text-ink shadow-[3px_3px_0_var(--ink)]">
         Tap me!
