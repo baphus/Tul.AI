@@ -15,7 +15,7 @@ export default async function OnboardingPage({ searchParams }: PageProps<"/onboa
 
   return (
     <main id="main" className="flex flex-1 flex-col">
-      <div className="mx-auto flex w-full max-w-[46rem] flex-1 flex-col px-5 pt-4 sm:px-8 lg:max-w-[68rem]">
+      <div className="mx-auto flex w-full max-w-[46rem] flex-1 flex-col px-5 sm:px-8 lg:max-w-[68rem]">
         <OnboardingFlow step={step} />
       </div>
     </main>
