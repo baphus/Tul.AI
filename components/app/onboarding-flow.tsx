@@ -323,6 +323,30 @@ export function OnboardingFlow({ step }: { step: number }) {
         }[note.text ?? ""] ?? note.text)
       : note.text;
 
+  const fieldCopy = language === "FIL"
+    ? {
+        locationEmpty: "Wala sa listahan — pananatilihin ang isinulat mo at itutugma sa mga pambansang programa.",
+        courseEmpty: "Wala sa listahan — pananatilihin namin ang eksaktong isinulat mo at ihahambing ito sa wording ng bawat provider.",
+        schoolExtra: "pero nagbubukas ito ng university grant",
+        schoolEmpty: "Wala sa listahan — pananatilihin namin ang isinulat mo.",
+        noCircumstances: "Ang mga programang para sa isa sa mga kategorya sa itaas ay lalabas na hindi kasalukuyang kwalipikado dahil sinabi mong walang naaangkop. Alisin ang check kung mas gusto mong hindi ito sagutin.",
+      }
+    : language === "BIS"
+      ? {
+          locationEmpty: "Wala sa lista — tipigan ang imong gisulat ug itugma sa nasudnong mga programa.",
+          courseEmpty: "Wala sa lista — tipigan namo ang eksakto nimong gisulat ug itandi sa mga pulong sa matag provider.",
+          schoolExtra: "apan makabukas kini og grant sa unibersidad",
+          schoolEmpty: "Wala sa lista — tipigan namo ang imong gisulat.",
+          noCircumstances: "Ang mga programa alang sa usa sa mga kategorya sa ibabaw ipakita nga dili karon eligible tungod kay miingon kang walay angay. Tangtanga ang check kon mas gusto nimo nga dili kini tubagon.",
+        }
+      : {
+          locationEmpty: "Not in the list — we'll keep what you typed and match it against national programmes.",
+          courseEmpty: "Not in the list — we'll keep exactly what you typed and compare it with each provider's wording.",
+          schoolExtra: "but it unlocks university grants",
+          schoolEmpty: "Not in the list — we'll keep what you typed.",
+          noCircumstances: "Programmes for any category above will show as not currently eligible because you said none apply. Clear this choice if you would rather leave the question unanswered.",
+        };
+
   return (
     <div className="flex min-h-0 flex-1 flex-col">
       {/* ── The lime question band ───────────────────────────
@@ -464,7 +488,7 @@ export function OnboardingFlow({ step }: { step: number }) {
                 value={profile.city}
                 onValueChange={(value) => setField("city", value)}
                 placeholder={language === "FIL" ? "hal. Iloilo City" : "e.g. Iloilo City"}
-                emptyMessage="Wala sa listahan — pananatilihin ang isinulat mo at itutugma sa mga pambansang programa."
+                emptyMessage={fieldCopy.locationEmpty}
               />
               {otherSelected && (
                 <p className="t-micro text-ink-mute text-pretty">
@@ -488,7 +512,7 @@ export function OnboardingFlow({ step }: { step: number }) {
                 itemLabel={(item) => item.name}
                 autoFocus
                 placeholder={t("onboardingSearchCourses")}
-                emptyMessage="Wala sa listahan — pananatilihin namin ang eksaktong isinulat mo at ihahambing ito sa wording ng bawat provider."
+                emptyMessage={fieldCopy.courseEmpty}
               />
               <div className="mt-1 flex flex-wrap gap-2">
                 {COURSE_SUGGESTIONS.map((course) => (
@@ -513,7 +537,7 @@ export function OnboardingFlow({ step }: { step: number }) {
                 <Label htmlFor="school">
                   {t("onboardingSchool")}{" "}
                   <span className="t-micro text-ink-mute">
-                    — {t("optional")}, pero nagbubukas ito ng university grant
+                    — {t("optional")}, {fieldCopy.schoolExtra}
                   </span>
                 </Label>
                 <SearchableField
@@ -542,7 +566,7 @@ export function OnboardingFlow({ step }: { step: number }) {
                       </span>
                     );
                   }}
-                  emptyMessage="Wala sa listahan — pananatilihin namin ang isinulat mo."
+                  emptyMessage={fieldCopy.schoolEmpty}
                 />
                 <p className="t-micro text-ink-mute text-pretty">
                   {schools.scope === "all"
@@ -648,7 +672,7 @@ export function OnboardingFlow({ step }: { step: number }) {
               </div>
               {profile.chips.includes(CHIP_NONE) && (
                 <p className="t-micro mx-auto mt-3.5 max-w-[46ch] text-ink-mute text-pretty">
-                  Ang mga programang para sa isa sa mga kategorya sa itaas ay lalabas na hindi kasalukuyang kwalipikado dahil sinabi mong walang naaangkop. Alisin ang check kung mas gusto mong hindi ito sagutin.
+                  {fieldCopy.noCircumstances}
                 </p>
               )}
             </fieldset>
