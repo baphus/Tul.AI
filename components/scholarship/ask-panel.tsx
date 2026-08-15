@@ -107,18 +107,14 @@ export function AskPanel({ card, condensed = false }: { card: Scholarship; conde
                       ? entry.a.citations?.length
                         ? copy.aiGroundedWithSources
                         : copy.aiGrounded
-                      : copy.publishedFallback}
+                      : copy.recordGrounded}
                   </p>
                   {entry.a.src ? (
                     <p className="t-micro mt-2 flex items-center gap-2 text-ink-mute">
                       <span className="size-1.5 rounded-full bg-met" aria-hidden="true" />
                       {t("source")}: {entry.a.src}
                     </p>
-                  ) : (
-                    <p className="t-micro mt-2 text-ink-mute">
-                      {t("notStated")}
-                    </p>
-                  )}
+                  ) : null}
                   {entry.a.citations?.length ? (
                     <ul className="t-micro mt-2 space-y-1 text-ink-mute">
                       {entry.a.citations.map((citation) => (

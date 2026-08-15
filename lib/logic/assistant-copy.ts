@@ -4,7 +4,7 @@ export const ASSISTANT_COPY: Record<Language, {
   answerContext: string;
   aiGrounded: string;
   aiGroundedWithSources: string;
-  publishedFallback: string;
+  recordGrounded: string;
   thinking: string;
   askPlaceholder: string;
   chatGreeting: (total: number, buckets: string) => string;
@@ -19,7 +19,7 @@ export const ASSISTANT_COPY: Record<Language, {
     answerContext: "Answers use the published record. For current facts, Tul.AI may research the provider's official sources and show citations; anything it can't confirm stays unknown.",
     aiGrounded: "AI response grounded in the published record",
     aiGroundedWithSources: "AI response grounded in the published record and official web sources",
-    publishedFallback: "Published-record answer — AI is unavailable right now",
+    recordGrounded: "Based on the scholarship record",
     thinking: "Thinking…",
     askPlaceholder: "Ask about scholarships…",
     chatGreeting: (total, buckets) => `You've found ${total} match${total === 1 ? "" : "es"}: ${buckets}. Ask me to clarify any match or research scholarship questions. Provider sources still decide eligibility, deadlines, and applications.`,
@@ -34,7 +34,7 @@ export const ASSISTANT_COPY: Record<Language, {
     answerContext: "Batay ang mga sagot sa inilathalang rekord. Para sa kasalukuyang impormasyon, maaaring magsaliksik ang Tul.AI sa opisyal na source ng provider at magpakita ng citation; anumang hindi makumpirma ay mananatiling unknown.",
     aiGrounded: "Sagot ng AI na nakabatay sa inilathalang rekord",
     aiGroundedWithSources: "Sagot ng AI na nakabatay sa inilathalang rekord at opisyal na web source",
-    publishedFallback: "Sagot mula sa inilathalang rekord — hindi available ang AI ngayon",
+    recordGrounded: "Batay sa rekord ng scholarship",
     thinking: "Nag-iisip…",
     askPlaceholder: "Magtanong tungkol sa mga scholarship…",
     chatGreeting: (total, buckets) => `Mayroon kang ${total} match${total === 1 ? "" : "es"}: ${buckets}. Maaari kang magtanong para linawin ang anumang match o magsaliksik tungkol sa scholarship. Ang provider pa rin ang nagpapasya sa eligibility, deadline, at aplikasyon.`,
@@ -49,7 +49,7 @@ export const ASSISTANT_COPY: Record<Language, {
     answerContext: "Ang mga tubag gibase sa gipatik nga rekord. Para sa kasamtangang impormasyon, mahimong mosusi ang Tul.AI sa opisyal nga tinubdan sa provider ug magpakita og citation; ang dili makumpirma magpabiling unknown.",
     aiGrounded: "Tubag sa AI nga gibase sa gipatik nga rekord",
     aiGroundedWithSources: "Tubag sa AI nga gibase sa gipatik nga rekord ug opisyal nga mga tinubdan sa web",
-    publishedFallback: "Tubag gikan sa gipatik nga rekord — dili available ang AI karon",
+    recordGrounded: "Gibase sa rekord sa scholarship",
     thinking: "Naghunahuna…",
     askPlaceholder: "Pangutana bahin sa mga scholarship…",
     chatGreeting: (total, buckets) => `Nakaplagan nimo ang ${total} ka match${total === 1 ? "" : "es"}: ${buckets}. Pangutana lang aron masabtan ang bisan unsang match o bahin sa scholarship. Ang provider gihapon ang magbuot sa eligibility, deadline, ug aplikasyon.`,

@@ -69,9 +69,9 @@ describe("answerFor", () => {
     expect(a.src).toBe(CHED.sources[0].name);
   });
 
-  it("defers to the provider when it cannot ground the answer", () => {
+  it("directs students to the provider when an answer needs confirmation", () => {
     const a = answerFor("Can I apply in Tagalog?", CHED);
-    expect(a.text).toContain("doesn't cover that specifically");
+    expect(a.text).toContain("contact " + CHED.provider + " directly");
     expect(a.src).toBeNull();
   });
 

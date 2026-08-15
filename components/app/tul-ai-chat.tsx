@@ -188,9 +188,7 @@ export function TulAiChat({
                   <div className="t-caption max-w-[90%] self-start rounded-lg rounded-bl-xs border border-hairline bg-canvas px-3.5 py-2.5 text-ink [animation:rise_260ms_cubic-bezier(.2,.8,.3,1)_both]">
                     <p>{entry.a.text}</p>
                     <p className="t-micro mt-2 border-t border-hairline pt-2 text-ink-mute">
-                      {entry.origin === "ai"
-                        ? "AI response grounded in your published matches"
-                        : "Published-match answer — AI is unavailable right now"}
+                      {entry.origin === "ai" ? copy.aiGrounded : copy.recordGrounded}
                     </p>
                     {entry.a.src && (
                       <p className="t-micro mt-2 text-ink-mute">

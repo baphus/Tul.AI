@@ -39,7 +39,7 @@ export async function POST(request: Request) {
 
     // ── Build full structured context from the scholarship record ──
     // Gemini answers directly from this data — no keyword matching needed.
-    // answerFor() is only used as the offline fallback when the AI is unavailable.
+    // answerFor() is only used as the deterministic fallback when no generated response is available.
     const { eligibility } = card;
     const eligibilityLines: string[] = [];
     if (eligibility.special?.length)
@@ -98,7 +98,7 @@ Student question: "${question}"
 Rules:
 - Answer clearly and warmly in 2–4 sentences.
 - Never estimate acceptance odds or guarantee an award.
-- If the record doesn't cover the question, say so and direct the student to ${card.provider} at ${card.host}.
+- If the record doesn't cover the question, direct the student to ${card.provider} at ${card.host} for that detail. Do not imply that an unpublished detail makes the student ineligible.
 - Unknown eligibility details stay unknown — never treat a missing answer as ineligible.
 ${liveResearch ? "- Follow the research order above. Cite every current fact you use." : "- Do not add any facts beyond the record above."}`;
 

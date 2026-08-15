@@ -320,13 +320,11 @@ export function answerFor(q: string, card: Scholarship, language: Language = "EN
 
   return {
     text:
-      "The published record for " +
+      "For a definitive answer about this, contact " +
       card.provider +
-      " — " +
-      card.title +
-      " doesn't cover that specifically. The safest answer will come from the provider directly at " +
+      " directly at " +
       card.host +
-      " — their information was last checked " +
+      ". Their information was last checked " +
       card.sources[0].date.replace("Verified ", "").replace("Checked ", "") +
       ".",
     src: null,
