@@ -101,11 +101,17 @@ export interface Scholarship {
   logo: string | null;
   title: string;
   amount: number;
+  /** Provider-published support when a programme does not state a peso amount. */
+  assistance: string;
+  /** Full provider-published support package, shown in the record details. */
+  benefits: string[];
   amountNote: string;
   /** Display form, e.g. "Aug. 30, 2026". */
   deadline: string;
   /** Machine form for day arithmetic — "days left" is always computed, never stored. */
   deadlineIso: string;
+  /** A recurring programme expected to reopen; its specific 2027 call is not yet published. */
+  expectedNextCycle: boolean;
   match: "Strong match" | "Good match" | "Possible match";
   matchShort: string;
   tone: MatchTone;
@@ -168,6 +174,23 @@ type RawScholarship = {
 
 const rawRecords = rawScholarships as RawScholarship[];
 
+const EXPECTED_2027_CYCLE_IDS = new Set([
+  "gbf-iskolar-ni-juan-tech-voc-certification-scholarship-program-1",
+  "asian-development-bank-japan-scholarship-program-adb-jsp-12",
+  "panasonic-college-scholarship-asia-philippines-2",
+  "mercury-drug-foundation-inc-mdfi-pharmacy-scholarship-11",
+  "aboitiz-future-leaders-scholarship-program-15",
+  "sm-foundation-college-scholarship-program-3",
+  "ched-merit-scholarship-program-cmsp-ay-2026-2027-39",
+  "security-bank-foundation-scholarships-internal-external-and-regalo-mo-ki-19",
+  "mdfi-gawad-talino-scholarship-21",
+  "amcham-foundation-scholarship-program-32",
+  "cebuana-lhuillier-foundation-inc-clfi-nationwide-scholarship-program-29",
+  "shell-unlad-sa-pasada-usp-scholarship-program-33",
+  "ched-sikap-l-scholarship-legal-education-track-38",
+  "cebu-technological-university-internally-funded-scholarships-43",
+]);
+
 function dateOnly(value: string | null | undefined): string { return value ? value.slice(0, 10) : ""; }
 function displayDate(value: string | null | undefined): string {
   const iso = dateOnly(value);
@@ -201,8 +224,18 @@ function providerLogo(record: RawScholarship): string | null {
 }
 function benefitAmount(record: RawScholarship): number {
   const text = record.benefits.join(" ");
-  const values = [...text.matchAll(/[₱]\s*([0-9,]+)/g)].map((match) => Number(match[1].replace(/,/g, "")));
+  const values = [...text.matchAll(/(?:[₱]|PHP\s*)\s*([0-9,]+)/gi)].map((match) => Number(match[1].replace(/,/g, "")));
   return values.length ? Math.max(...values) : 0;
+}
+function assistanceFor(record: RawScholarship): string {
+  const text = record.benefits.join(" ").toLowerCase();
+  if (text.includes("full tuition") || text.includes("100% tuition")) return "Full tuition";
+  if (text.includes("free tuition")) return "Free tuition & training";
+  if (text.includes("tuition discount")) return "Tuition discount";
+  if (text.includes("tuition")) return "Tuition support";
+  if (text.includes("financial grant") || text.includes("financial assistance")) return "Financial assistance";
+  if (text.includes("scholarship support")) return "Scholarship support";
+  return "Provider-published support";
 }
 function sourceTier(record: RawScholarship): 1 | 2 | 3 | 4 {
   switch (record.verificationSource) {
@@ -245,12 +278,12 @@ function rowsFor(criteria: Eligibility): RequirementRow[] {
 }
 function adapt(record: RawScholarship): Scholarship {
   const eligibility = criteriaFor(record); const rows = rowsFor(eligibility);
-  const lastVerified = dateOnly(record.lastVerified) || "Unknown"; const verification = record.verificationStatus;
-  const amount = benefitAmount(record); const deadlineIso = dateOnly(record.deadline) || "9999-12-31";
+  const lastVerified = dateOnly(record.lastVerified) || "Unknown"; const expectedNextCycle = EXPECTED_2027_CYCLE_IDS.has(record.id); const verification = expectedNextCycle ? "Needs Verification" : record.verificationStatus;
+  const amount = benefitAmount(record); const assistance = assistanceFor(record); const deadlineIso = dateOnly(record.deadline) || "9999-12-31";
   const sourceUrl = record.provider.website ?? record.applicationUrl ?? "";
   return {
-    id: record.id, provider: record.provider.name, logo: providerLogo(record), title: record.name, amount,
-    amountNote: amount ? "published benefit" : "see provider details", deadline: displayDate(record.deadline), deadlineIso,
+    id: record.id, provider: record.provider.name, logo: providerLogo(record), title: record.name, amount, assistance, benefits: record.benefits,
+    amountNote: amount ? "published benefit" : "provider-published support", deadline: displayDate(record.deadline), deadlineIso, expectedNextCycle,
     match: "Possible match", matchShort: "Review " + rows.length + " published requirement" + (rows.length === 1 ? "" : "s"),
     tone: "possible", met: 0, total: rows.length,
     why: rows.slice(0, 3).map((row) => ({ state: row.state, label: row.label + " published" })), rows,

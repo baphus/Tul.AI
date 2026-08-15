@@ -39,8 +39,8 @@
       "Volunteerism activities and seminars",
       "Career opportunities in Megaworld, subsidiaries, and affiliates"
     ],
-    "deadline": null,
-    "applicationUrl": null,
+    "deadline": "2026-09-01",
+    "applicationUrl": "https://www.megaworldfoundation.com/scholarship/apply/form",
     "eligibility": {
       "educationLevel": [
         "Incoming Freshman",
@@ -52,9 +52,13 @@
       }
     },
     "requirements": [
-      "Partner-school enrollment required",
-      "Volunteerism activities and seminars",
-      "Career assistance after graduation"
+      "Enrolment at a Megaworld Foundation partner school",
+      "Incoming freshmen: final senior-high grade report with at least 85% average (or equivalent) and at least 80% in every subject",
+      "Incoming freshmen: university entrance-exam result, admission letter, certificate of enrolment, or registration form",
+      "Incoming freshmen: upper-10% class-ranking certificate, if available",
+      "Incoming sophomores and juniors: grade reports through the current semester with at least 85% GPA (or equivalent) and at least 80% in every subject",
+      "Incoming sophomores and juniors: full-load enrolment assessment/registration form with class schedule and updated course curriculum",
+      "Complete applications and subsequent assessment/interviews are required"
     ],
     "requiredDocuments": [
       "One-month payslip if parent/s are employed",
@@ -63,13 +67,15 @@
       "Complete copy of grades",
       "Certificate of Enrollment / Registration Form",
       "Photo of applicant with family/guardian",
-      "For freshmen: admission/entrance result or equivalent",
-      "For sophomores/juniors: full-load registration and updated curriculum"
+      "For freshmen: passing university entrance-exam result, admission letter, certificate of enrolment, or registration form",
+      "For freshmen: upper-10% class-ranking certificate, if available",
+      "For sophomores/juniors: full-load registration or enrolment assessment with class schedule",
+      "For sophomores/juniors: complete and updated course curriculum"
     ],
     "tags": [
       "foundation"
     ],
-    "lastVerified": "2026-08-12",
+    "lastVerified": "2026-08-16",
     "verificationSource": "official",
     "verificationStatus": "Verified"
   },
@@ -470,7 +476,8 @@
     "benefits": [
       "Financial assistance for higher education",
       "Support for underprivileged students",
-      "Employee and family educational support"
+      "Employee and family educational support",
+      "Regalo Mo, Kinabukasan Ko (agency track): PHP 30,000 annual college stipend; tuition and miscellaneous fees are covered up to the programme's published maximum"
     ],
     "deadline": "2026-08-31",
     "applicationUrl": "https://philscholar.com/list-of-security-bank-foundation-scholarships/",
@@ -2146,8 +2153,10 @@
     },
     "description": "CHED's merit scholarship program for qualified incoming first-year college students. The official AY 2026–2027 regional announcement described this cycle as open from June 22 to July 31, 2026; this record is retained as a closed-cycle reference.",
     "benefits": [
-      "Financial assistance for qualified incoming first-year college students",
-      "Check CHED's next official call for the benefit schedule"
+      "Full PESFA at a private HEI: up to PHP 120,000 per academic year (PHP 40,000 tuition and other school fees, PHP 70,000 stipend, and PHP 10,000 book/connectivity allowance)",
+      "Half PESFA at a private HEI: up to PHP 60,000 per academic year",
+      "Full scholarship at an SUC/LUC: free higher education plus PHP 70,000 stipend and PHP 10,000 book/connectivity allowance (PHP 80,000 total published annual assistance)",
+      "Half scholarship at an SUC/LUC: PHP 40,000 total published annual assistance"
     ],
     "deadline": "2026-07-31",
     "applicationUrl": null,

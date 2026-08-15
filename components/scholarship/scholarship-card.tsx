@@ -76,12 +76,15 @@ export function ScholarshipCard({
             <>
               <div className="relative mt-4 border-t border-hairline pt-4 lg:mt-3 lg:pt-3">
                 <p className="t-micro text-ink-deep">Potential assistance</p>
-                <p className="mt-1 flex flex-wrap items-baseline gap-2"><CountUp key={`${card.id}-assistance`} value={card.amount} reduced={reduced} format={formatPeso} /><span className="t-caption text-ink-mute">{card.amountNote}</span></p>
+                <p className="mt-1 flex flex-wrap items-baseline gap-2">
+                  {card.amount ? <CountUp key={`${card.id}-assistance`} value={card.amount} reduced={reduced} format={formatPeso} /> : <span className="t-caption-strong text-pretty text-ink-deep">{card.assistance}</span>}
+                  <span className="t-caption text-ink-mute">{card.amountNote}</span>
+                </p>
               </div>
               <div className="relative mt-4 border-t border-hairline pt-4 lg:mt-3 lg:pt-3">
                 <p className="t-micro text-ink-mute">Deadline</p>
-                <p className="t-body-strong mt-1">{card.deadline}</p>
-                <DeadlineCountdown deadlineIso={card.deadlineIso} />
+                <p className="t-body-strong mt-1">{card.expectedNextCycle ? "Expected next cycle in 2027" : card.deadline}</p>
+                {!card.expectedNextCycle && <DeadlineCountdown deadlineIso={card.deadlineIso} />}
               </div>
               <div className="relative mt-4 border-t border-hairline pt-4 lg:mt-3 lg:pt-3">
                 <p className="t-micro flex items-center gap-1.5 text-ink-deep"><SparklesIcon className="size-3.5 shrink-0" aria-hidden="true" />Why this matched you</p>
@@ -104,7 +107,7 @@ export function ScholarshipCard({
               </p>
               <p className="t-caption-strong justify-self-end tabular-nums">
                 <span className="sr-only">Published benefit: </span>
-                {formatPeso(card.amount)}
+                {card.amount ? formatPeso(card.amount) : "Published support"}
               </p>
               <p className="t-micro col-span-2 truncate text-ink-mute">
                 <span className="sr-only">Deadline: </span>

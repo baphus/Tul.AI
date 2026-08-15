@@ -62,13 +62,13 @@ export function ScholarshipSummaryCard({
           </h3>
         </div>
         <div className="hidden text-right sm:block">
-          <p className="t-display-md t-num">{formatPeso(card.amount)}</p>
+          <p className={card.amount ? "t-display-md t-num" : "t-caption-strong max-w-48 text-pretty text-ink"}>{card.amount ? formatPeso(card.amount) : card.assistance}</p>
           <p className="t-micro mt-0.5 text-ink-mute">{card.amountNote}</p>
         </div>
       </div>
 
       <p className="t-body mt-4 text-ink-mute sm:hidden">
-        <span className="t-body-strong t-num text-ink">{formatPeso(card.amount)}</span>{" "}
+        <span className={card.amount ? "t-body-strong t-num text-ink" : "t-body-strong text-ink"}>{card.amount ? formatPeso(card.amount) : card.assistance}</span>{" "}
         {card.amountNote}
       </p>
 

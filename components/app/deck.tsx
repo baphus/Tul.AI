@@ -42,7 +42,7 @@ export function Deck({ detailOpen, onCardChange, onPositionChange }: { detailOpe
           result,
           rawIndex: cards.findIndex((item) => item.id === result.id),
         }))
-        .filter(({ card }) => card.verification !== "Expired" && (!today || isDeadlineOpen(card.deadlineIso, today))),
+        .filter(({ card }) => card.verification !== "Expired" && (card.expectedNextCycle || !today || isDeadlineOpen(card.deadlineIso, today))),
     [cards, state.profile, today]
   );
 

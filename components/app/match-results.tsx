@@ -40,7 +40,7 @@ export function MatchResults() {
   const ranked = useMemo(
     () => rankScholarships(cards, state.profile).filter((result) => {
       const card = cards.find((item) => item.id === result.id);
-      return Boolean(card && card.verification !== "Expired" && (!today || isDeadlineOpen(card.deadlineIso, today)));
+      return Boolean(card && card.verification !== "Expired" && (card.expectedNextCycle || !today || isDeadlineOpen(card.deadlineIso, today)));
     }),
     [cards, state.profile, today]
   );
@@ -224,12 +224,12 @@ function TopMatch({
 
           <div className="mt-3 flex flex-wrap items-center gap-2">
             {result.tone !== "possible" && <ToneBadge tone={result.tone} />}
-            <DeadlineChip deadline={card.deadline} deadlineIso={card.deadlineIso} />
+            <DeadlineChip deadline={card.deadline} deadlineIso={card.deadlineIso} expectedNextCycle={card.expectedNextCycle} />
           </div>
         </div>
 
         <div className="flex-none text-right">
-          <p className="t-display-md t-num">{formatPeso(card.amount)}</p>
+          <p className={card.amount ? "t-display-md t-num" : "t-caption-strong max-w-40 text-pretty text-ink"}>{card.amount ? formatPeso(card.amount) : card.assistance}</p>
           <p className="t-micro mt-0.5 text-ink-mute">{card.amountNote}</p>
         </div>
       </Link>

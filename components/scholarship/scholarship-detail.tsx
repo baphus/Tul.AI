@@ -79,7 +79,7 @@ export function ScholarshipDetail({
           <h1 className="t-display-xl mt-4 max-w-[16ch] text-balance">{card.title}</h1>
           <div className="mt-5 flex flex-wrap items-center gap-2">
             {personalized && match.tone !== "possible" && <MatchBadge card={match} />}
-            <DeadlineChip deadline={card.deadline} deadlineIso={card.deadlineIso} />
+            <DeadlineChip deadline={card.deadline} deadlineIso={card.deadlineIso} expectedNextCycle={card.expectedNextCycle} />
           </div>
         </div>
       </header>
@@ -89,15 +89,15 @@ export function ScholarshipDetail({
         <dl className="mt-8 grid gap-3 sm:grid-cols-2">
           <div className="rounded-lg border border-hairline bg-canvas p-5">
             <dt className="t-micro text-ink-mute">Potential assistance</dt>
-            <dd className="t-display-md t-num mt-1.5">{formatPeso(card.amount)}</dd>
+            <dd className={cn("mt-1.5", card.amount ? "t-display-md t-num" : "t-body-strong text-pretty")}>{card.amount ? formatPeso(card.amount) : card.assistance}</dd>
             <p className="t-caption mt-1 text-ink-mute">{card.amountNote}</p>
           </div>
           <div className="rounded-lg border border-hairline bg-canvas p-5">
             <dt className="t-micro text-ink-mute">Application deadline</dt>
             <dd className="t-display-md mt-1.5">
-              <time dateTime={card.deadlineIso}>{card.deadline}</time>
+              {card.expectedNextCycle ? "Expected next cycle in 2027" : <time dateTime={card.deadlineIso}>{card.deadline}</time>}
             </dd>
-            <p className="t-caption mt-1 text-ink-mute">Published by the provider</p>
+            <p className="t-caption mt-1 text-ink-mute">{card.expectedNextCycle ? "The provider has not published the 2027 call date yet" : "Published by the provider"}</p>
           </div>
         </dl>
 
@@ -115,6 +115,16 @@ export function ScholarshipDetail({
         </dl>
 
         {/* ── Why this matched ── */}
+          </DisclosureSection>
+          <DisclosureSection title="Published support" open>
+            <ul className="space-y-3">
+              {card.benefits.map((benefit) => (
+                <li key={benefit} className="t-body flex gap-3 text-ink-mute">
+                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-ink" aria-hidden="true" />
+                  <span>{benefit}</span>
+                </li>
+              ))}
+            </ul>
           </DisclosureSection>
           <DisclosureSection title={personalized ? "Why this matched you" : "Published requirements"} open>
         <section aria-labelledby="why">

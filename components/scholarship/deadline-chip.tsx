@@ -22,17 +22,19 @@ const TONE = {
 export function DeadlineChip({
   deadline,
   deadlineIso,
+  expectedNextCycle = false,
   className,
   withIcon = true,
 }: {
   deadline: string;
   deadlineIso: string;
+  expectedNextCycle?: boolean;
   className?: string;
   withIcon?: boolean;
 }) {
   const today = useToday();
   const language = useLanguage();
-  const hasDeadline = deadlineIso !== "9999-12-31";
+  const hasDeadline = deadlineIso !== "9999-12-31" && !expectedNextCycle;
   const days = hasDeadline && today ? daysUntil(deadlineIso, today) : Number.NaN;
   const tone = today ? deadlineTone(days) : "open";
 
@@ -45,7 +47,7 @@ export function DeadlineChip({
       )}
     >
       {withIcon && <CalendarClockIcon className="size-3" aria-hidden="true" />}
-      {hasDeadline ? <time dateTime={deadlineIso}>{deadline}</time> : <span>{deadline}</span>}
+      {expectedNextCycle ? <span>Expected next cycle in 2027</span> : hasDeadline ? <time dateTime={deadlineIso}>{deadline}</time> : <span>{deadline}</span>}
       {hasDeadline && today && <span aria-hidden="true">·</span>}
       {hasDeadline && today && <span>{deadlineLabel(days, language)}</span>}
     </span>
