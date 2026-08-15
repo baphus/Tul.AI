@@ -3,15 +3,11 @@
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
-  Building2Icon,
-  ChurchIcon,
   CheckIcon,
-  LandmarkIcon,
-  GraduationCapIcon,
   SparklesIcon,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { BandPicker } from "@/components/app/band-picker";
 import { ChoiceCard, ChoiceChip } from "@/components/app/choice-card";
@@ -24,6 +20,7 @@ import {
 } from "@/components/ui/searchable-field";
 import { Textarea } from "@/components/ui/textarea";
 import { useTulAi } from "@/hooks/use-tul-ai";
+import { usePrefersReducedMotion } from "@/hooks/use-media-query";
 import { ONBOARDING_STEPS, ROUTES } from "@/lib/logic/routes";
 import { useLanguage, useTranslation } from "@/lib/logic/language";
 import type { TranslationKey } from "@/lib/logic/translations";
@@ -32,7 +29,7 @@ import { canAdvance, dependentsError, gwaError, isPlanning } from "@/lib/logic/v
 import { GWA_BANDS, HOUSEHOLD_BANDS } from "@/lib/reference/bands";
 import { COURSE_GROUPS, type CourseOption } from "@/lib/reference/courses";
 import { LOCATION_OPTIONS } from "@/lib/reference/locations";
-import { schoolsFor, type SchoolKind } from "@/lib/reference/schools";
+import { schoolMark, schoolsFor, type SchoolKind } from "@/lib/reference/schools";
 import {
   CHIP_EXCLUSIVE,
   CHIP_NONE,
@@ -75,8 +72,53 @@ import { cn } from "@/lib/utils";
 
 interface StepMeta {
   question: string;
-  why: string;
   optional?: boolean;
+}
+
+const NOTE_PLACEHOLDERS = [
+  "For example: I am working while studying and need support for transport and books.",
+  "For example: one of my parents works overseas, and I am preparing for nursing.",
+  "For example: I am returning to school and would appreciate help with allowance.",
+];
+
+/** A gentle example loop that pauses, erases, then offers another prompt. */
+function useTypingPlaceholder(reduced: boolean) {
+  const [text, setText] = useState("");
+
+  useEffect(() => {
+    if (reduced) return;
+
+    let timeout = 0;
+    let example = 0;
+    let character = 0;
+    let erasing = false;
+    const tick = () => {
+      const message = NOTE_PLACEHOLDERS[example];
+      if (!erasing) {
+        character += 1;
+        setText(message.slice(0, character));
+        if (character === message.length) {
+          erasing = true;
+          timeout = window.setTimeout(tick, 1800);
+          return;
+        }
+      } else {
+        character -= 1;
+        setText(message.slice(0, character));
+        if (character === 0) {
+          erasing = false;
+          example = (example + 1) % NOTE_PLACEHOLDERS.length;
+          timeout = window.setTimeout(tick, 500);
+          return;
+        }
+      }
+      timeout = window.setTimeout(tick, erasing ? 20 : 34);
+    };
+    timeout = window.setTimeout(tick, 500);
+    return () => window.clearTimeout(timeout);
+  }, [reduced]);
+
+  return reduced ? NOTE_PLACEHOLDERS[0] : text;
 }
 
 /* Main's school metadata is rendered in the searchable school results below. */
@@ -87,22 +129,13 @@ const schoolKindLabels: Record<SchoolKind, string> = {
   sectarian: "Sectarian institution",
 };
 
-function SchoolKindIcon({ kind }: { kind: SchoolKind }) {
-  const Icon =
-    kind === "state"
-      ? LandmarkIcon
-      : kind === "local"
-        ? Building2Icon
-        : kind === "sectarian"
-          ? ChurchIcon
-          : GraduationCapIcon;
-
+function SchoolMark({ name }: { name: string }) {
   return (
     <span
-      className="flex size-8 flex-none items-center justify-center rounded-full bg-canvas-soft text-ink group-data-highlighted:bg-white/15 group-data-highlighted:text-white"
+      className="t-micro flex size-8 flex-none items-center justify-center rounded-full bg-ink px-0.5 text-center text-white group-data-highlighted:bg-white group-data-highlighted:text-ink"
       aria-hidden="true"
     >
-      <Icon className="size-4" />
+      {schoolMark(name)}
     </span>
   );
 }
@@ -112,34 +145,28 @@ function metaFor(step: number, planning: boolean, t: (key: TranslationKey) => st
     case 1:
       return {
         question: t("whereStudies"),
-        why: t("onboardingWhyStage"),
       };
     case 2:
       return {
         question: t("whereBased"),
-        why: t("onboardingWhyLocation"),
       };
     case 3:
       return {
         question: planning ? t("planningStudy") : t("studying"),
-        why: t("onboardingWhyCourse"),
       };
     case 4:
       return {
         question: t("academicStanding"),
-        why: t("onboardingWhyGwa"),
         optional: true,
       };
     case 5:
       return {
         question: t("household"),
-        why: t("onboardingWhyHousehold"),
         optional: true,
       };
     default:
       return {
         question: t("anythingElse"),
-        why: t("onboardingWhyAnything"),
         optional: true,
       };
   }
@@ -150,7 +177,9 @@ export function OnboardingFlow({ step }: { step: number }) {
   const { state, dispatch } = useTulAi();
   const language = useLanguage();
   const { t } = useTranslation();
+  const reduced = usePrefersReducedMotion();
   const profile = state.profile;
+  const typingPlaceholder = useTypingPlaceholder(reduced);
 
   const planning = isPlanning(profile);
   const meta = metaFor(step, planning, t);
@@ -245,14 +274,8 @@ export function OnboardingFlow({ step }: { step: number }) {
           "Securing funding first — no school decided yet": "Naghahanap muna ng pondo — wala pang napipiling paaralan",
           Filipino: "Filipino",
           "Not a Filipino citizen": "Hindi Pilipinong mamamayan",
-          "One of my parents works overseas": "Nagtatrabaho sa ibang bansa ang isa sa mga magulang ko",
-          "We're a 4Ps household": "Sambahayan kami ng 4Ps",
-          "I'm from a solo-parent household": "Galing ako sa sambahayang may solo parent",
-          "I'm the first in my family to go to college": "Ako ang unang mag-aaral sa kolehiyo sa aming pamilya",
-          "I'm working while studying": "Nagtatrabaho ako habang nag-aaral",
-          "I need allowance, not just tuition": "Kailangan ko ng allowance, hindi tuition lang",
-          "I had to stop studying for a while": "Kinailangan kong tumigil muna sa pag-aaral",
-          "I'm planning to shift courses": "Nagpaplano akong magpalit ng kurso",
+          "Working student": "Nagtatrabaho habang nag-aaral",
+          "Allowance support": "Tulong para sa allowance",
           "Prefer not to say": t("onboardingPreferNot"),
           "Somewhere else": "Ibang lugar",
           "Elsewhere in Cebu": "Ibang bahagi ng Cebu",
@@ -293,6 +316,7 @@ export function OnboardingFlow({ step }: { step: number }) {
       ? ({
           "I'm the first in my family to go to college.": "Ako ang unang makakapagkolehiyo sa aming pamilya.",
           "I'm working while studying, so I need something that fits around a job.": "Nagtatrabaho ako habang nag-aaral, kaya kailangan ko ng bagay na maaaring isabay sa trabaho.",
+          "Tuition is only part of the problem - I need help with allowance, transport and books too.": "Bahagi lang ng problema ang tuition - kailangan ko rin ng tulong para sa allowance, pamasahe, at libro.",
           "Tuition is only part of the problem — I need help with allowance, transport and books too.": "Bahagi lang ng problema ang tuition — kailangan ko rin ng tulong para sa allowance, pamasahe, at libro.",
           "I had to stop studying for a while and I'm returning now.": "Kinailangan kong tumigil muna sa pag-aaral at ngayon ay nagbabalik ako.",
           "I'm planning to shift courses, so I'm open to programmes tied to a different field.": "Nagpaplano akong magpalit ng kurso, kaya bukas ako sa programang kaugnay ng ibang larangan.",
@@ -346,9 +370,6 @@ export function OnboardingFlow({ step }: { step: number }) {
             <h1 className="t-display-xl enter enter-d1 mt-3 max-w-[32rem] text-balance text-ink-deep lg:t-display-lg">
               {meta.question}
             </h1>
-            <p className="t-body enter enter-d2 mt-4 max-w-[34rem] text-ink-deep/80 text-pretty">
-              {meta.why}
-            </p>
           </div>
         </div>
       </div>
@@ -511,7 +532,7 @@ export function OnboardingFlow({ step }: { step: number }) {
 
                     return (
                       <span className="flex min-w-0 items-center gap-3">
-                        <SchoolKindIcon kind={school.kind} />
+                        <SchoolMark name={school.name} />
                         <span className="min-w-0 flex-1">
                           <span className="t-body block truncate">{school.name}</span>
                           <span className="t-micro block truncate text-ink-faint group-data-highlighted:text-white/70">
@@ -679,9 +700,6 @@ export function OnboardingFlow({ step }: { step: number }) {
                   );
                 })}
               </div>
-              <p className="t-micro mt-3 max-w-[52ch] text-ink-mute text-pretty">
-                {t("onboardingFirstThree")}
-              </p>
             </div>
 
             <div className="grid gap-2.5">
@@ -690,7 +708,7 @@ export function OnboardingFlow({ step }: { step: number }) {
                 id="notes"
                 rows={6}
                 className="rounded-lg border-hairline bg-canvas p-4 text-base"
-                placeholder={language === "FIL" ? "Halimbawa: nagtatrabaho sa ibang bansa ang tatay ko, ako ang unang mag-aaral sa kolehiyo sa aming pamilya, at nais kong kumuha ng nursing." : "For example: my father works overseas, I'm the first in my family to go to college, and I'm hoping to take nursing."}
+                placeholder={profile.notes ? undefined : typingPlaceholder}
                 value={profile.notes}
                 onChange={(e) => setField("notes", e.target.value)}
               />

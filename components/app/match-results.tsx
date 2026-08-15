@@ -132,7 +132,7 @@ export function MatchResults() {
       )}
 
       <div className="mt-8 flex flex-wrap items-center gap-3">
-        <ButtonLink className="h-12 rounded-md px-6" href={ROUTES.discover}>
+        <ButtonLink className="h-12 rounded-md px-6" href={ROUTES.review}>
           View matched options
           <ArrowRightIcon />
         </ButtonLink>

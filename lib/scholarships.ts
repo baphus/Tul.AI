@@ -395,12 +395,21 @@ export const CITIES = [
  * The first onboarding question. Coverage is Cebu-first in the MVP, so the
  * options say so plainly rather than implying nationwide coverage.
  */
-export const LOCATIONS: { value: string; label: string; note: string }[] = [
+export const LEGACY_LOCATIONS: { value: string; label: string; note: string }[] = [
   { value: "Cebu City", label: "Cebu City", note: "Best covered — city, provincial and university programs" },
   { value: "Elsewhere in Cebu", label: "Elsewhere in Cebu", note: "Provincial and national programs" },
   { value: "Metro Manila", label: "Metro Manila", note: "National programs for now" },
   { value: "Davao", label: "Davao", note: "National programs for now" },
   { value: "Somewhere else", label: "Somewhere else", note: "Tell us where and we'll match national programs" },
+];
+
+/** Cebu is the MVP launch area; the searchable field still accepts every location. */
+export const LOCATIONS: { value: string; label: string; note: string }[] = [
+  { value: "Cebu City", label: "Cebu City", note: "City, provincial and university programmes" },
+  { value: "Mandaue City", label: "Mandaue City", note: "Metro Cebu programmes" },
+  { value: "Lapu-Lapu City", label: "Lapu-Lapu City", note: "Metro Cebu programmes" },
+  { value: "Talisay City", label: "Talisay City", note: "Metro Cebu programmes" },
+  { value: "Cebu Province", label: "Cebu Province", note: "For every other Cebu municipality or city" },
 ];
 
 /** Common programs, offered as quick picks on the "what are you studying" step. */
@@ -435,7 +444,7 @@ export interface QuickNote {
   text?: string;
 }
 
-export const QUICK_NOTES: QuickNote[] = [
+export const LEGACY_QUICK_NOTES: QuickNote[] = [
   { label: "One of my parents works overseas", chip: "OFW parent" },
   { label: "We're a 4Ps household", chip: "4Ps household" },
   { label: "I'm from a solo-parent household", chip: "Solo-parent household" },
@@ -459,6 +468,15 @@ export const QUICK_NOTES: QuickNote[] = [
     label: "I'm planning to shift courses",
     text: "I'm planning to shift courses, so I'm open to programmes tied to a different field.",
   },
+];
+
+/** A short set of common starting points; students can always add their own context. */
+export const QUICK_NOTES: QuickNote[] = [
+  { label: "OFW parent", chip: "OFW parent" },
+  { label: "4Ps household", chip: "4Ps household" },
+  { label: "Solo-parent household", chip: "Solo-parent household" },
+  { label: "Working student", text: "I'm working while studying, so I need something that fits around a job." },
+  { label: "Allowance support", text: "Tuition is only part of the problem - I need help with allowance, transport and books too." },
 ];
 
 export const BRAND = "oklch(0.5 0.12 200)";

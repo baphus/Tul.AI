@@ -1,193 +1,187 @@
 "use client";
 
-import { SparklesIcon } from "lucide-react";
+import { ArrowRightIcon, SlidersHorizontalIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { TulAiChat } from "@/components/app/tul-ai-chat";
+import { AiMatchSummary } from "@/components/scholarship/ai-match-summary";
+import { ScholarshipDetail } from "@/components/scholarship/scholarship-detail";
 import { ScholarshipSummaryCard } from "@/components/scholarship/scholarship-summary-card";
-import { Button, ButtonLink } from "@/components/ui/button";
+import { ButtonLink } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
+import { useIsDesktop } from "@/hooks/use-media-query";
+import { useToday } from "@/hooks/use-today";
 import { useTulAi } from "@/hooks/use-tul-ai";
-import { advisory, type Decision } from "@/lib/logic/advisory";
-import { rankScholarships } from "@/lib/logic/matching";
+import { isDeadlineOpen } from "@/lib/logic/deadlines";
+import { rankScholarships, type RankedMatch } from "@/lib/logic/matching";
 import { ROUTES } from "@/lib/logic/routes";
 import type { Scholarship } from "@/lib/scholarships";
 
+type BrowseCard = { card: Scholarship; index: number; result: RankedMatch };
+
 /**
- * Review before applying. The dashboard focuses on the scholarships a student
- * has prioritized, while the complete public directory remains one click away.
+ * The post-onboarding home for scholarships. Unlike the former priority list,
+ * this always starts with live deterministic matches, so completing matching
+ * produces a useful list before a student makes any save/pass choice.
  */
-export function ReviewList() {
-  const { state, dispatch, cards, ready } = useTulAi();
+export function ReviewList({ cardId }: { cardId: string | null }) {
+  const router = useRouter();
+  const desktop = useIsDesktop();
+  const today = useToday();
+  const { cards, state } = useTulAi();
+  const [desktopCardId, setDesktopCardId] = useState<string | null>(null);
+  const detailPane = useRef<HTMLDivElement>(null);
 
-  const group = (want: Decision) =>
-    cards
-      .map((card, index) => ({ card, index }))
-      .filter((row) => state.decisions[row.index] === want);
+  const matches = useMemo(
+    () => rankScholarships(cards, state.profile).filter((result) => result.tone !== "none"),
+    [cards, state.profile]
+  );
+  const browseCards = useMemo<BrowseCard[]>(
+    () =>
+      matches
+        .map((result) => {
+          const index = cards.findIndex((card) => card.id === result.id);
+          return { card: cards[index], index, result };
+        })
+        .filter(
+          (item): item is BrowseCard =>
+            Boolean(item.card) &&
+            item.card.verification !== "Expired" &&
+            (!today || isDeadlineOpen(item.card.deadlineIso, today))
+        ),
+    [cards, matches, today]
+  );
 
-  const saved = group("yes");
-  const passed = group("no");
-  const advice = advisory(state.decisions);
-  const recommendedMatches = rankScholarships(cards, state.profile).filter((match) => match.tone !== "none");
-  const recommendedCards = recommendedMatches
-    .map((match) => cards.find((card) => card.id === match.id))
-    .filter((card): card is Scholarship => Boolean(card));
+  const activeCardId = desktop ? desktopCardId ?? cardId : cardId;
+  const selected = activeCardId
+    ? browseCards.find(({ card }) => card.id === activeCardId) ?? null
+    : null;
 
-  if (ready && cards.length === 0) {
+  useEffect(() => {
+    detailPane.current?.scrollTo({ top: 0, behavior: "auto" });
+  }, [selected?.card.id]);
+
+  const open = (id: string) => {
+    if (desktop) setDesktopCardId(id);
+    router.push(ROUTES.reviewCard(id), { scroll: false });
+  };
+  const close = () => {
+    setDesktopCardId(null);
+    router.push(ROUTES.review, { scroll: false });
+  };
+
+  if (browseCards.length === 0) {
     return (
-      <div className="mx-auto max-w-[34rem] py-16 text-center">
-        <h1 className="t-display-lg text-balance">You haven&apos;t sorted anything yet.</h1>
-        <p className="t-body mt-4 text-ink-mute text-pretty">
-          Go through the deck once and this becomes your shortlist — with the deadlines,
-          overlapping documents and anything worth knowing before you apply.
+      <div className="mx-auto max-w-[42rem] py-18 text-center">
+        <h1 className="t-display-xl text-balance">No open matches right now.</h1>
+        <p className="t-body-lg mx-auto mt-4 max-w-[40ch] text-ink-mute text-pretty">
+          Your profile was checked, but the currently open verified records do not show a match yet. A closed deadline is never presented as an active opportunity.
         </p>
-        <ButtonLink className="mt-8 h-12 rounded-md px-6" href={ROUTES.discover}>
-          Open the deck
-        </ButtonLink>
+        <div className="mt-8 flex flex-wrap justify-center gap-3">
+          <ButtonLink className="h-12 px-6" href={ROUTES.profile}>
+            Update profile <SlidersHorizontalIcon />
+          </ButtonLink>
+          <ButtonLink variant="outline" className="h-12 border-hairline-dark px-6" href={ROUTES.scholarships}>
+            Browse verified records <ArrowRightIcon />
+          </ButtonLink>
+        </div>
       </div>
     );
   }
 
-  return (
-    <div className="py-10">
-      <h1 className="t-display-xl text-balance">Your scholarship dashboard.</h1>
-      <p className="hidden">
-        You put {saved.length} of {cards.length} near the top. Nothing was discarded — the
-        rest sit below and can move up at any time.
-      </p>
-      <p className="t-body-lg mt-4 max-w-[36rem] text-ink-mute text-pretty">
-        {saved.length + passed.length > 0
-          ? `You put ${saved.length} of ${cards.length} near the top. Nothing was discarded — the rest can move up at any time.`
-          : "You’ve explored your matched scholarships. Review their published details, keep the ones that matter most, and return whenever your profile changes."}
-      </p>
+  const selectedDetail = selected && (
+    <ScholarshipDetail
+      card={selected.card}
+      index={selected.index}
+      result={selected.result}
+      matchExplanation={<AiMatchSummary result={selected.result} />}
+    />
+  );
 
-      {advice && (
-        <div className="mt-8 flex gap-3.5 rounded-lg border border-hairline bg-canvas-soft p-5">
-          <span
-            className="grid size-7 flex-none place-items-center rounded-md bg-ink text-white"
-            aria-hidden="true"
-          >
-            <SparklesIcon className="size-3.5" />
-          </span>
-          <div>
-            <p className="t-body-strong">{advice.title}</p>
-            <p className="t-caption mt-1.5 text-ink-mute text-pretty">{advice.text}</p>
-          </div>
+  return (
+    <div className="py-8 lg:py-10">
+      <div className="flex flex-col gap-8 border-b border-hairline pb-8 lg:flex-row lg:items-end lg:justify-between">
+        <div className="max-w-[44rem]">
+          <h1 className="t-display-xl text-balance">Scholarships worth reviewing.</h1>
+          <p className="t-body-lg mt-4 text-ink-mute text-pretty">
+            These open opportunities have no known conflict with your profile. Select one to see the published requirements, ask a question, and continue only through the provider&apos;s official application.
+          </p>
         </div>
-      )}
+        <p className="t-caption t-num flex-none text-ink-mute">
+          {browseCards.length} open {browseCards.length === 1 ? "opportunity" : "opportunities"}
+        </p>
+      </div>
 
       <TulAiChat
         complete
         placement="dashboard"
-        matches={recommendedMatches}
-        matchedCards={recommendedCards}
+        matches={browseCards.map(({ result }) => result)}
+        matchedCards={browseCards.map(({ card }) => card)}
       />
 
-      <div className="mt-12 flex flex-col gap-12">
-        <Group
-          title="Top of your list"
-          count={saved.length}
-          empty="Nothing here yet. Anything you move up from below appears in this list."
-          rows={saved}
-          moveLabel="Move to lower priority"
-          onMove={(index) => dispatch({ type: "MOVE", index })}
-        />
-
-        <Group
-          title="Lower priority"
-          count={passed.length}
-          empty="Everything is at the top of your list."
-          rows={passed}
-          moveLabel="Move up"
-          onMove={(index) => dispatch({ type: "MOVE", index })}
-          muted
-        />
-      </div>
-
-      <div className="mt-14 flex flex-wrap items-center gap-3 border-t border-hairline pt-8">
-        <ButtonLink className="h-12 rounded-md px-6" href={ROUTES.scholarships}>
-          Browse all scholarships
-        </ButtonLink>
-        <ButtonLink
-          variant="outline"
-          className="h-12 rounded-md border-hairline-dark px-5"
-          href={ROUTES.discover}
-        >
-          Back to the deck
-        </ButtonLink>
-      </div>
-      <p className="t-micro mt-4 text-ink-mute">
-        Meeting published requirements does not guarantee selection. Each provider makes
-        its own decision.
-      </p>
-    </div>
-  );
-}
-
-function Group({
-  title,
-  count,
-  empty,
-  rows,
-  moveLabel,
-  onMove,
-  muted = false,
-}: {
-  title: string;
-  count: number;
-  empty: string;
-  rows: { card: Scholarship; index: number }[];
-  moveLabel: string;
-  onMove: (index: number) => void;
-  muted?: boolean;
-}) {
-  return (
-    <section aria-labelledby={`group-${title.replace(/\s+/g, "-").toLowerCase()}`}>
-      <div className="flex items-baseline gap-3">
-        <h2
-          id={`group-${title.replace(/\s+/g, "-").toLowerCase()}`}
-          className="t-display-md"
-        >
-          {title}
-        </h2>
-        <span className="t-micro t-num text-ink-mute">{count}</span>
-      </div>
-
-      {rows.length === 0 ? (
-        empty && (
-          <p className="t-caption mt-4 rounded-lg border border-dashed border-hairline-dark/25 p-5 text-ink-mute">
-            {empty}
-          </p>
-        )
-      ) : (
-        <ul className="mt-5 flex flex-col gap-4">
-          {rows.map(({ card, index }) => (
-            <li key={card.id}>
+      <div className="mt-8 lg:grid lg:min-h-[42rem] lg:grid-cols-[minmax(0,1fr)_minmax(23rem,34rem)] lg:gap-8">
+        <section aria-label="Matched scholarships" className="min-w-0">
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {browseCards.map(({ card, index, result }) => (
               <ScholarshipSummaryCard
+                key={card.id}
                 card={card}
                 index={index}
-                muted={muted}
+                result={result}
+                href={ROUTES.reviewCard(card.id)}
+                className="flex h-full flex-col"
                 actions={
-                  <>
-                    <ButtonLink
-                      variant="outline"
-                      className="h-10 rounded-md border-hairline"
-                      href={ROUTES.scholarship(card.id)}
-                    >
-                      View full record
-                    </ButtonLink>
-                    <Button
-                      variant="secondary"
-                      className="h-10 rounded-md"
-                      onClick={() => onMove(index)}
-                    >
-                      {moveLabel}
-                    </Button>
-                  </>
+                  <button
+                    type="button"
+                    onClick={() => open(card.id)}
+                    aria-controls="scholarship-review-detail"
+                    className="ring-brand t-caption-strong flex w-full items-center justify-between rounded-md border border-hairline px-4 py-2.5 text-ink transition-colors hover:bg-canvas-soft"
+                  >
+                    Review this scholarship <ArrowRightIcon className="size-4" aria-hidden="true" />
+                  </button>
                 }
               />
-            </li>
-          ))}
-        </ul>
-      )}
-    </section>
+            ))}
+          </div>
+        </section>
+
+        <aside
+          id="scholarship-review-detail"
+          aria-label="Selected scholarship details"
+          className="hidden min-h-0 overflow-hidden rounded-xl border border-hairline bg-canvas lg:block"
+        >
+          {selectedDetail ? (
+            <div ref={detailPane} className="sc max-h-[calc(100dvh-11rem)] overflow-y-auto overscroll-contain">
+              {selectedDetail}
+            </div>
+          ) : (
+            <div className="flex h-full min-h-[30rem] flex-col justify-end bg-canvas-soft p-7">
+              <p className="t-display-lg max-w-[12ch] text-balance">Choose a scholarship to review.</p>
+              <p className="t-caption mt-3 max-w-[34ch] text-ink-mute text-pretty">
+                Its published details and its own grounded Q&amp;A will appear here without taking you away from the list.
+              </p>
+            </div>
+          )}
+        </aside>
+      </div>
+
+      <Sheet open={Boolean(selected) && !desktop} onOpenChange={(next) => !next && close()}>
+        {selected && (
+          <SheetContent
+            side="bottom"
+            className="max-h-[92dvh] gap-0 overflow-hidden rounded-t-xl bg-canvas p-0 pb-[env(safe-area-inset-bottom)] text-ink shadow-[0_-16px_45px_-28px_rgba(14,15,12,0.45)]"
+          >
+            <SheetTitle className="sr-only">{selected.card.title}</SheetTitle>
+            <SheetDescription className="sr-only">Published scholarship details and grounded questions.</SheetDescription>
+            <div className="sc min-h-0 flex-1 overflow-y-auto overscroll-contain">{selectedDetail}</div>
+          </SheetContent>
+        )}
+      </Sheet>
+
+      <p className="t-micro mt-8 text-ink-mute">
+        A matching result explains the published requirements; it does not guarantee selection. The provider makes every application and award decision.
+      </p>
+    </div>
   );
 }

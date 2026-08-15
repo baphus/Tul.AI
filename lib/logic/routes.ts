@@ -22,6 +22,8 @@ export const ROUTES = {
   discoverCard: (id: string) => `/discover?card=${encodeURIComponent(id)}`,
   discoverCardExpanded: (id: string) => `/discover?card=${encodeURIComponent(id)}&panel=expanded`,
   review: "/review",
+  /** The review grid keeps the selected record in the URL, like the deck does. */
+  reviewCard: (id: string) => `/review?card=${encodeURIComponent(id)}`,
   profile: "/profile",
 } as const;
 

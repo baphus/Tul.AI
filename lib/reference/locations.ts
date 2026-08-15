@@ -34,7 +34,7 @@ export const LOCATION_OPTIONS: LocationOption[] = [
   { value: "Consolacion", kind: "city", province: "Cebu", island: "Visayas" },
   { value: "Minglanilla", kind: "city", province: "Cebu", island: "Visayas" },
   { value: "Liloan", kind: "city", province: "Cebu", island: "Visayas" },
-  { value: "Cebu (elsewhere in the province)", kind: "province", province: "Cebu", island: "Visayas" },
+  { value: "Cebu Province", kind: "province", province: "Cebu", island: "Visayas" },
 
   // ── Metro Manila ──
   { value: "Manila", kind: "city", province: "Metro Manila", island: "Luzon" },

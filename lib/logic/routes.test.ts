@@ -15,10 +15,12 @@ describe("route builders", () => {
   it("addresses a scholarship by id", () => {
     expect(ROUTES.scholarship(DATA[0].id)).toBe(`/scholarships/${DATA[0].id}`);
     expect(ROUTES.discoverCard(DATA[1].id)).toBe(`/discover?card=${DATA[1].id}`);
+    expect(ROUTES.reviewCard(DATA[1].id)).toBe(`/review?card=${DATA[1].id}`);
   });
 
   it("escapes anything unusual in a card id", () => {
     expect(ROUTES.discoverCard("a b&c")).toBe("/discover?card=a%20b%26c");
+    expect(ROUTES.reviewCard("a b&c")).toBe("/review?card=a%20b%26c");
   });
 
   it("clamps a built onboarding step", () => {

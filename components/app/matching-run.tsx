@@ -7,7 +7,9 @@ import { useEffect, useMemo, useState } from "react";
 import { DotGrid } from "@/components/site/dot-grid";
 import { ButtonLink } from "@/components/ui/button";
 import { usePrefersReducedMotion } from "@/hooks/use-media-query";
+import { useToday } from "@/hooks/use-today";
 import { useTulAi } from "@/hooks/use-tul-ai";
+import { isDeadlineOpen } from "@/lib/logic/deadlines";
 import {
   PASS_COUNT,
   PASS_LABELS,
@@ -52,6 +54,7 @@ export function MatchingRun() {
   const router = useRouter();
   const { state, dispatch, cards, ready } = useTulAi();
   const reduced = usePrefersReducedMotion();
+  const today = useToday();
   const [visiblePasses, setVisiblePasses] = useState(0);
 
   const profileReady = isProfileReady(state.profile);
@@ -69,6 +72,18 @@ export function MatchingRun() {
     () => (profileReady ? totalsOf(pairs) : null),
     [pairs, profileReady]
   );
+  /* Keep the handoff honest: a closed record is researched, but never counted
+     as a path the student can currently explore. */
+  const openMatches = useMemo(
+    () =>
+      pairs.filter(
+        ({ card, result }) =>
+          result.tone !== "none" &&
+          card.verification !== "Expired" &&
+          (!today || isDeadlineOpen(card.deadlineIso, today))
+      ),
+    [pairs, today]
+  );
 
   useEffect(() => {
     if (!ready || !profileReady) return;
@@ -77,7 +92,7 @@ export function MatchingRun() {
     const openDiscover = () => {
       window.sessionStorage.setItem("tul-ai:match-celebration", "1");
       window.sessionStorage.removeItem("tul-ai:chat-match-seen");
-      router.replace(ROUTES.discover);
+      router.replace(ROUTES.review);
     };
 
     if (reduced) {
@@ -222,7 +237,7 @@ export function MatchingRun() {
         <div className="mt-5 grid grid-cols-3 gap-3 border-t border-hairline pt-5">
           <Count value={done === PASS_COUNT ? totals?.reviewed : undefined} label="records reviewed" />
           <Count value={done === PASS_COUNT ? totals?.requirements : undefined} label="requirements compared" />
-          <Count value={done === PASS_COUNT ? totals?.open : undefined} label="paths to explore" />
+          <Count value={done === PASS_COUNT ? openMatches.length : undefined} label="open paths to explore" />
         </div>
       </div>
 

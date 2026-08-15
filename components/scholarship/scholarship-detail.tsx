@@ -13,6 +13,26 @@ import type { RankedMatch } from "@/lib/logic/matching";
 import type { Scholarship } from "@/lib/scholarships";
 import { cn } from "@/lib/utils";
 
+function DisclosureSection({
+  title,
+  open = false,
+  children,
+}: {
+  title: string;
+  open?: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <details open={open} className="group border-t border-hairline py-5 first:border-t-0 first:pt-0">
+      <summary className="ring-brand flex cursor-pointer list-none items-center justify-between gap-4 rounded-md outline-hidden">
+        <h2 className="t-display-lg">{title}</h2>
+        <ChevronRightIcon className="size-5 flex-none text-ink-mute transition-transform group-open:rotate-90" aria-hidden="true" />
+      </summary>
+      <div className="pt-5">{children}</div>
+    </details>
+  );
+}
+
 /**
  * The full scholarship record (PRD §23). Server-rendered and shareable: the
  * requirement rows are native <details>, so they open without JavaScript and
@@ -81,7 +101,9 @@ export function ScholarshipDetail({
           </div>
         </dl>
 
-        <p className="t-body mt-6 text-ink-mute text-pretty">{card.back.about}</p>
+        <div className="mt-8">
+          <DisclosureSection title="About this scholarship" open>
+        <p className="t-body text-ink-mute text-pretty">{card.back.about}</p>
 
         <dl className="mt-6 grid gap-5 border-t border-hairline pt-6 sm:grid-cols-2">
           {card.back.facts.map(([label, value]) => (
@@ -93,8 +115,10 @@ export function ScholarshipDetail({
         </dl>
 
         {/* ── Why this matched ── */}
-        <section className="mt-12" aria-labelledby="why">
-          <h2 id="why" className="t-display-lg">
+          </DisclosureSection>
+          <DisclosureSection title={personalized ? "Why this matched you" : "Published requirements"} open>
+        <section aria-labelledby="why">
+          <h2 id="why" className="sr-only">
             {personalized ? "Why this matched you" : "Published requirements"}
           </h2>
           <p className="t-body mt-2 text-ink-mute text-pretty">
@@ -147,8 +171,10 @@ export function ScholarshipDetail({
         </section>
 
         {/* ── Documents ── */}
-        <section className="mt-12" aria-labelledby="documents">
-          <h2 id="documents" className="t-display-lg">
+          </DisclosureSection>
+          <DisclosureSection title="What you'll need">
+        <section aria-labelledby="documents">
+          <h2 id="documents" className="sr-only">
             What you&apos;ll need
           </h2>
           <p className="t-body mt-2 text-ink-mute">
@@ -171,12 +197,16 @@ export function ScholarshipDetail({
         </section>
 
         {/* ── Grounded Q&A ── */}
-        <section className="mt-12" aria-labelledby="ask">
-          <AskPanel card={card} />
-        </section>
+          </DisclosureSection>
+          <DisclosureSection title="Ask Tul.AI">
+            <section aria-labelledby="ask">
+              <AskPanel card={card} condensed />
+            </section>
+          </DisclosureSection>
+        </div>
 
         {/* ── Standing disclaimer (AGENTS.md §3) ── */}
-        <div className="mt-12 rounded-lg border border-hairline bg-canvas-soft p-5">
+        <div className="hidden">
           <p className="t-eyebrow text-ink-mute">Important</p>
           <p className="t-caption mt-2 text-ink text-pretty">
             Meeting published requirements does not guarantee selection. The scholarship

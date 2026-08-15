@@ -23,7 +23,7 @@ interface Entry {
  *
  * Self-contained: the conversation belongs to this surface, not to global state.
  */
-export function AskPanel({ card }: { card: Scholarship }) {
+export function AskPanel({ card, condensed = false }: { card: Scholarship; condensed?: boolean }) {
   const [thread, setThread] = useState<Entry[]>([]);
   const [input, setInput] = useState("");
   const [pending, setPending] = useState(false);
@@ -82,7 +82,7 @@ export function AskPanel({ card }: { card: Scholarship }) {
   );
 
   return (
-    <div>
+    <div className={condensed ? "[&>h2]:hidden [&>p]:hidden" : undefined}>
       <h2 className="t-display-lg" id="ask">
         {t("askAboutThis")}
       </h2>

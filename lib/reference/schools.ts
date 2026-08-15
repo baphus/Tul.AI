@@ -44,6 +44,22 @@ export const SCHOOL_OPTIONS: SchoolOption[] = [
   { name: "Cebu Technological University – Toledo", city: "Toledo City", province: "Cebu", kind: "state" },
   { name: "Consolatrix College of Toledo City", city: "Toledo City", province: "Cebu", kind: "sectarian" },
   { name: "Talisay City College", city: "Talisay City", province: "Cebu", kind: "local" },
+  { name: "Velez College", city: "Cebu City", province: "Cebu", kind: "private" },
+  { name: "University of Southern Philippines Foundation", city: "Cebu City", province: "Cebu", kind: "private" },
+  { name: "St. Theresa's College of Cebu", city: "Cebu City", province: "Cebu", kind: "sectarian" },
+  { name: "St. Paul College Foundation", city: "Cebu City", province: "Cebu", kind: "sectarian" },
+  { name: "Mandaue City College", city: "Mandaue City", province: "Cebu", kind: "local" },
+  { name: "Lapu-Lapu City College", city: "Lapu-Lapu City", province: "Cebu", kind: "local" },
+  { name: "Naga City College", city: "Naga City (Cebu)", province: "Cebu", kind: "local" },
+  { name: "City College of Carcar", city: "Carcar City", province: "Cebu", kind: "local" },
+  { name: "Cebu Technological University - Argao", city: "Cebu Province", province: "Cebu", kind: "state" },
+  { name: "Cebu Technological University - Barili", city: "Cebu Province", province: "Cebu", kind: "state" },
+  { name: "Cebu Technological University - Moalboal", city: "Cebu Province", province: "Cebu", kind: "state" },
+  { name: "Cebu Technological University - Tuburan", city: "Cebu Province", province: "Cebu", kind: "state" },
+  { name: "Cebu Technological University - San Francisco", city: "Cebu Province", province: "Cebu", kind: "state" },
+  { name: "Cebu Technological University - Daanbantayan", city: "Cebu Province", province: "Cebu", kind: "state" },
+  { name: "Cebu Technological University - Bantayan", city: "Cebu Province", province: "Cebu", kind: "state" },
+  { name: "Cebu Technological University - Oslob", city: "Cebu Province", province: "Cebu", kind: "state" },
 
   // ── Metro Manila ──
   { name: "University of the Philippines Diliman", city: "Quezon City", province: "Metro Manila", kind: "state" },
@@ -125,6 +141,43 @@ export interface SchoolFilter {
   scope: "city" | "province" | "all";
   /** The place the scope refers to, for the label. */
   place: string | null;
+}
+
+/**
+ * Compact, recognizable marks for the school selector. We intentionally use
+ * text marks rather than copying institutional seals, so every option gets a
+ * stable visual identifier without claiming an unlicensed official crest.
+ */
+const SCHOOL_MARKS: Record<string, string> = {
+  "University of San Carlos": "USC",
+  "Cebu Technological University": "CTU",
+  "University of the Philippines Cebu": "UP",
+  "Cebu Normal University": "CNU",
+  "University of Cebu": "UC",
+  "Cebu Doctors' University": "CDU",
+  "Southwestern University PHINMA": "SWU",
+  "University of the Visayas": "UV",
+  "Velez College": "VC",
+  "University of Southern Philippines Foundation": "USPF",
+  "St. Theresa's College of Cebu": "STC",
+  "St. Paul College Foundation": "SPCF",
+  "Mandaue City College": "MCC",
+  "Lapu-Lapu City College": "LLCC",
+  "Naga City College": "NCC",
+  "City College of Carcar": "CCC",
+};
+
+export function schoolMark(name: string): string {
+  const listed = SCHOOL_MARKS[name];
+  if (listed) return listed;
+  const initials = name
+    .replace(/[^A-Za-z0-9\s]/g, " ")
+    .split(/\s+/)
+    .filter((word) => word.length > 2)
+    .slice(0, 3)
+    .map((word) => word[0])
+    .join("");
+  return initials || name.slice(0, 2);
 }
 
 /**

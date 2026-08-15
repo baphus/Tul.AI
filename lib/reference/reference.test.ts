@@ -95,7 +95,7 @@ describe("locations", () => {
   it("resolves the coarse onboarding quick pills", () => {
     // These are the five LOCATIONS pills, which are coarser than the searchable
     // list — "Elsewhere in Cebu" is not a city and must still find Cebu.
-    expect(provinceOf("Elsewhere in Cebu")).toBe("Cebu");
+    expect(provinceOf("Cebu Province")).toBe("Cebu");
     expect(provinceOf("Metro Manila")).toBe("Metro Manila");
     expect(provinceOf("Davao")).toBe("Davao del Sur");
   });
