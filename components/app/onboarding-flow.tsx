@@ -4,6 +4,7 @@ import {
   ArrowLeftIcon,
   ArrowRightIcon,
   Building2Icon,
+  ChevronDownIcon,
   CheckIcon,
   ChurchIcon,
   GraduationCapIcon,
@@ -11,11 +12,13 @@ import {
   SparklesIcon,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
+import ReactCountryFlag from "react-country-flag";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { BandPicker } from "@/components/app/band-picker";
-import { ChoiceCard, ChoiceChip } from "@/components/app/choice-card";
+import { ChoiceCard, ChoiceChip, InfoHint } from "@/components/app/choice-card";
 import { DotGrid } from "@/components/site/dot-grid";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -146,6 +149,92 @@ const schoolKindIcons: Record<SchoolKind, LucideIcon> = {
   sectarian: ChurchIcon,
 };
 
+const SCHOOL_LOGOS: Record<string, string> = {
+  "University of San Carlos": "/logos/schools/university-of-san-carlos.png",
+  "Cebu Technological University": "/logos/schools/cebu-technological-university.png",
+  "University of the Philippines Cebu": "/logos/schools/university-of-the-philippines-cebu.png",
+  "Cebu Normal University": "/logos/schools/cebu-normal-university.png",
+  "University of Cebu": "/logos/schools/university-of-cebu.png",
+  "University of San Jose–Recoletos": "/logos/schools/university-of-san-jose-recoletos.png",
+  "Cebu Institute of Technology – University": "/logos/schools/cebu-institute-of-technology-university.png",
+  "Southwestern University PHINMA": "/logos/schools/southwestern-university-phinma.png",
+  "University of the Visayas": "/logos/schools/university-of-the-visayas.png",
+  "Cebu City Medical Center College": "/logos/schools/cebu-city-medical-center-college.png",
+  "Cebu Institute of Medicine": "/logos/schools/cebu-institute-of-medicine.png",
+  "Asian College of Technology": "/logos/schools/asian-college-of-technology.png",
+  "Velez College": "/logos/schools/velez-college.jpg",
+  "University of Southern Philippines Foundation": "/logos/schools/university-of-southern-philippines-foundation.png",
+  "St. Theresa's College of Cebu": "/logos/schools/st-theresas-college-of-cebu.png",
+  "St. Paul College Foundation": "/logos/schools/st-paul-college-foundation.png",
+  "University of the Philippines Diliman": "/logos/schools/university-of-the-philippines-diliman.png",
+  "University of the Philippines Manila": "/logos/schools/university-of-the-philippines-manila.png",
+  "Ateneo de Manila University": "/logos/schools/ateneo-de-manila-university.png",
+  "De La Salle University": "/logos/schools/de-la-salle-university.png",
+  "Far Eastern University": "/logos/schools/far-eastern-university.png",
+  "University of Santo Tomas": "/logos/schools/university-of-santo-tomas.png",
+  "Polytechnic University of the Philippines": "/logos/schools/polytechnic-university-of-the-philippines.png",
+  "Mapúa University": "/logos/schools/mapua-university.png",
+  "Technological University of the Philippines": "/logos/schools/technological-university-of-the-philippines.png",
+  "Pamantasan ng Lungsod ng Maynila": "/logos/schools/pamantasan-ng-lungsod-ng-maynila.png",
+  "Quezon City University": "/logos/schools/quezon-city-university.png",
+  "Miriam College": "/logos/schools/miriam-college.png",
+  "Rizal Technological University": "/logos/schools/rizal-technological-university.png",
+  "Pamantasan ng Lungsod ng Pasig": "/logos/schools/pamantasan-ng-lungsod-ng-pasig.png",
+  "Taguig City University": "/logos/schools/taguig-city-university.png",
+  "University of Makati": "/logos/schools/university-of-makati.png",
+  "Marikina Polytechnic College": "/logos/schools/marikina-polytechnic-college.png",
+  "Cebu Doctors' University": "/logos/schools/cebu-doctors-university.png",
+  "Benedicto College": "/logos/schools/benedicto-college.png",
+  "West Visayas State University": "/logos/schools/west-visayas-state-university.png",
+  "Central Philippine University": "/logos/schools/central-philippine-university.png",
+  "University of San Agustin": "/logos/schools/university-of-san-agustin.png",
+  "Silliman University": "/logos/schools/silliman-university.png",
+  "Negros Oriental State University": "/logos/schools/negros-oriental-state-university.png",
+  "University of St. La Salle": "/logos/schools/university-of-st-la-salle.png",
+  "Carlos Hilado Memorial State University": "/logos/schools/carlos-hilado-memorial-state-university.png",
+  "Visayas State University": "/logos/schools/visayas-state-university.png",
+  "Eastern Visayas State University": "/logos/schools/eastern-visayas-state-university.png",
+  "Bohol Island State University": "/logos/schools/bohol-island-state-university.png",
+  "Holy Name University": "/logos/schools/holy-name-university.png",
+  "Capiz State University": "/logos/schools/capiz-state-university.png",
+  "Aklan State University": "/logos/schools/aklan-state-university.png",
+  "University of the Philippines Los Baños": "/logos/schools/university-of-the-philippines-los-banos.png",
+  "Benguet State University": "/logos/schools/benguet-state-university.png",
+  "Batangas State University": "/logos/schools/batangas-state-university.png",
+  "De La Salle Lipa": "/logos/schools/de-la-salle-lipa.png",
+  "Cavite State University": "/logos/schools/cavite-state-university.png",
+  "Bulacan State University": "/logos/schools/bulacan-state-university.png",
+  "Central Luzon State University": "/logos/schools/central-luzon-state-university.png",
+  "Holy Angel University": "/logos/schools/holy-angel-university.png",
+  "Saint Louis University": "/logos/schools/saint-louis-university.png",
+  "Ateneo de Naga University": "/logos/schools/ateneo-de-naga-university.png",
+  "Bicol University": "/logos/schools/bicol-university.png",
+  "Pangasinan State University": "/logos/schools/pangasinan-state-university.png",
+  "Cagayan State University": "/logos/schools/cagayan-state-university.png",
+  "Western Philippines University": "/logos/schools/western-philippines-university.png",
+  "Mariano Marcos State University": "/logos/schools/mariano-marcos-state-university.png",
+  "University of Southeastern Philippines": "/logos/schools/university-of-southeastern-philippines.png",
+  "University of Mindanao": "/logos/schools/university-of-mindanao.png",
+  "Ateneo de Davao University": "/logos/schools/ateneo-de-davao-university.png",
+  "Xavier University – Ateneo de Cagayan": "/logos/schools/xavier-university-ateneo-de-cagayan.png",
+  "Mindanao State University – Iligan Institute of Technology": "/logos/schools/mindanao-state-university-iligan-institute-of-technology.png",
+  "Western Mindanao State University": "/logos/schools/western-mindanao-state-university.png",
+  "Mindanao State University – General Santos": "/logos/schools/mindanao-state-university-general-santos.png",
+  "Caraga State University": "/logos/schools/caraga-state-university.png",
+  "Central Mindanao University": "/logos/schools/central-mindanao-university.png",
+  "Ateneo de Zamboanga University": "/logos/schools/ateneo-de-zamboanga-university.png",
+};
+
+function schoolLogo(name: string): string | undefined {
+  if (name.startsWith("Cebu Technological University")) {
+    return SCHOOL_LOGOS["Cebu Technological University"];
+  }
+  if (name.startsWith("University of Cebu")) {
+    return SCHOOL_LOGOS["University of Cebu"];
+  }
+  return SCHOOL_LOGOS[name];
+}
+
 function SchoolMark({ kind }: { kind: SchoolKind }) {
   const Icon = schoolKindIcons[kind];
   return (
@@ -198,6 +287,8 @@ export function OnboardingFlow({ step }: { step: number }) {
   const reduced = usePrefersReducedMotion();
   const profile = state.profile;
   const typingPlaceholder = useTypingPlaceholder(reduced);
+  const [citizenshipOpen, setCitizenshipOpen] = useState(false);
+  const [circumstancesOpen, setCircumstancesOpen] = useState(false);
 
   const planning = isPlanning(profile);
   const meta = metaFor(step, planning, t);
@@ -208,6 +299,12 @@ export function OnboardingFlow({ step }: { step: number }) {
       dispatch({ type: "SET_FIELD", field, value }),
     [dispatch]
   );
+
+  useEffect(() => {
+    if (state.hydrated && !profile.citizenship) {
+      setField("citizenship", "Filipino");
+    }
+  }, [profile.citizenship, setField, state.hydrated]);
 
   const goTo = useCallback(
     (next: number) => {
@@ -461,18 +558,63 @@ export function OnboardingFlow({ step }: { step: number }) {
               </div>
             )}
 
-            <fieldset className="mt-6">
-              <legend className="t-body-strong">{t("onboardingCitizenship")} <span className="t-micro text-ink-mute">— {t("optional")}</span></legend>
-              <p className="t-caption mt-1 text-ink-mute text-pretty">{t("onboardingCitizenshipHint")}</p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {CITIZENSHIP_OPTIONS.map((option) => (
-                  <ChoiceChip key={option} label={display(option)} pressed={profile.citizenship === option} onToggle={() => setField("citizenship", profile.citizenship === option ? "" : option)} />
-                ))}
+            <div className="mt-6 grid max-w-xs gap-2.5">
+              <div className="flex items-center justify-between gap-3">
+                <Label htmlFor="citizenship">
+                  {t("onboardingCitizenship")} <span className="t-micro text-ink-mute">— {t("optional")}</span>
+                </Label>
+                <InfoHint label={t("onboardingMoreInfo")}>
+                  {t("onboardingCitizenshipHint")}
+                </InfoHint>
               </div>
-            </fieldset>
+              <div className="relative">
+                <button
+                  id="citizenship"
+                  type="button"
+                  className="ring-brand t-body flex h-12 w-full items-center justify-between rounded-md border border-hairline bg-canvas px-3.5 text-left text-ink"
+                  aria-haspopup="listbox"
+                  aria-expanded={citizenshipOpen}
+                  onClick={() => setCitizenshipOpen((open) => !open)}
+                >
+                  <span className="flex items-center gap-2">
+                    {profile.citizenship === "Filipino" && (
+                      <ReactCountryFlag countryCode="PH" svg aria-hidden="true" style={{ width: "1.25em", height: "1.25em" }} />
+                    )}
+                    {display(profile.citizenship || "Filipino")}
+                  </span>
+                  <ChevronDownIcon className="size-4 text-ink-mute" aria-hidden="true" />
+                </button>
+                {citizenshipOpen && (
+                  <div
+                    role="listbox"
+                    aria-label={t("onboardingCitizenship")}
+                    className="absolute z-20 mt-2 w-full overflow-hidden rounded-lg border border-hairline bg-canvas p-1.5 shadow-[0_12px_32px_-12px_rgba(14,15,12,0.22)]"
+                  >
+                    {CITIZENSHIP_OPTIONS.map((option) => (
+                      <button
+                        key={option}
+                        type="button"
+                        role="option"
+                        aria-selected={profile.citizenship === option}
+                        className="flex w-full items-center gap-2 rounded-md px-3 py-2.5 text-left t-body hover:bg-canvas-soft"
+                        onClick={() => {
+                          setField("citizenship", option);
+                          setCitizenshipOpen(false);
+                        }}
+                      >
+                        {option === "Filipino" && (
+                          <ReactCountryFlag countryCode="PH" svg aria-hidden="true" style={{ width: "1.25em", height: "1.25em" }} />
+                        )}
+                        {display(option)}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
 
             {planning && (
-              <Aside>
+              <Aside showInfo={false}>
                 {t("onboardingPlanningAside")}
               </Aside>
             )}
@@ -509,9 +651,9 @@ export function OnboardingFlow({ step }: { step: number }) {
                 emptyMessage={fieldCopy.locationEmpty}
               />
               {otherSelected && (
-                <p className="t-micro text-ink-mute text-pretty">
+                <InfoHint label={t("onboardingMoreInfo")}>
                   {t("onboardingLocationCoverage")}
-                </p>
+                </InfoHint>
               )}
             </div>
           </div>
@@ -519,7 +661,7 @@ export function OnboardingFlow({ step }: { step: number }) {
 
         {/* ── 3 · Studies ── */}
         {step === 3 && (
-          <div className="flex flex-col gap-9 lg:grid lg:grid-cols-2 lg:items-start lg:gap-12">
+          <div className="flex flex-col gap-9">
             <div className="grid gap-2.5">
               <Label htmlFor="course">{t("onboardingCourse")}</Label>
               <SearchableGroupedField<CourseOption>
@@ -574,7 +716,17 @@ export function OnboardingFlow({ step }: { step: number }) {
 
                     return (
                       <span className="flex min-w-0 items-center gap-3">
-                        <SchoolMark kind={school.kind} />
+                        {schoolLogo(school.name) ? (
+                          <Image
+                            src={schoolLogo(school.name)!}
+                            alt=""
+                            width={32}
+                            height={32}
+                            className="size-8 flex-none rounded-full object-contain"
+                          />
+                        ) : (
+                          <SchoolMark kind={school.kind} />
+                        )}
                         <span className="min-w-0 flex-1">
                           <span className="t-body block truncate">{school.name}</span>
                           <span className="t-micro block truncate text-ink-faint group-data-highlighted:text-white/70">
@@ -586,7 +738,7 @@ export function OnboardingFlow({ step }: { step: number }) {
                   }}
                   emptyMessage={fieldCopy.schoolEmpty}
                 />
-                <p className="t-micro text-ink-mute text-pretty">
+                <InfoHint label={t("onboardingMoreInfo")}>
                   {schools.scope === "all"
                     ? language === "FIL"
                       ? `Ipinapakita ang lahat ng ${schools.schools.length} paaralan sa talaan namin.`
@@ -594,7 +746,7 @@ export function OnboardingFlow({ step }: { step: number }) {
                     : language === "FIL"
                       ? `Ipinapakita ang ${schools.schools.length} paaralan ${schools.scope === "city" ? "sa" : "sa buong"} ${schools.place} — mag-type para hanapin ang lahat ng paaralan.`
                       : `Showing ${schools.schools.length} ${schools.scope === "city" ? "schools in" : "schools across"} ${schools.place} — type to search every school instead.`}
-                </p>
+                </InfoHint>
               </div>
             )}
           </div>
@@ -618,13 +770,14 @@ export function OnboardingFlow({ step }: { step: number }) {
             disclosureLabel={language === "FIL" ? "Idagdag ang eksaktong GWA (opsyonal)" : "Add my exact GWA (optional)"}
             displayValue={display}
             displayNote={noteFor}
+            hintLabel={t("onboardingMoreInfo")}
           />
         )}
 
         {/* ── 5 · Household ── */}
         {step === 5 && (
-          <div className="flex flex-col gap-9 lg:grid lg:grid-cols-[minmax(0,1.15fr)_minmax(0,.85fr)] lg:items-start lg:gap-x-12 lg:gap-y-8">
-            <fieldset className="lg:col-start-1">
+          <div className="flex flex-col gap-8">
+            <fieldset>
               <legend className="t-body-strong mb-3">
                 {t("onboardingHouseholdIncome")}
               </legend>
@@ -642,7 +795,7 @@ export function OnboardingFlow({ step }: { step: number }) {
               </div>
             </fieldset>
 
-            <div className="lg:col-start-1">
+            <div>
               <p className="t-body-strong mb-3">{t("onboardingHouseholdSize")}</p>
               <BandPicker
                 name="Household size"
@@ -660,40 +813,62 @@ export function OnboardingFlow({ step }: { step: number }) {
                 disclosureLabel={language === "FIL" ? "Magbigay ng eksaktong bilang (opsyonal)" : "Give an exact number instead (optional)"}
                 displayValue={display}
                 displayNote={noteFor}
+                hintLabel={t("onboardingMoreInfo")}
               />
             </div>
 
-            <fieldset className="mx-auto w-full max-w-md text-center lg:col-start-2 lg:row-span-2 lg:row-start-1">
-              <legend className="t-body-strong">{t("onboardingCircumstances")}</legend>
-              <p className="t-caption mt-1 mb-3.5 text-ink-mute text-pretty">
-                {t("onboardingCircumstancesHint")}
-              </p>
-              <div className="flex flex-wrap justify-center gap-2">
-                {CIRCUMSTANCE_CHIPS.map((option) => (
-                  <ChoiceChip
-                    key={option}
-                    label={display(option)}
-                    pressed={profile.chips.includes(option)}
-                    onToggle={() => dispatch({ type: "TOGGLE_CHIP", value: option })}
-                  />
-                ))}
-              </div>
-              <div className="mt-3.5 flex flex-wrap justify-center gap-2 border-t border-hairline pt-3.5">
-                {CHIP_EXCLUSIVE.map((option) => (
-                  <ChoiceChip
-                    key={option}
-                    label={display(chipLabel(option))}
-                    pressed={profile.chips.includes(option)}
-                    onToggle={() => dispatch({ type: "TOGGLE_CHIP", value: option })}
-                  />
-                ))}
-              </div>
-              {profile.chips.includes(CHIP_NONE) && (
-                <p className="t-micro mx-auto mt-3.5 max-w-[46ch] text-ink-mute text-pretty">
-                  {fieldCopy.noCircumstances}
-                </p>
+            <div>
+              <button
+                type="button"
+                className="flex w-full items-center justify-between rounded-xl border border-hairline px-4 py-3 text-left transition-colors hover:bg-canvas-soft"
+                aria-expanded={circumstancesOpen}
+                aria-controls="circumstances-options"
+                onClick={() => setCircumstancesOpen((open) => !open)}
+              >
+                <span className="t-body-strong">{t("onboardingAddCircumstances")}</span>
+                <ChevronDownIcon
+                  className={`size-4 transition-transform ${circumstancesOpen ? "rotate-180" : ""}`}
+                  aria-hidden="true"
+                />
+              </button>
+              {circumstancesOpen && (
+                <div id="circumstances-options" className="mt-4 rounded-xl border border-hairline bg-canvas-soft p-4">
+                  <fieldset>
+                    <legend className="t-body-strong">{t("onboardingCircumstances")}</legend>
+                    <div className="mt-1 mb-3.5">
+                      <InfoHint label={t("onboardingMoreInfo")}>
+                        {t("onboardingCircumstancesHint")}
+                      </InfoHint>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {CIRCUMSTANCE_CHIPS.map((option) => (
+                        <ChoiceChip
+                          key={option}
+                          label={display(option)}
+                          pressed={profile.chips.includes(option)}
+                          onToggle={() => dispatch({ type: "TOGGLE_CHIP", value: option })}
+                        />
+                      ))}
+                    </div>
+                    <div className="mt-3.5 flex flex-wrap gap-2 border-t border-hairline pt-3.5">
+                      {CHIP_EXCLUSIVE.map((option) => (
+                        <ChoiceChip
+                          key={option}
+                          label={display(chipLabel(option))}
+                          pressed={profile.chips.includes(option)}
+                          onToggle={() => dispatch({ type: "TOGGLE_CHIP", value: option })}
+                        />
+                      ))}
+                    </div>
+                    {profile.chips.includes(CHIP_NONE) && (
+                      <div className="mt-3.5">
+                        <InfoHint label={t("onboardingMoreInfo")}>{fieldCopy.noCircumstances}</InfoHint>
+                      </div>
+                    )}
+                  </fieldset>
+                </div>
               )}
-            </fieldset>
+            </div>
           </div>
         )}
 
@@ -826,7 +1001,7 @@ export function OnboardingFlow({ step }: { step: number }) {
 }
 
 /** A quiet note explaining a branch the student just took. */
-function Aside({ children }: { children: React.ReactNode }) {
+function Aside({ children, showInfo = true }: { children: React.ReactNode; showInfo?: boolean }) {
   return (
     <div className="mt-6 flex gap-3.5 rounded-lg border border-hairline bg-canvas-soft p-4">
       <span
@@ -835,7 +1010,11 @@ function Aside({ children }: { children: React.ReactNode }) {
       >
         <CheckIcon className="size-3.5" strokeWidth={3} />
       </span>
-      <p className="t-caption max-w-[52ch] text-ink-mute text-pretty">{children}</p>
+      {showInfo ? (
+        <InfoHint label="Show more information">{children}</InfoHint>
+      ) : (
+        <p className="t-caption max-w-[52ch] text-ink-mute text-pretty">{children}</p>
+      )}
     </div>
   );
 }
