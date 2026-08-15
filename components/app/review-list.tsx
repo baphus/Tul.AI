@@ -1,16 +1,16 @@
 "use client";
 
-import { ArrowRightIcon, SlidersHorizontalIcon } from "lucide-react";
+import { ArrowRightIcon, SlidersHorizontalIcon, XIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { TulAiChat } from "@/components/app/tul-ai-chat";
 import { AiMatchSummary } from "@/components/scholarship/ai-match-summary";
+import { ScholarshipCard } from "@/components/scholarship/scholarship-card";
 import { ScholarshipDetail } from "@/components/scholarship/scholarship-detail";
-import { ScholarshipSummaryCard } from "@/components/scholarship/scholarship-summary-card";
-import { ButtonLink } from "@/components/ui/button";
+import { Button, ButtonLink } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
-import { useIsDesktop } from "@/hooks/use-media-query";
+import { useIsDesktop, usePrefersReducedMotion } from "@/hooks/use-media-query";
 import { useToday } from "@/hooks/use-today";
 import { useTulAi } from "@/hooks/use-tul-ai";
 import { isDeadlineOpen } from "@/lib/logic/deadlines";
@@ -21,16 +21,18 @@ import type { Scholarship } from "@/lib/scholarships";
 type BrowseCard = { card: Scholarship; index: number; result: RankedMatch };
 
 /**
- * The post-onboarding home for scholarships. Unlike the former priority list,
- * this always starts with live deterministic matches, so completing matching
- * produces a useful list before a student makes any save/pass choice.
+ * The post-onboarding home for scholarships. The grid deliberately uses the
+ * Discover deck's front face, so the same opportunity has one recognisable
+ * visual language whether it is browsed singly or alongside its peers.
  */
 export function ReviewList({ cardId }: { cardId: string | null }) {
   const router = useRouter();
   const desktop = useIsDesktop();
+  const reduced = usePrefersReducedMotion();
   const today = useToday();
   const { cards, state } = useTulAi();
   const [desktopCardId, setDesktopCardId] = useState<string | null>(null);
+  const [guideOpen, setGuideOpen] = useState(true);
   const detailPane = useRef<HTMLDivElement>(null);
 
   const matches = useMemo(
@@ -66,10 +68,19 @@ export function ReviewList({ cardId }: { cardId: string | null }) {
     if (desktop) setDesktopCardId(id);
     router.push(ROUTES.reviewCard(id), { scroll: false });
   };
-  const close = () => {
+  const close = useCallback(() => {
     setDesktopCardId(null);
     router.push(ROUTES.review, { scroll: false });
-  };
+  }, [router]);
+
+  useEffect(() => {
+    if (!selected) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") close();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [close, selected]);
 
   if (browseCards.length === 0) {
     return (
@@ -98,75 +109,74 @@ export function ReviewList({ cardId }: { cardId: string | null }) {
       matchExplanation={<AiMatchSummary result={selected.result} />}
     />
   );
+  const gridClass = "grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-5";
 
   return (
-    <div className="py-8 lg:py-10">
-      <div className="flex flex-col gap-8 border-b border-hairline pb-8 lg:flex-row lg:items-end lg:justify-between">
-        <div className="max-w-[44rem]">
-          <h1 className="t-display-xl text-balance">Scholarships worth reviewing.</h1>
-          <p className="t-body-lg mt-4 text-ink-mute text-pretty">
-            These open opportunities have no known conflict with your profile. Select one to see the published requirements, ask a question, and continue only through the provider&apos;s official application.
-          </p>
-        </div>
-        <p className="t-caption t-num flex-none text-ink-mute">
-          {browseCards.length} open {browseCards.length === 1 ? "opportunity" : "opportunities"}
-        </p>
-      </div>
+    <div className="py-5 lg:py-7">
+      <header className="mb-6">
+        <h1 className="t-display-lg">Scholarships for you</h1>
+        <p className="t-body mt-2 text-ink-mute">Click a card to view its details and ask about it.</p>
+      </header>
 
       <TulAiChat
-        complete
-        placement="dashboard"
+        complete={!selected}
+        placement="floating"
         matches={browseCards.map(({ result }) => result)}
         matchedCards={browseCards.map(({ card }) => card)}
       />
 
-      <div className="mt-8 lg:grid lg:min-h-[42rem] lg:grid-cols-[minmax(0,1fr)_minmax(23rem,34rem)] lg:gap-8">
-        <section aria-label="Matched scholarships" className="min-w-0">
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {browseCards.map(({ card, index, result }) => (
-              <ScholarshipSummaryCard
-                key={card.id}
-                card={card}
-                index={index}
-                result={result}
-                href={ROUTES.reviewCard(card.id)}
-                className="flex h-full flex-col"
-                actions={
-                  <button
-                    type="button"
-                    onClick={() => open(card.id)}
-                    aria-controls="scholarship-review-detail"
-                    className="ring-brand t-caption-strong flex w-full items-center justify-between rounded-md border border-hairline px-4 py-2.5 text-ink transition-colors hover:bg-canvas-soft"
-                  >
-                    Review this scholarship <ArrowRightIcon className="size-4" aria-hidden="true" />
-                  </button>
-                }
-              />
-            ))}
-          </div>
-        </section>
+      <section aria-label="Matched scholarships" className="min-w-0">
+        <div className={gridClass}>
+          {browseCards.map(({ card, index, result }) => (
+            <div
+              key={card.id}
+              className="relative min-h-[12rem] overflow-hidden rounded-xl sm:min-h-[14rem] lg:min-h-[15rem]"
+            >
+              <ScholarshipCard card={card} index={index} flipped={false} reduced={reduced} result={result} compact />
+              <button
+                type="button"
+                onClick={() => open(card.id)}
+                className="ring-brand absolute inset-0 z-10 rounded-xl"
+                aria-controls="scholarship-review-detail"
+                aria-label={`Review ${card.title}`}
+              >
+                <span className="sr-only">Review {card.title}</span>
+              </button>
+            </div>
+          ))}
+        </div>
+      </section>
 
-        <aside
-          id="scholarship-review-detail"
-          aria-label="Selected scholarship details"
-          className="hidden min-h-0 overflow-hidden rounded-xl border border-hairline bg-canvas lg:block"
-        >
-          {selectedDetail ? (
-            <div ref={detailPane} className="sc max-h-[calc(100dvh-11rem)] overflow-y-auto overscroll-contain">
+      {selected && (
+        <button
+          type="button"
+          aria-label="Close scholarship details"
+          onClick={close}
+          className="fixed inset-0 z-30 hidden bg-ink/10 backdrop-blur-[2px] lg:block"
+        />
+      )}
+
+      <aside
+        id="scholarship-review-detail"
+        aria-label="Selected scholarship details"
+        aria-hidden={!selected}
+        className={`fixed top-0 right-0 bottom-0 z-40 hidden w-[min(42rem,46vw)] overflow-hidden border-l border-hairline bg-canvas transition-transform duration-[360ms] ease-[cubic-bezier(.16,1,.3,1)] lg:block ${selected ? "translate-x-0" : "translate-x-full"}`}
+      >
+        {selected && (
+          <>
+            <div className="absolute top-3 right-3 z-10">
+              <Button variant="tertiary" size="icon" aria-label="Close scholarship details" onClick={close}>
+                <XIcon />
+              </Button>
+            </div>
+            <div ref={detailPane} className="sc h-full overflow-y-auto overscroll-contain">
               {selectedDetail}
             </div>
-          ) : (
-            <div className="flex h-full min-h-[30rem] flex-col justify-end bg-canvas-soft p-7">
-              <p className="t-display-lg max-w-[12ch] text-balance">Choose a scholarship to review.</p>
-              <p className="t-caption mt-3 max-w-[34ch] text-ink-mute text-pretty">
-                Its published details and its own grounded Q&amp;A will appear here without taking you away from the list.
-              </p>
-            </div>
-          )}
-        </aside>
-      </div>
+          </>
+        )}
+      </aside>
 
-      <Sheet open={Boolean(selected) && !desktop} onOpenChange={(next) => !next && close()}>
+      <Sheet open={Boolean(selected) && !desktop && !guideOpen} onOpenChange={(next) => !next && close()}>
         {selected && (
           <SheetContent
             side="bottom"
@@ -179,9 +189,21 @@ export function ReviewList({ cardId }: { cardId: string | null }) {
         )}
       </Sheet>
 
-      <p className="t-micro mt-8 text-ink-mute">
-        A matching result explains the published requirements; it does not guarantee selection. The provider makes every application and award decision.
-      </p>
+      <Sheet open={guideOpen} onOpenChange={setGuideOpen}>
+        <SheetContent
+          side="center"
+          showCloseButton={false}
+          className="max-h-[calc(100dvh-2rem)] w-[min(20rem,calc(100vw-2rem))] gap-0 overflow-y-auto rounded-xl border border-ink bg-canvas p-4 text-ink sm:p-5"
+        >
+          <SheetTitle className="t-heading">Your review deck is ready.</SheetTitle>
+          <SheetDescription className="t-caption mt-2.5 text-ink-mute text-pretty">
+            Open any card for the full published record. You can ask Tul.AI about a scholarship there, or use the chat button whenever you want help comparing your options.
+          </SheetDescription>
+          <Button className="mt-4 h-11 w-full px-5" onClick={() => setGuideOpen(false)}>
+            Start reviewing <ArrowRightIcon />
+          </Button>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }

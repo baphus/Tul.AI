@@ -40,29 +40,70 @@ function CountUp({
 
 const faceClass = "absolute inset-0 flex flex-col overflow-hidden rounded-xl border border-[color:var(--tint-border)] p-4 shadow-[0_8px_24px_rgba(14,15,12,0.1)] [backface-visibility:hidden] sm:p-5 lg:p-5";
 
-export function ScholarshipCard({ card, index, flipped, reduced, result }: { card: Scholarship; index: number; flipped: boolean; reduced: boolean; result: RankedMatch }) {
+export function ScholarshipCard({
+  card,
+  index,
+  flipped,
+  reduced,
+  result,
+  compact = false,
+}: {
+  card: Scholarship;
+  index: number;
+  flipped: boolean;
+  reduced: boolean;
+  result: RankedMatch;
+  compact?: boolean;
+}) {
   return (
     <div className="tinted absolute inset-0 [perspective:1400px]" style={providerTint(index)}>
       <div className={cn("absolute inset-0 [transform-style:preserve-3d]", reduced ? "transition-none" : "transition-transform duration-500 ease-out")} style={{ transform: flipped ? "rotateY(180deg)" : undefined }}>
         <article className={faceClass} style={{ background: "var(--tint-face)" }} aria-hidden={flipped}>
-          <ProviderWatermark logo={card.logo} className="-right-14 top-28 size-54" />
-          <div className="relative flex items-start justify-between gap-3">
-            <div>
-              <p className="t-micro text-ink-deep">Your match</p>
-              <p className="mt-1">{result.percent === null ? <span className="t-figure">-</span> : <CountUp key={card.id} value={result.percent} reduced={reduced} format={(value) => `${value}%`} />}</p>
+          <ProviderWatermark logo={card.logo} className={compact ? "-right-10 top-12 size-40" : "-right-14 top-28 size-54"} />
+          <div className={cn("relative flex gap-3", compact ? "justify-end" : "items-start justify-between")}>
+            {!compact && (
+              <div>
+                <p className="t-micro text-ink-deep">Your match</p>
+                <p className="mt-1">{result.percent === null ? <span className="t-figure">-</span> : <CountUp key={card.id} value={result.percent} reduced={reduced} format={(value) => `${value}%`} />}</p>
+              </div>
+            )}
+            <MatchBadge card={result} className={cn("shrink-0", compact ? "px-1.5 py-0.5 text-[0.625rem] leading-3 [&>span]:size-1" : "mt-1")} />
+          </div>
+          {!compact && (
+            <>
+              <div className="relative mt-4 border-t border-hairline pt-4 lg:mt-3 lg:pt-3">
+                <p className="t-micro text-ink-deep">Potential assistance</p>
+                <p className="mt-1 flex flex-wrap items-baseline gap-2"><CountUp key={`${card.id}-assistance`} value={card.amount} reduced={reduced} format={formatPeso} /><span className="t-caption text-ink-mute">{card.amountNote}</span></p>
+              </div>
+              <div className="relative mt-4 border-t border-hairline pt-4 lg:mt-3 lg:pt-3">
+                <p className="t-micro text-ink-mute">Deadline</p>
+                <p className="t-body-strong mt-1">{card.deadline}</p>
+                <DeadlineCountdown deadlineIso={card.deadlineIso} />
+              </div>
+            </>
+          )}
+          <h2 className={cn(
+            "relative mt-auto text-balance",
+            compact
+              ? "t-heading pt-4 text-[clamp(0.95rem,3.6vw,1.25rem)] leading-[1.08] sm:text-[1.1rem] lg:text-[1.2rem]"
+              : "t-display-lg pt-5 text-[clamp(1.85rem,7.5vw,2.4rem)] leading-[0.96] lg:pt-4 lg:text-[2rem]"
+          )}>{card.title}</h2>
+          {compact && (
+            <div className="relative mt-3 grid grid-cols-2 gap-x-3 gap-y-1 border-t border-hairline pt-2 text-ink-deep">
+              <p className="t-caption-strong tabular-nums">
+                <span className="sr-only">Published requirements matched: </span>
+                {result.percent === null ? "—" : `${result.percent}%`}
+              </p>
+              <p className="t-caption-strong justify-self-end tabular-nums">
+                <span className="sr-only">Published benefit: </span>
+                {formatPeso(card.amount)}
+              </p>
+              <p className="t-micro col-span-2 truncate text-ink-mute">
+                <span className="sr-only">Deadline: </span>
+                {card.deadline}
+              </p>
             </div>
-            <MatchBadge card={result} className="mt-1 shrink-0" />
-          </div>
-          <div className="relative mt-4 border-t border-hairline pt-4 lg:mt-3 lg:pt-3">
-            <p className="t-micro text-ink-deep">Potential assistance</p>
-            <p className="mt-1 flex flex-wrap items-baseline gap-2"><CountUp key={`${card.id}-assistance`} value={card.amount} reduced={reduced} format={formatPeso} /><span className="t-caption text-ink-mute">{card.amountNote}</span></p>
-          </div>
-          <div className="relative mt-4 border-t border-hairline pt-4 lg:mt-3 lg:pt-3">
-            <p className="t-micro text-ink-mute">Deadline</p>
-            <p className="t-body-strong mt-1">{card.deadline}</p>
-            <DeadlineCountdown deadlineIso={card.deadlineIso} />
-          </div>
-          <h2 className="t-display-lg relative mt-auto pt-5 text-balance text-[clamp(1.85rem,7.5vw,2.4rem)] leading-[0.96] lg:pt-4 lg:text-[2rem]">{card.title}</h2>
+          )}
           <div className="hidden">
           <ProviderWatermark logo={card.logo} className="-right-14 top-28 size-54" />
           <p className="t-eyebrow mt-2.5 text-[color:var(--tint-ink)] lg:mt-1.5">{card.provider}</p>

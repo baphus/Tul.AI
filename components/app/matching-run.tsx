@@ -132,9 +132,11 @@ export function MatchingRun() {
   const progress = Math.round((done / PASS_COUNT) * 100);
 
   return (
-    <div className="mx-auto max-w-[34rem] py-14">
+    <div className="mx-auto flex min-h-dvh w-full max-w-[76rem] items-center py-5 sm:py-7 lg:py-10">
+      <div className="w-full lg:grid lg:grid-cols-[minmax(0,1.05fr)_minmax(22rem,.95fr)] lg:items-center lg:gap-14 xl:gap-20">
+      <div>
       {/* The hero's band, carrying the research state. */}
-      <div className="relative overflow-hidden rounded-xl bg-brand px-6 py-8 sm:px-8">
+      <div className="relative overflow-hidden rounded-xl bg-brand px-5 py-6 sm:px-7 sm:py-7">
         <DotGrid baseColor="#86d95a" activeColor="#163300" />
         <div className="relative">
           <div className="flex items-center gap-2.5">
@@ -147,15 +149,15 @@ export function MatchingRun() {
             <p className="t-eyebrow text-ink-deep/70">Matching your profile</p>
           </div>
 
-          <h1 className="t-display-xl mt-5 text-balance text-ink-deep">
+          <h1 className="t-display-xl mt-4 text-balance text-ink-deep">
             Building your opportunity view...
           </h1>
-          <p className="t-body mt-4 text-ink-deep/80 text-pretty">
+          <p className="t-caption mt-3 text-ink-deep/80 text-pretty">
             We&apos;re carefully comparing the details you shared with published requirements.
           </p>
 
           <div
-            className="mt-7 h-1.5 overflow-hidden rounded-full bg-ink-deep/15"
+            className="mt-5 h-1.5 overflow-hidden rounded-full bg-ink-deep/15"
             role="progressbar"
             aria-valuemin={0}
             aria-valuemax={100}
@@ -171,7 +173,7 @@ export function MatchingRun() {
       </div>
 
       {/* ── The passes, each completing when its own work has run ── */}
-      <ol className="mt-9 flex flex-col gap-4" aria-live="polite">
+      <ol className="mt-5 flex flex-col gap-3 sm:mt-6" aria-live="polite">
         {PASS_LABELS.map((label, i) => {
           const result = i < done ? passes[i] : undefined;
           const current = i === done;
@@ -196,7 +198,7 @@ export function MatchingRun() {
                 </span>
                 {/* The pass's own figures, shown only once it has produced them. */}
                 {result && (
-                  <span className="t-micro t-num mt-1 block text-ink-mute">
+                  <span className="t-micro t-num mt-0.5 block text-ink-mute">
                     {i === 0
                       ? `${cards.length} records read`
                       : `${result.met} met · ${result.unknown} unknown · ${result.conflicts} conflicting`}
@@ -207,10 +209,12 @@ export function MatchingRun() {
           );
         })}
       </ol>
+      </div>
 
-      <div className="mt-9 rounded-xl border border-hairline bg-canvas-soft p-5">
-        <p className="t-eyebrow text-ink-mute">Official sources</p>
-        <ul className="mt-3.5 flex flex-col gap-2">
+      <aside className="mt-6 hidden sm:block lg:mt-0">
+      <div className="rounded-xl border border-hairline bg-canvas-soft p-5 sm:p-6">
+        <p className="t-body-strong">Checking trusted sources</p>
+        <ul className="mt-4 grid gap-2.5 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
           {SOURCE_CHECKS.map((label, i) => {
             /* Tied to real progress rather than to a timer: a source lights up
                once enough passes have completed to have consulted it. */
@@ -235,16 +239,18 @@ export function MatchingRun() {
         </ul>
 
         <div className="mt-5 grid grid-cols-3 gap-3 border-t border-hairline pt-5">
-          <Count value={done === PASS_COUNT ? totals?.reviewed : undefined} label="records reviewed" />
-          <Count value={done === PASS_COUNT ? totals?.requirements : undefined} label="requirements compared" />
-          <Count value={done === PASS_COUNT ? openMatches.length : undefined} label="open paths to explore" />
+          <Count value={done === PASS_COUNT ? totals?.reviewed : undefined} label="records read" />
+          <Count value={done === PASS_COUNT ? totals?.requirements : undefined} label="requirements" />
+          <Count value={done === PASS_COUNT ? openMatches.length : undefined} label="open paths" />
         </div>
       </div>
 
-      <p className="t-micro mt-6 text-ink-mute text-pretty">
+      <p className="t-micro mt-4 text-ink-mute text-pretty">
         Each step is based on published information. This helps you explore options; it
         does not predict an outcome.
       </p>
+      </aside>
+      </div>
     </div>
   );
 }

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 
-import { OnboardingHeader } from "@/components/app/app-header";
 import { MatchingRun } from "@/components/app/matching-run";
 
 export const metadata: Metadata = {
@@ -11,11 +10,8 @@ export const metadata: Metadata = {
 
 export default function MatchingPage() {
   return (
-    <>
-      <OnboardingHeader />
-      <main id="main" className="flex-1 px-5 sm:px-8">
-        <MatchingRun />
-      </main>
-    </>
+    <main id="main" className="flex min-h-dvh flex-1 px-5 sm:px-8">
+      <MatchingRun />
+    </main>
   );
 }
