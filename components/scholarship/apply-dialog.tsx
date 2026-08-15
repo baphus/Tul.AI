@@ -11,7 +11,8 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import type { Scholarship } from "@/lib/scholarships";
-import { useTranslation } from "@/lib/logic/language";
+import { useLanguage, useTranslation } from "@/lib/logic/language";
+import { ASSISTANT_COPY } from "@/lib/logic/assistant-copy";
 import { cn } from "@/lib/utils";
 
 /**
@@ -30,6 +31,8 @@ export function ApplyDialog({
 }) {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
+  const language = useLanguage();
+  const copy = ASSISTANT_COPY[language].apply;
   const buttonLabel = label === "Continue to official application" ? t("continueOfficial") : label;
 
   return (
@@ -50,22 +53,20 @@ export function ApplyDialog({
         >
           <div className="mx-auto mb-5 h-1 w-9 rounded-full bg-hairline" aria-hidden="true" />
           <SheetTitle className="t-display-lg text-balance">
-            You&apos;re heading to the official scholarship provider.
+            {copy.title}
           </SheetTitle>
           <SheetDescription className="t-body mt-3 text-ink-mute text-pretty">
-            Tul.AI helps you discover and understand opportunities. Your application is
-            completed directly with {card.provider}, who makes the final decision.
+            {copy.description(card.provider)}
           </SheetDescription>
 
           <p className="mt-5 flex items-center gap-2.5 rounded-md border border-hairline bg-canvas-soft px-4 py-3">
             <span className="size-1.5 rounded-full bg-met" aria-hidden="true" />
             <span className="t-body-strong flex-1 break-all">{card.host}</span>
-            <span className="t-micro text-ink-mute">Official</span>
+            <span className="t-micro text-ink-mute">{copy.official}</span>
           </p>
 
           <p className="t-caption mt-4 text-ink-mute">
-            Check the programme page for the current application form — published
-            requirements can change after our last check.
+            {copy.check}
           </p>
 
           {card.applicationUrl ? <ButtonLink
@@ -75,9 +76,9 @@ export function ApplyDialog({
             rel="noopener noreferrer"
             onClick={() => setOpen(false)}
           >
-            Continue to {card.host}
+            {copy.continue(card.host)}
             <ExternalLinkIcon />
-          </ButtonLink> : <p className="t-caption mt-6 rounded-md border border-hairline bg-canvas-soft p-4 text-ink-mute">The provider has not published a direct application link. Use its official source to check the current process.</p>}
+          </ButtonLink> : <p className="t-caption mt-6 rounded-md border border-hairline bg-canvas-soft p-4 text-ink-mute">{copy.noLink}</p>}
           <Button
             variant="ghost"
             className="mt-2 h-11 w-full text-ink-mute"

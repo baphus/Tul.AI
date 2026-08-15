@@ -5,9 +5,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { CHAT_SUGGESTIONS, chatFor } from "@/lib/logic/chat";
+import { chatFor, chatSuggestionsFor } from "@/lib/logic/chat";
 import type { Answer } from "@/lib/logic/answerFor";
 import { useLanguage } from "@/lib/logic/language";
+import { ASSISTANT_COPY } from "@/lib/logic/assistant-copy";
 import type { RankedMatch } from "@/lib/logic/matching";
 import type { Scholarship } from "@/lib/scholarships";
 import { useTulAi } from "@/hooks/use-tul-ai";
@@ -40,6 +41,7 @@ export function TulAiChat({
 }) {
   const { state } = useTulAi();
   const language = useLanguage();
+  const copy = ASSISTANT_COPY[language];
   const [open, setOpen] = useState(false);
   const [thread, setThread] = useState<Entry[]>([]);
   const [input, setInput] = useState("");
@@ -51,7 +53,7 @@ export function TulAiChat({
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const profile = state.profile;
-  const matchGreeting = completionGreeting(matches);
+  const matchGreeting = completionGreeting(matches, language);
   const floating = placement === "floating";
 
   /* Keep the latest exchange in view. */
@@ -76,7 +78,7 @@ export function TulAiChat({
       })
         .then(async (r) => ({ ok: r.ok, json: await r.json() }))
         .then(({ json }) => {
-          const ans = (json?.answer as Answer | null) ?? chatFor(q, profile, matchedCards);
+          const ans = (json?.answer as Answer | null) ?? chatFor(q, profile, matchedCards, language);
           setThread((current) =>
             current.map((entry, i) =>
               i === current.length - 1
@@ -86,7 +88,7 @@ export function TulAiChat({
           );
         })
         .catch(() => {
-          const ans = chatFor(q, profile, matchedCards);
+          const ans = chatFor(q, profile, matchedCards, language);
           setThread((current) =>
             current.map((entry, i) =>
               i === current.length - 1
@@ -120,7 +122,7 @@ export function TulAiChat({
       <div className="fixed right-5 bottom-5 z-50 flex items-center gap-2 sm:right-8 sm:bottom-8">
         {!seenMatchGreeting && !open && (
           <span className="t-caption-strong max-w-48 rounded-xl border border-hairline bg-canvas px-3 py-2 text-ink shadow-[0_10px_30px_-8px_rgba(14,15,12,0.22)]">
-            You&apos;ve found your matches
+            {copy.foundMatches}
           </span>
         )}
         <Button
@@ -147,7 +149,7 @@ export function TulAiChat({
               </div>
             </div>
             <Button type="button" className="h-12 gap-2 px-5" aria-expanded={open} onClick={toggle}>
-              Ask about your list <ArrowRightIcon />
+              {copy.askList} <ArrowRightIcon />
             </Button>
           </div>
         </section>
@@ -165,7 +167,7 @@ export function TulAiChat({
             </span>
             <div className="min-w-0">
               <p className="t-caption-strong text-ink">Ask Tul.AI</p>
-              <p className="t-micro text-ink-mute">Published records, with cited live research when needed</p>
+              <p className="t-micro text-ink-mute">{copy.chatEvidence}</p>
             </div>
           </header>
 
@@ -226,7 +228,7 @@ export function TulAiChat({
 
           {thread.length === 0 && (
             <div className="flex flex-wrap gap-2 border-t border-hairline bg-canvas px-4 pt-3">
-              {CHAT_SUGGESTIONS.map((question) => (
+              {chatSuggestionsFor(language).map((question) => (
                 <button
                   key={question}
                   type="button"
@@ -270,20 +272,26 @@ export function TulAiChat({
   );
 }
 
-function completionGreeting(matches: RankedMatch[]): string {
+function completionGreeting(matches: RankedMatch[], language: import("@/lib/logic/locale").Language): string {
+  const copy = ASSISTANT_COPY[language];
   const strong = matches.filter((match) => match.tone === "strong").length;
   const good = matches.filter((match) => match.tone === "good").length;
   const possible = matches.filter((match) => match.tone === "possible").length;
   const total = matches.length;
 
   if (total === 0) {
-    return "You’ve finished your current list. No eligible or possible matches appeared in this verified set yet. I can help you review your profile or research broader opportunities—without treating a search result as a confirmed match.";
+    return copy.noMatchesGreeting;
   }
 
+  const labels = language === "FIL"
+    ? { strong: "malakas", good: "maganda", possible: "posible" }
+    : language === "BIS"
+      ? { strong: "kusog", good: "maayo", possible: "posible" }
+      : { strong: "strong", good: "good", possible: "possible" };
   const buckets = [
-    strong ? `${strong} strong` : null,
-    good ? `${good} good` : null,
-    possible ? `${possible} possible` : null,
+    strong ? `${strong} ${labels.strong}` : null,
+    good ? `${good} ${labels.good}` : null,
+    possible ? `${possible} ${labels.possible}` : null,
   ].filter(Boolean);
-  return `You’ve found ${total} match${total === 1 ? "" : "es"}: ${buckets.join(", ")}. Ask me to clarify any match or research scholarship questions. Provider sources still decide eligibility, deadlines, and applications.`;
+  return copy.chatGreeting(total, buckets.join(", "));
 }

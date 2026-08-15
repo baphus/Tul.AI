@@ -37,7 +37,21 @@ export function deadlineTone(days: number): DeadlineTone {
 }
 
 /** Human label for a countdown. Never invents certainty about a closed date. */
-export function deadlineLabel(days: number): string {
+export function deadlineLabel(days: number, language: Language = "ENG"): string {
+  if (language === "FIL") {
+    if (Number.isNaN(days)) return "Walang inilathalang deadline";
+    if (days < 0) return "Tapos na ang application period";
+    if (days === 0) return "Ngayong araw ang deadline";
+    if (days === 1) return "1 araw na lang";
+    return `${days} araw na lang`;
+  }
+  if (language === "BIS") {
+    if (Number.isNaN(days)) return "Walay gipatik nga deadline";
+    if (days < 0) return "Natapos na ang panahon sa aplikasyon";
+    if (days === 0) return "Karon ang deadline";
+    if (days === 1) return "1 ka adlaw na lang";
+    return `${days} ka adlaw na lang`;
+  }
   if (Number.isNaN(days)) return "Deadline not published";
   if (days < 0) return "Application period has closed";
   if (days === 0) return "Closes today";
@@ -61,3 +75,4 @@ export function formatIsoDate(iso: string): string {
     timeZone: "UTC",
   });
 }
+import type { Language } from "./locale";

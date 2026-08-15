@@ -1,8 +1,8 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 
-import type { Language } from "@/lib/logic/locale";
+import { isLanguage, LANGUAGE_DETAILS, type Language } from "@/lib/logic/locale";
 import { translations, type TranslationKey } from "@/lib/logic/translations";
 
 export type { Language } from "@/lib/logic/locale";
@@ -11,7 +11,8 @@ export const LANGUAGE_STORAGE_KEY = "tul-ai-language";
 const LANGUAGE_CHANGE_EVENT = "tul-ai-language-change";
 
 function readLanguage(): Language {
-  return window.localStorage.getItem(LANGUAGE_STORAGE_KEY) === "FIL" ? "FIL" : "ENG";
+  const stored = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
+  return isLanguage(stored) ? stored : "ENG";
 }
 
 function subscribe(callback: () => void) {
@@ -23,14 +24,19 @@ function subscribe(callback: () => void) {
   };
 }
 
-/** The site-wide language preference. `FIL` means Filipino (Tagalog). */
+/** The site-wide language preference, shared by every client surface and AI request. */
 export function useLanguage(): Language {
-  return useSyncExternalStore(subscribe, readLanguage, () => "ENG");
+  const language = useSyncExternalStore<Language>(subscribe, readLanguage, () => "ENG");
+  useEffect(() => {
+    document.documentElement.lang = LANGUAGE_DETAILS[language].htmlLang;
+  }, [language]);
+  return language;
 }
 
 export function setLanguage(language: Language) {
+  if (!isLanguage(language)) return;
   window.localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
-  document.documentElement.lang = language === "FIL" ? "fil" : "en";
+  document.documentElement.lang = LANGUAGE_DETAILS[language].htmlLang;
   window.dispatchEvent(new Event(LANGUAGE_CHANGE_EVENT));
 }
 

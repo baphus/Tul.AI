@@ -19,7 +19,7 @@ export async function POST(request: Request) {
     const matchedCards = (await getScholarships()).filter(
       (card) => card.verification !== "Expired" && matchScholarship(card, safeProfile).tone !== "none"
     );
-    const groundTruth = chatFor(question, safeProfile, matchedCards);
+    const groundTruth = chatFor(question, safeProfile, matchedCards, responseLanguage);
     const liveResearch = shouldUseLiveResearch(question) && canUseLiveResearch();
     const officialDomains = matchedCards.flatMap((card) =>
       card.sources.flatMap((source) => {

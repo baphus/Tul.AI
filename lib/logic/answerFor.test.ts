@@ -74,4 +74,9 @@ describe("answerFor", () => {
     expect(a.text).toContain("doesn't cover that specifically");
     expect(a.src).toBeNull();
   });
+
+  it("uses the selected language for the deterministic fallback", () => {
+    expect(answerFor("What is the deadline?", CHED, "FIL").text).toContain("inilathalang rekord");
+    expect(answerFor("What is the deadline?", CHED, "BIS").text).toContain("gipatik nga rekord");
+  });
 });

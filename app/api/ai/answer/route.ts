@@ -112,7 +112,7 @@ ${liveResearch ? "- Follow the research order above. Cite every current fact you
     if (!result.success || !result.text) {
       // AI unavailable — fall back to the deterministic rule engine.
       if (result.error) console.error("[/api/ai/answer] AI unavailable:", result.error);
-      const fallback = answerFor(question, card);
+      const fallback = answerFor(question, card, responseLanguage);
       return NextResponse.json({
         answer: fallback,
         answerOrigin: "published-record",

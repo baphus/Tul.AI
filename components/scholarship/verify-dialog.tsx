@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/sheet";
 import { usePrefersReducedMotion } from "@/hooks/use-media-query";
 import { useLanguage } from "@/lib/logic/language";
+import { ASSISTANT_COPY } from "@/lib/logic/assistant-copy";
 import { VERIFY_LABELS, type Scholarship } from "@/lib/scholarships";
 import { cn } from "@/lib/utils";
 
@@ -28,6 +29,7 @@ export function VerifyDialog({ card }: { card: Scholarship }) {
   const timers = useRef<number[]>([]);
   const reduced = usePrefersReducedMotion();
   const language = useLanguage();
+  const copy = ASSISTANT_COPY[language].verify;
 
   const clear = useCallback(() => {
     timers.current.forEach(window.clearTimeout);
@@ -80,9 +82,9 @@ export function VerifyDialog({ card }: { card: Scholarship }) {
           <SparklesIcon className="size-4" />
         </span>
         <span className="flex-1">
-          <span className="t-body-strong block">Ask Tul.AI to verify</span>
+          <span className="t-body-strong block">{copy.action}</span>
           <span className="t-caption block text-ink-mute">
-            Re-check the provider&apos;s published information
+            {copy.subtitle}
           </span>
         </span>
       </button>
@@ -109,7 +111,7 @@ export function VerifyDialog({ card }: { card: Scholarship }) {
               <SparklesIcon className="size-3.5" />
             </span>
             <SheetTitle className="t-display-md">
-              {done ? "Research complete" : "Checking official sources…"}
+              {done ? copy.complete : copy.checking}
             </SheetTitle>
           </div>
           <SheetDescription className="sr-only">
@@ -141,7 +143,7 @@ export function VerifyDialog({ card }: { card: Scholarship }) {
           {done && (
             <div className="mt-6 [animation:rise_300ms_cubic-bezier(.2,.8,.3,1)_both]">
               <div className="h-px bg-hairline" />
-              <h3 className="t-display-md mt-5">What Tul.AI found</h3>
+              <h3 className="t-display-md mt-5">{copy.found}</h3>
               <p className="t-body mt-2 text-ink-mute text-pretty">{aiVerifiedText || card.verify}</p>
 
               {citations.length > 0 && (
@@ -165,8 +167,7 @@ export function VerifyDialog({ card }: { card: Scholarship }) {
                 ))}
               </ul>
               <p className="t-micro mt-3 text-ink-mute">
-                {card.sources.length} official{" "}
-                {card.sources.length === 1 ? "source" : "sources"} available to review
+                {copy.sources(card.sources.length)}
               </p>
 
               <Button
@@ -174,7 +175,7 @@ export function VerifyDialog({ card }: { card: Scholarship }) {
                 variant="secondary"
                 onClick={() => setOpen(false)}
               >
-                Done
+                {copy.done}
               </Button>
             </div>
           )}

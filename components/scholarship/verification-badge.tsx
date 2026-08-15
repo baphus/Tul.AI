@@ -1,6 +1,9 @@
+"use client";
+
 import { CircleAlertIcon, CircleHelpIcon, CircleSlashIcon, RefreshCwIcon, ShieldCheckIcon } from "lucide-react";
 
 import type { VerificationStatus } from "@/lib/scholarships";
+import { useLanguage } from "@/lib/logic/language";
 import { cn } from "@/lib/utils";
 
 const STYLE: Record<VerificationStatus, { class: string; Icon: typeof ShieldCheckIcon; help: string }> = {
@@ -43,6 +46,12 @@ export function VerificationBadge({
   className?: string;
 }) {
   const { class: tone, Icon } = STYLE[status];
+  const language = useLanguage();
+  const labels: Record<typeof language, Record<VerificationStatus, string>> = {
+    ENG: { Verified: "Verified", "Needs Verification": "Needs Verification", Updated: "Updated", Expired: "Expired", Unknown: "Unknown" },
+    FIL: { Verified: "Na-verify", "Needs Verification": "Kailangang i-verify", Updated: "Na-update", Expired: "Paso na", Unknown: "Hindi alam" },
+    BIS: { Verified: "Napamatud-an", "Needs Verification": "Kinahanglan pamatuoran", Updated: "Na-update", Expired: "Natapos na", Unknown: "Wala mahibal-i" },
+  };
 
   return (
     <span className={cn("inline-flex flex-wrap items-center gap-x-2 gap-y-1", className)}>
@@ -50,7 +59,7 @@ export function VerificationBadge({
         className={cn("t-micro inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1", tone)}
       >
         <Icon className="size-3" aria-hidden="true" />
-        {status}
+        {labels[language][status]}
       </span>
     </span>
   );

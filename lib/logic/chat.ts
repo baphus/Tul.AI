@@ -5,6 +5,7 @@ import { formatPeso } from "./format";
 import { matchScholarship, rankScholarships, TONE_LABEL } from "./matching";
 import { isProfileReady } from "./validation";
 import type { Profile } from "./state";
+import type { Language } from "./locale";
 
 /**
  * The small, grounded chat engine behind the "Ask Tul.AI" widget.
@@ -24,6 +25,12 @@ export const CHAT_SUGGESTIONS = [
   "Which scholarship closes soonest?",
   "What do you know about me?",
 ];
+
+export function chatSuggestionsFor(language: Language): string[] {
+  if (language === "FIL") return ["Ano ang maaari kong apply-an?", "Eligible ba ako sa DOST?", "Aling scholarship ang pinakamalapit ang deadline?", "Ano ang alam mo tungkol sa akin?"];
+  if (language === "BIS") return ["Unsay mahimo nakong apply-an?", "Eligible ba ko sa DOST?", "Unsa nga scholarship ang hapit na ang deadline?", "Unsay nahibaw-an nimo bahin nako?"];
+  return CHAT_SUGGESTIONS;
+}
 
 const PROFILE_LABELS: [keyof Profile, string][] = [
   ["city", "where you're studying"],
@@ -217,7 +224,8 @@ function onboardingReply(): Answer {
  * factual questions like deadlines); generic match questions need a ready
  * profile; everything unresolved defers to the capability note or onboarding.
  */
-export function chatFor(question: string, profile: Profile, cards: Scholarship[]): Answer {
+export function chatFor(question: string, profile: Profile, cards: Scholarship[], language: Language = "ENG"): Answer {
+  if (language !== "ENG") return localizedChatFallback(question, profile, cards, language);
   const q = question.trim().toLowerCase();
   const k = " " + q + " ";
 
@@ -295,6 +303,39 @@ export function chatFor(question: string, profile: Profile, cards: Scholarship[]
 
   return {
     text: "I answer from your profile answers and the published records only. I can tell you what you can apply for, whether one programme fits your answers, what closes soonest, or what I know about you. If a detail isn't published, I'll say so rather than guess.",
+    src: null,
+  };
+}
+
+/** The deterministic no-model reply is localized too; it never falls back to English. */
+function localizedChatFallback(
+  question: string,
+  profile: Profile,
+  cards: Scholarship[],
+  language: Exclude<Language, "ENG">
+): Answer {
+  const card = cardFor(question, cards);
+  const ready = isProfileReady(profile);
+  if (card) {
+    const result = matchScholarship(card, profile);
+    const match = result.tone === "strong" ? (language === "FIL" ? "strong match" : "kusog nga match") : result.tone === "good" ? (language === "FIL" ? "good match" : "maayong match") : result.tone === "possible" ? (language === "FIL" ? "possible match" : "posibleng match") : (language === "FIL" ? "hindi kasalukuyang eligible" : "dili karon eligible");
+    return {
+      text: language === "FIL"
+        ? `${card.provider} — ${card.title} ay ${match} batay sa iyong sinagutan. ${result.met} sa ${result.total} inilathalang requirement ang nakumpirma. Tingnan ang opisyal na source para sa kasalukuyang deadline at aplikasyon; ang unknown ay hindi ibig sabihing hindi eligible.`
+        : `${card.provider} — ${card.title} kay ${match} base sa imong mga tubag. ${result.met} sa ${result.total} ka gipatik nga kinahanglanon ang nakumpirma. Susiha ang opisyal nga tinubdan para sa kasamtangang deadline ug aplikasyon; ang unknown dili pasabot nga dili eligible.`,
+      src: card.sources[0]?.name ?? null,
+    };
+  }
+  if (!ready) return {
+    text: language === "FIL"
+      ? "Kailangan ko muna ang iyong lugar at pinag-aaralan bago makapagbigay ng match. Kumpletuhin ang required na tanong; ang kulang na detalye ay unknown, hindi kabiguan."
+      : "Kinahanglan una nako ang imong lugar ug gitun-an aron makahatag og match. Kumpletuhon ang required nga mga pangutana; ang kulang nga detalye kay unknown, dili kapakyasan.",
+    src: null,
+  };
+  return {
+    text: language === "FIL"
+      ? "Sinasagot ko lamang ang profile mo at mga inilathalang scholarship record. Maaari kitang tulungang suriin ang mga match, pinakamalapit na deadline, o requirements. Ang provider ang magpapasya sa eligibility at aplikasyon."
+      : "Motubag ko base lamang sa imong profile ug gipatik nga mga rekord sa scholarship. Matabangan tika sa mga match, pinakahapit nga deadline, o mga kinahanglanon. Ang provider maoy magbuot sa eligibility ug aplikasyon.",
     src: null,
   };
 }

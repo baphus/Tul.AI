@@ -5,9 +5,10 @@ import { useCallback, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { answerFor, SUGGESTIONS, type Answer } from "@/lib/logic/answerFor";
+import { answerFor, suggestionsFor, type Answer } from "@/lib/logic/answerFor";
 import { useTulAiOptional } from "@/hooks/use-tul-ai";
 import { useLanguage, useTranslation } from "@/lib/logic/language";
+import { ASSISTANT_COPY } from "@/lib/logic/assistant-copy";
 import type { Scholarship } from "@/lib/scholarships";
 
 interface Entry {
@@ -30,6 +31,7 @@ export function AskPanel({ card, condensed = false }: { card: Scholarship; conde
   const requestInFlight = useRef(false);
   const language = useLanguage();
   const { t } = useTranslation();
+  const copy = ASSISTANT_COPY[language];
   useTulAiOptional();
 
   const ask = useCallback(
@@ -50,7 +52,7 @@ export function AskPanel({ card, condensed = false }: { card: Scholarship; conde
       })
         .then(async (r) => ({ ok: r.ok, json: await r.json() }))
         .then(({ json }) => {
-          const ans = (json?.answer as Answer | null) ?? answerFor(q, card);
+          const ans = (json?.answer as Answer | null) ?? answerFor(q, card, language);
           setThread((current) =>
             current.map((entry, i) =>
               i === current.length - 1
@@ -64,7 +66,7 @@ export function AskPanel({ card, condensed = false }: { card: Scholarship; conde
           );
         })
         .catch(() => {
-          const ans = answerFor(q, card);
+          const ans = answerFor(q, card, language);
           setThread((current) =>
             current.map((entry, i) =>
               i === current.length - 1
@@ -87,8 +89,7 @@ export function AskPanel({ card, condensed = false }: { card: Scholarship; conde
         {t("askAboutThis")}
       </h2>
       <p className="t-body mt-2 text-ink-mute text-pretty">
-        Answers use the published record. For current facts, Tul.AI may research the
-        provider&apos;s official sources and show citations; anything it can&apos;t confirm stays unknown.
+        {copy.answerContext}
       </p>
 
       {thread.length > 0 && (
@@ -104,9 +105,9 @@ export function AskPanel({ card, condensed = false }: { card: Scholarship; conde
                   <p className="t-micro mt-3 border-t border-hairline pt-2.5 text-ink-mute">
                     {entry.origin === "ai"
                       ? entry.a.citations?.length
-                        ? "AI response grounded in the published record and official web sources"
-                        : "AI response grounded in the published record"
-                      : "Published-record answer — AI is unavailable right now"}
+                        ? copy.aiGroundedWithSources
+                        : copy.aiGrounded
+                      : copy.publishedFallback}
                   </p>
                   {entry.a.src ? (
                     <p className="t-micro mt-2 flex items-center gap-2 text-ink-mute">
@@ -131,7 +132,7 @@ export function AskPanel({ card, condensed = false }: { card: Scholarship; conde
           ))}
           {pending && (
             <div className="flex w-fit items-center gap-1.5 self-start rounded-lg rounded-bl-xs border border-hairline bg-canvas px-4 py-3.5">
-              <span className="sr-only">{t("lookingUp")}</span>
+              <span className="sr-only">{copy.thinking}</span>
               {[0, 0.15, 0.3].map((delay) => (
                 <span
                   key={delay}
@@ -146,7 +147,7 @@ export function AskPanel({ card, condensed = false }: { card: Scholarship; conde
       )}
 
       <div className="mt-5 flex flex-wrap gap-2">
-        {SUGGESTIONS.map((question) => (
+        {suggestionsFor(language).map((question) => (
           <button
             key={question}
             type="button"

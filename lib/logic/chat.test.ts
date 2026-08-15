@@ -100,4 +100,9 @@ describe("chatFor — manners and edge cases", () => {
   it("offers suggestion chips", () => {
     expect(CHAT_SUGGESTIONS).toHaveLength(4);
   });
+
+  it("uses Filipino and Bisaya for no-model replies", () => {
+    expect(chatFor("Am I eligible for DOST?", DEMO, DATA, "FIL").text).toContain("batay sa iyong sinagutan");
+    expect(chatFor("Am I eligible for DOST?", DEMO, DATA, "BIS").text).toContain("base sa imong mga tubag");
+  });
 });

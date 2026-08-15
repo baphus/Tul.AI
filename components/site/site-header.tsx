@@ -49,7 +49,7 @@ function LanguageSelector() {
   const { t } = useTranslation();
 
   function changeLanguage(value: string | null) {
-    if (value !== "ENG" && value !== "FIL") return;
+    if (value !== "ENG" && value !== "FIL" && value !== "BIS") return;
     setLanguage(value);
   }
 
@@ -60,7 +60,7 @@ function LanguageSelector() {
         className="ring-brand h-11 gap-2 rounded-full border-hairline bg-transparent py-1 pr-1 pl-2.5 text-ink hover:bg-canvas/40 focus-visible:ring-2 focus-visible:ring-brand/60 [&>svg:last-child]:hidden"
       >
         <CountryFlag language={language} />
-        <span className="sr-only">Language: </span>
+        <span className="sr-only">{t("language")}: </span>
         <span className="t-caption-strong pr-1 text-ink">
           {language}
         </span>
@@ -74,6 +74,9 @@ function LanguageSelector() {
         </SelectItem>
         <SelectItem value="FIL" className="t-body-sm rounded-lg px-2.5 py-2 focus:bg-canvas-soft">
           Filipino
+        </SelectItem>
+        <SelectItem value="BIS" className="t-body-sm rounded-lg px-2.5 py-2 focus:bg-canvas-soft">
+          Bisaya
         </SelectItem>
       </SelectContent>
     </Select>

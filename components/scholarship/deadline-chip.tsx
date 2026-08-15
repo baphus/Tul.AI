@@ -3,6 +3,7 @@
 import { CalendarClockIcon } from "lucide-react";
 
 import { useToday } from "@/hooks/use-today";
+import { useLanguage } from "@/lib/logic/language";
 import { daysUntil, deadlineLabel, deadlineTone } from "@/lib/logic/deadlines";
 import { cn } from "@/lib/utils";
 
@@ -30,6 +31,7 @@ export function DeadlineChip({
   withIcon?: boolean;
 }) {
   const today = useToday();
+  const language = useLanguage();
   const hasDeadline = deadlineIso !== "9999-12-31";
   const days = hasDeadline && today ? daysUntil(deadlineIso, today) : Number.NaN;
   const tone = today ? deadlineTone(days) : "open";
@@ -45,7 +47,7 @@ export function DeadlineChip({
       {withIcon && <CalendarClockIcon className="size-3" aria-hidden="true" />}
       {hasDeadline ? <time dateTime={deadlineIso}>{deadline}</time> : <span>{deadline}</span>}
       {hasDeadline && today && <span aria-hidden="true">·</span>}
-      {hasDeadline && today && <span>{deadlineLabel(days)}</span>}
+      {hasDeadline && today && <span>{deadlineLabel(days, language)}</span>}
     </span>
   );
 }
@@ -59,6 +61,7 @@ export function DeadlineCountdown({
   className?: string;
 }) {
   const today = useToday();
+  const language = useLanguage();
   if (!today || deadlineIso === "9999-12-31") return null;
   const days = daysUntil(deadlineIso, today);
   const tone = deadlineTone(days);
@@ -71,7 +74,7 @@ export function DeadlineCountdown({
         className
       )}
     >
-      {deadlineLabel(days)}
+      {deadlineLabel(days, language)}
     </span>
   );
 }

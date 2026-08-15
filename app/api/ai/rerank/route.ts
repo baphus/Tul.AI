@@ -19,8 +19,13 @@ const explanationSchema = z.object({
   ).min(1).max(5),
 });
 
-function fallback(matches: RankedMatch[]): AiExplanation[] {
-  return matches.slice(0, 5).map((match) => ({ id: match.id, reason: `${match.match} — ${match.met} of ${match.total} published requirements matched${match.unknown ? `; ${match.unknown} to confirm` : ""}.` }));
+function fallback(matches: RankedMatch[], language: ReturnType<typeof requestedLanguage> = "ENG"): AiExplanation[] {
+  const copy = language === "FIL"
+    ? { of: "sa", matched: "na natugmang inilathalang requirement", confirm: "na dapat kumpirmahin" }
+    : language === "BIS"
+      ? { of: "sa", matched: "nga naparehas nga gipatik nga kinahanglanon", confirm: "nga angay kumpirmahon" }
+      : { of: "of", matched: "published requirements matched", confirm: "to confirm" };
+  return matches.slice(0, 5).map((match) => ({ id: match.id, reason: `${match.match} — ${match.met} ${copy.of} ${match.total} ${copy.matched}${match.unknown ? `; ${match.unknown} ${copy.confirm}` : ""}.` }));
 }
 
 export async function POST(request: Request) {
@@ -28,14 +33,15 @@ export async function POST(request: Request) {
     const { rankedMatches, language } = (await request.json()) as { rankedMatches?: RankedMatch[]; language?: unknown };
     if (!Array.isArray(rankedMatches)) return NextResponse.json({ error: "Missing ranked matches." }, { status: 400 });
     const matches = rankedMatches.slice(0, 5);
-    if (!allowAiRequest(request)) return NextResponse.json({ reRanked: rankedMatches, explanations: fallback(matches), generated: false, limited: true });
+    const responseLanguage = requestedLanguage(language);
+    if (!allowAiRequest(request)) return NextResponse.json({ reRanked: rankedMatches, explanations: fallback(matches, responseLanguage), generated: false, limited: true });
     const generated = await generateTulAIJson<z.infer<typeof explanationSchema>>(
       `Create one concise, warm explanation per item from this deterministic match summary. Do not add facts, scores, or promises. Explain unknown requirements as information to confirm.\n${JSON.stringify(matches.map(({ id, match, met, total, unknown, checks }) => ({ id, match, met, total, unknown, checks })))}`,
-      `${TUL_AI_SYSTEM_INSTRUCTION}\n\n${responseLanguageInstruction(requestedLanguage(language))}`
+      `${TUL_AI_SYSTEM_INSTRUCTION}\n\n${responseLanguageInstruction(responseLanguage)}`
     );
     const parsed = explanationSchema.safeParse(generated.data);
     if (!generated.success || !parsed.success) {
-      return NextResponse.json({ reRanked: rankedMatches, explanations: fallback(matches), generated: false });
+      return NextResponse.json({ reRanked: rankedMatches, explanations: fallback(matches, responseLanguage), generated: false });
     }
     const permitted = new Set(matches.map((match) => match.id));
     const explanations = parsed.data.explanations
@@ -43,7 +49,7 @@ export async function POST(request: Request) {
       .map((item): AiExplanation => ({ id: item.id, reason: item.reason }));
     return NextResponse.json({
       reRanked: rankedMatches,
-      explanations: explanations?.length ? explanations : fallback(matches),
+      explanations: explanations?.length ? explanations : fallback(matches, responseLanguage),
       generated: Boolean(explanations?.length),
     });
   } catch {

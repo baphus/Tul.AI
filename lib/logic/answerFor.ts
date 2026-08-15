@@ -1,5 +1,6 @@
 import type { Scholarship } from "@/lib/scholarships";
 import { formatPeso } from "@/lib/logic/format";
+import type { Language } from "./locale";
 
 export interface Answer {
   text: string;
@@ -14,6 +15,12 @@ export const SUGGESTIONS = [
   "What are my chances?",
 ];
 
+export function suggestionsFor(language: Language): string[] {
+  if (language === "FIL") return ["Maaari ba akong magkaroon ng isa pang scholarship?", "Paano kung hindi ko maabot ang deadline?", "Paano inilalabas ang pera?", "Ano ang tsansa ko?"];
+  if (language === "BIS") return ["Mahimo ba ko makadawat ug laing scholarship?", "Unsa kung malapas nako ang deadline?", "Giunsa paghatag ang kuwarta?", "Unsa ang akong kahigayunan?"];
+  return SUGGESTIONS;
+}
+
 /**
  * Rule-based Q&A grounded in the published data on the card. Anything not
  * covered defers to the provider — the model never invents requirements or
@@ -21,7 +28,8 @@ export const SUGGESTIONS = [
  * the first intent that matches wins, and the most specific phrases are
  * checked before generic ones.
  */
-export function answerFor(q: string, card: Scholarship): Answer {
+export function answerFor(q: string, card: Scholarship, language: Language = "ENG"): Answer {
+  if (language !== "ENG") return localizedFallback(card, language);
   const k = " " + q.toLowerCase().trim() + " ";
 
   // ── Multiple scholarships ──
@@ -323,4 +331,15 @@ export function answerFor(q: string, card: Scholarship): Answer {
       ".",
     src: null,
   };
+}
+
+/**
+ * The no-model path must honour the same language contract as the AI route.
+ * Provider and programme names stay intact because they are official record data.
+ */
+function localizedFallback(card: Scholarship, language: Exclude<Language, "ENG">): Answer {
+  const text = language === "FIL"
+    ? `Ang sagot para sa ${card.provider} — ${card.title} ay batay lamang sa inilathalang rekord. Tingnan ang opisyal na source ng provider para sa kasalukuyang requirements, deadline na ${card.deadline}, at proseso ng aplikasyon. Ang anumang hindi nakumpirma ay mananatiling unknown.`
+    : `Ang tubag para sa ${card.provider} — ${card.title} gibase lamang sa gipatik nga rekord. Susiha ang opisyal nga tinubdan sa provider para sa kasamtangang mga kinahanglanon, deadline nga ${card.deadline}, ug proseso sa aplikasyon. Ang bisan unsang dili makumpirma magpabiling unknown.`;
+  return { text, src: card.sources[0]?.name ?? null };
 }
