@@ -101,6 +101,8 @@ export interface Scholarship {
   logo: string | null;
   title: string;
   amount: number;
+  /** Provider-published monetary and non-monetary benefits. */
+  benefits: string[];
   amountNote: string;
   /** Display form, e.g. "Aug. 30, 2026". */
   deadline: string;
@@ -250,7 +252,7 @@ function adapt(record: RawScholarship): Scholarship {
   const sourceUrl = record.provider.website ?? record.applicationUrl ?? "";
   return {
     id: record.id, provider: record.provider.name, logo: providerLogo(record), title: record.name, amount,
-    amountNote: amount ? "published benefit" : "see provider details", deadline: displayDate(record.deadline), deadlineIso,
+    benefits: record.benefits, amountNote: amount ? "published benefit" : "other published benefits", deadline: displayDate(record.deadline), deadlineIso,
     match: "Possible match", matchShort: "Review " + rows.length + " published requirement" + (rows.length === 1 ? "" : "s"),
     tone: "possible", met: 0, total: rows.length,
     why: rows.slice(0, 3).map((row) => ({ state: row.state, label: row.label + " published" })), rows,

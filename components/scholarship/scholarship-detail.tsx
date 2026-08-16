@@ -7,7 +7,7 @@ import { DeadlineChip } from "@/components/scholarship/deadline-chip";
 import { MatchBadge, MatchMetric } from "@/components/scholarship/match-metric";
 import { ProviderCrest, ProviderWatermark, providerTint } from "@/components/scholarship/provider-logo";
 import { RequirementMark } from "@/components/scholarship/requirement-mark";
-import { formatPeso } from "@/lib/logic/format";
+import { benefitSummary } from "@/lib/logic/format";
 import { detailRequirements } from "@/lib/logic/detail-match";
 import type { RankedMatch } from "@/lib/logic/matching";
 import type { Scholarship } from "@/lib/scholarships";
@@ -89,7 +89,7 @@ export function ScholarshipDetail({
         <dl className="mt-8 grid gap-3 sm:grid-cols-2">
           <div className="rounded-lg border border-hairline bg-canvas p-5">
             <dt className="t-micro text-ink-mute">Potential assistance</dt>
-            <dd className="t-display-md t-num mt-1.5">{formatPeso(card.amount)}</dd>
+            <dd className={cn("t-display-md mt-1.5", card.amount > 0 ? "t-num" : "text-[1rem] leading-snug")}>{benefitSummary(card)}</dd>
             <p className="t-caption mt-1 text-ink-mute">{card.amountNote}</p>
           </div>
           <div className="rounded-lg border border-hairline bg-canvas p-5">

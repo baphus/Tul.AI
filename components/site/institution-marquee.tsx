@@ -1,7 +1,7 @@
 import { ShieldCheckIcon, ShieldQuestionMarkIcon } from "lucide-react";
 
 import { ProviderCrest } from "@/components/scholarship/provider-logo";
-import { formatPeso } from "@/lib/logic/format";
+import { benefitSummary } from "@/lib/logic/format";
 import type { Scholarship } from "@/lib/scholarships";
 
 /**
@@ -55,14 +55,10 @@ function Row({ card, index }: { card: Scholarship; index: number }) {
             adapter can't parse into a figure; `amountNote` then reads "see
             provider details". Printing ₱0 alongside it would assert the
             provider offers nothing. */}
-        {card.amount > 0 ? (
-          <p className="t-caption-strong t-num text-ink">
-            {formatPeso(card.amount)}{" "}
-            <span className="t-micro text-ink-mute">{card.amountNote}</span>
-          </p>
-        ) : (
-          <p className="t-caption-strong text-ink-mute">{card.amountNote}</p>
-        )}
+        <p className={card.amount > 0 ? "t-caption-strong t-num text-ink" : "t-caption-strong text-ink-mute"}>
+          {benefitSummary(card)}{" "}
+          {card.amount > 0 && <span className="t-micro text-ink-mute">{card.amountNote}</span>}
+        </p>
         <p
           className={`t-micro inline-flex flex-none items-center gap-1 ${
             confirmed ? "text-met" : "text-attention-ink"

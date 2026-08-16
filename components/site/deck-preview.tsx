@@ -3,7 +3,7 @@ import { ArrowUpIcon, CheckIcon, ShieldCheckIcon, XIcon } from "lucide-react";
 import { MatchMetric } from "@/components/scholarship/match-metric";
 import { ProviderCrest, providerTint } from "@/components/scholarship/provider-logo";
 import { RequirementMark } from "@/components/scholarship/requirement-mark";
-import { formatPeso } from "@/lib/logic/format";
+import { benefitSummary } from "@/lib/logic/format";
 import type { Scholarship } from "@/lib/scholarships";
 import { cn } from "@/lib/utils";
 
@@ -49,7 +49,7 @@ export function DeckPreview({
           <h3 className="t-display-md mt-3 text-ink">{card.title}</h3>
 
           <p className="mt-5 flex items-baseline gap-2">
-            <span className="t-figure text-ink">{formatPeso(card.amount)}</span>
+            <span className={cn("text-ink", card.amount > 0 ? "t-figure" : "t-caption leading-snug")}>{benefitSummary(card)}</span>
             <span className="t-micro text-ink-mute">{card.amountNote}</span>
           </p>
 

@@ -7,7 +7,7 @@ import { MatchBadge } from "@/components/scholarship/match-metric";
 import { ProviderCrest, ProviderWatermark, providerTint } from "@/components/scholarship/provider-logo";
 import { RequirementMark } from "@/components/scholarship/requirement-mark";
 import { DeadlineCountdown } from "@/components/scholarship/deadline-chip";
-import { formatPeso } from "@/lib/logic/format";
+import { benefitSummary, formatPeso } from "@/lib/logic/format";
 import { compactMatchReason } from "@/lib/logic/matching";
 import type { RankedMatch } from "@/lib/logic/matching";
 import type { Scholarship } from "@/lib/scholarships";
@@ -76,7 +76,10 @@ export function ScholarshipCard({
             <>
               <div className="relative mt-4 border-t border-hairline pt-4 lg:mt-3 lg:pt-3">
                 <p className="t-micro text-ink-deep">Potential assistance</p>
-                <p className="mt-1 flex flex-wrap items-baseline gap-2"><CountUp key={`${card.id}-assistance`} value={card.amount} reduced={reduced} format={formatPeso} /><span className="t-caption text-ink-mute">{card.amountNote}</span></p>
+                <p className="mt-1 flex flex-wrap items-baseline gap-2">
+                  {card.amount > 0 ? <CountUp key={`${card.id}-assistance`} value={card.amount} reduced={reduced} format={formatPeso} /> : <span className="t-caption text-ink-deep leading-snug">{benefitSummary(card)}</span>}
+                  {card.amount > 0 && <span className="t-caption text-ink-mute">{card.amountNote}</span>}
+                </p>
               </div>
               <div className="relative mt-4 border-t border-hairline pt-4 lg:mt-3 lg:pt-3">
                 <p className="t-micro text-ink-mute">Deadline</p>
@@ -104,7 +107,7 @@ export function ScholarshipCard({
               </p>
               <p className="t-caption-strong justify-self-end tabular-nums">
                 <span className="sr-only">Published benefit: </span>
-                {formatPeso(card.amount)}
+                {benefitSummary(card)}
               </p>
               <p className="t-micro col-span-2 truncate text-ink-mute">
                 <span className="sr-only">Deadline: </span>

@@ -1,5 +1,5 @@
 import type { Scholarship } from "@/lib/scholarships";
-import { formatPeso } from "@/lib/logic/format";
+import { benefitSummary } from "@/lib/logic/format";
 import type { Language } from "./locale";
 
 export interface Answer {
@@ -77,7 +77,7 @@ export function answerFor(q: string, card: Scholarship, language: Language = "EN
     return {
       text:
         "The published assistance is " +
-        formatPeso(card.amount) +
+        benefitSummary(card) +
         " " +
         card.amountNote +
         ". Amounts can change per cycle, so confirm the current figure on the official notice.",
@@ -115,7 +115,7 @@ export function answerFor(q: string, card: Scholarship, language: Language = "EN
         " " +
         card.title +
         " is a scholarship offering " +
-        (card.amount > 0 ? formatPeso(card.amount) + " (" + card.amountNote + ")" : card.amountNote) +
+        (card.amount > 0 ? benefitSummary(card) + " (" + card.amountNote + ")" : benefitSummary(card)) +
         ". " +
         card.back.about +
         " Applications close on " +

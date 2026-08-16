@@ -1,7 +1,7 @@
 import type { Scholarship } from "@/lib/scholarships";
 
 import { answerFor, type Answer } from "./answerFor";
-import { formatPeso } from "./format";
+import { benefitSummary } from "./format";
 import { matchScholarship, rankScholarships, TONE_LABEL } from "./matching";
 import { isProfileReady } from "./validation";
 import type { Profile } from "./state";
@@ -114,7 +114,7 @@ function eligibilityReply(card: Scholarship, profile: Profile): Answer {
         .join(", ")}. Unknown isn't a failure — add what you know on your profile.`
     );
   }
-  parts.push(`Closes ${card.deadline}. ${formatPeso(card.amount)} ${card.amountNote}.`);
+  parts.push(`Closes ${card.deadline}. ${benefitSummary(card)}${card.amount > 0 ? ` ${card.amountNote}` : ""}.`);
 
   return { text: parts.join(" "), src: card.sources[0]?.name ?? null };
 }
@@ -137,7 +137,7 @@ function bestMatchesReply(cards: Scholarship[], profile: Profile): Answer {
     const card = byId.get(result.id);
     const name = card ? `${card.provider} ${card.title}` : result.id;
     return `${i + 1}) ${name} — ${TONE_LABEL[result.tone]}${
-      card ? `, ${formatPeso(card.amount)} ${card.amountNote}, closes ${card.deadline}` : ""
+      card ? `, ${benefitSummary(card)}${card.amount > 0 ? ` ${card.amountNote}` : ""}, closes ${card.deadline}` : ""
     }`;
   });
 

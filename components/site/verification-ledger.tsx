@@ -1,7 +1,7 @@
 import { ArrowUpRightIcon } from "lucide-react";
 import Link from "next/link";
 
-import { formatPeso } from "@/lib/logic/format";
+import { benefitSummary } from "@/lib/logic/format";
 import { ROUTES } from "@/lib/logic/routes";
 import type { Scholarship } from "@/lib/scholarships";
 import { cn } from "@/lib/utils";
@@ -58,7 +58,7 @@ export function VerificationLedger({ cards }: { cards: Scholarship[] }) {
                 </Link>
               </td>
               <td className="t-caption t-num py-5 pr-6 align-top whitespace-nowrap">
-                {formatPeso(card.amount)}
+                {benefitSummary(card)}
               </td>
               <td className="t-caption t-num py-5 pr-6 align-top whitespace-nowrap text-ink-mute">
                 <time dateTime={card.deadlineIso}>{card.deadline}</time>
@@ -87,7 +87,7 @@ export function VerificationLedger({ cards }: { cards: Scholarship[] }) {
             <dl className="mt-3 grid grid-cols-2 gap-x-6 gap-y-2.5">
               <div>
                 <dt className="t-micro text-ink-mute">Support</dt>
-                <dd className="t-caption t-num">{formatPeso(card.amount)}</dd>
+                <dd className="t-caption">{benefitSummary(card)}</dd>
               </div>
               <div>
                 <dt className="t-micro text-ink-mute">Closes</dt>

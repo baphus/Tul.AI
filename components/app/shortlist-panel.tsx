@@ -7,7 +7,7 @@ import { DeadlineCountdown } from "@/components/scholarship/deadline-chip";
 import { ProviderCrest } from "@/components/scholarship/provider-logo";
 import { ButtonLink } from "@/components/ui/button";
 import { useTulAi } from "@/hooks/use-tul-ai";
-import { formatPeso } from "@/lib/logic/format";
+import { benefitSummary } from "@/lib/logic/format";
 import { ROUTES } from "@/lib/logic/routes";
 import { passedCount, savedIndexes, unsortedCount } from "@/lib/logic/state";
 
@@ -76,7 +76,7 @@ export function ShortlistPanel() {
                     </span>
                   </span>
                   <span className="t-micro t-num flex-none">
-                    {formatPeso(card.amount)}
+                    {benefitSummary(card)}
                   </span>
                 </Link>
               </li>

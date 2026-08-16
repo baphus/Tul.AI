@@ -2,7 +2,7 @@
 
 import { ProviderCrest } from "@/components/scholarship/provider-logo";
 import { useLanguage } from "@/lib/logic/language";
-import { formatPeso } from "@/lib/logic/format";
+import { benefitSummary } from "@/lib/logic/format";
 import type { Scholarship } from "@/lib/scholarships";
 import { cn } from "@/lib/utils";
 
@@ -209,11 +209,11 @@ export function OfferPills({
               className="hero-pill-face t-body-strong t-num absolute inset-0 text-right text-ink motion-reduce:hidden"
               style={{ animationDelay: `${slot * SLOT_SECONDS + PART_STAGGER_SECONDS.amount}s` }}
             >
-              {formatPeso(card.amount)}
+              {benefitSummary(card)}
             </span>
           ))}
           <span className="t-body-strong t-num absolute inset-0 hidden text-right text-ink motion-reduce:block">
-            {formatPeso(faces[0].card.amount)}
+            {benefitSummary(faces[0].card)}
           </span>
         </span>
       </div>

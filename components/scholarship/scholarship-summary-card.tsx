@@ -5,7 +5,7 @@ import { DeadlineChip } from "@/components/scholarship/deadline-chip";
 import { MatchMetric } from "@/components/scholarship/match-metric";
 import { ProviderCrest } from "@/components/scholarship/provider-logo";
 import { VerificationBadge } from "@/components/scholarship/verification-badge";
-import { formatPeso } from "@/lib/logic/format";
+import { benefitSummary } from "@/lib/logic/format";
 import { ROUTES } from "@/lib/logic/routes";
 import type { RankedMatch } from "@/lib/logic/matching";
 import type { Scholarship } from "@/lib/scholarships";
@@ -62,13 +62,13 @@ export function ScholarshipSummaryCard({
           </h3>
         </div>
         <div className="hidden text-right sm:block">
-          <p className="t-display-md t-num">{formatPeso(card.amount)}</p>
+          <p className={cn("t-display-md", card.amount > 0 ? "t-num" : "max-w-[24ch] text-right text-[0.95rem] leading-snug")}>{benefitSummary(card)}</p>
           <p className="t-micro mt-0.5 text-ink-mute">{card.amountNote}</p>
         </div>
       </div>
 
       <p className="t-body mt-4 text-ink-mute sm:hidden">
-        <span className="t-body-strong t-num text-ink">{formatPeso(card.amount)}</span>{" "}
+        <span className={cn("t-body-strong text-ink", card.amount > 0 && "t-num")}>{benefitSummary(card)}</span>{" "}
         {card.amountNote}
       </p>
 

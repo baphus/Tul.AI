@@ -5,6 +5,27 @@ export function formatPeso(amount: number): string {
   return "₱" + amount.toLocaleString("en-PH");
 }
 
+/** Uses published non-cash benefits when no positive peso amount was parsed. */
+export function benefitSummary(card: { amount: number; benefits: string[] }): string {
+  if (card.amount > 0) return formatPeso(card.amount);
+  const benefits = card.benefits
+    .filter((benefit) => !/^₱\s*0(?:\D|$)/i.test(benefit.trim()))
+    .filter(Boolean);
+  if (!benefits.length) return "See provider details";
+
+  const compact = benefits.map((benefit) =>
+    benefit
+      .replace(/^Full tuition and training fees$/i, "Full tuition + training")
+      .replace(/^Stay-in accommodation for (\d+) months$/i, "$1-month accommodation")
+      .replace(/^Transportation allowance$/i, "Transport allowance")
+      .replace(/^School supplies and uniforms$/i, "Supplies + uniforms")
+      .replace(/\band\b/gi, "+")
+  );
+  const visible = compact.slice(0, 3).join(" · ");
+  const remaining = compact.length - 3;
+  return remaining > 0 ? `${visible} · +${remaining} more benefits` : visible;
+}
+
 export interface RequirementMetric {
   met: number;
   total: number;

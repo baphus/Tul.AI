@@ -12,7 +12,7 @@ import { ButtonLink } from "@/components/ui/button";
 import { usePrefersReducedMotion } from "@/hooks/use-media-query";
 import { useToday } from "@/hooks/use-today";
 import { useTulAi } from "@/hooks/use-tul-ai";
-import { formatPeso } from "@/lib/logic/format";
+import { benefitSummary } from "@/lib/logic/format";
 import { isDeadlineOpen } from "@/lib/logic/deadlines";
 import { countsOf, rankScholarships, type MatchTone4, type RankedMatch } from "@/lib/logic/matching";
 import { ROUTES } from "@/lib/logic/routes";
@@ -229,7 +229,7 @@ function TopMatch({
         </div>
 
         <div className="flex-none text-right">
-          <p className="t-display-md t-num">{formatPeso(card.amount)}</p>
+          <p className={cn("t-display-md", card.amount > 0 ? "t-num" : "text-[0.95rem] leading-snug")}>{benefitSummary(card)}</p>
           <p className="t-micro mt-0.5 text-ink-mute">{card.amountNote}</p>
         </div>
       </Link>
