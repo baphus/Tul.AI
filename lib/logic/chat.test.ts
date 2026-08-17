@@ -7,6 +7,7 @@ import { chatFor, CHAT_SUGGESTIONS } from "./chat";
 const DEMO: Profile = {
   ...emptyProfile(),
   name: "Josephus",
+  citizenship: "Filipino",
   city: "Cebu City",
   stage: "College Student",
   school: "Cebu Technological University",
@@ -55,7 +56,7 @@ describe("chatFor — profile-wide questions", () => {
 
   it("asks for onboarding answers before matching", () => {
     const reply = chatFor("What can I apply for?", emptyProfile(), DATA);
-    expect(reply.text).toContain("where you're studying");
+    expect(reply.text).toContain("citizenship");
   });
 
   it("reports the soonest deadlines among open programmes", () => {

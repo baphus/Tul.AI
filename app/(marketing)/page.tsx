@@ -119,8 +119,8 @@ const FAQ: [string, string][] = [
     "No. A rules engine compares your answers against each published requirement and reports met, needs attention, or unknown. The AI explains that result in plain language — it never overrides it, and unknown never means ineligible.",
   ],
   [
-    "What does the match percentage actually measure?",
-    "Exactly one thing: the share of a provider's own published requirements your profile already meets — eight of nine is 89%. It is arithmetic you can audit, and every requirement behind it opens so you can read it yourself. What it is not is a prediction: it says nothing about your chance of being awarded the scholarship, and no AI produces it. Where a provider publishes nothing we can check, we say so instead of showing 0%.",
+    "What does the match label mean?",
+    "It summarizes the provider's published requirements that your profile confirms. Open each requirement to see the evidence behind the label. It is not a prediction of an award: the provider makes that decision, and no AI produces the match label. If the provider publishes nothing we can check, Tul.AI says so plainly.",
   ],
   [
     "How current is the information?",

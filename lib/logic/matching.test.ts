@@ -277,5 +277,10 @@ it("produces a deterministic compact reason that varies with the checks", () => 
 
     const none = compactMatchReason(matchScholarship(fixture({ gwaMin: 99 }), DEMO));
     expect(none).toContain("GWA isn't met under the published rules");
+
+    const unpublished = compactMatchReason(matchScholarship(fixture({}), DEMO));
+    expect(unpublished).toBe(
+      "This provider has not published eligibility requirements we can check. It may be open to you, but this is not yet confirmed."
+    );
   });
 });

@@ -14,7 +14,6 @@ describe("published scholarship assistance", () => {
     "security-bank-foundation-scholarships-internal-external-and-regalo-mo-ki-19",
     "mdfi-gawad-talino-scholarship-21",
     "megaworld-foundation-scholarship-program-31",
-    "amcham-foundation-scholarship-program-32",
     "cebuana-lhuillier-foundation-inc-clfi-nationwide-scholarship-program-29",
     "shell-unlad-sa-pasada-usp-scholarship-program-33",
     "ched-sikap-l-scholarship-legal-education-track-38",
@@ -24,7 +23,7 @@ describe("published scholarship assistance", () => {
   it("has visible provider-published support for every reported record", () => {
     const records = requestedRecords.map((id) => DATA.find((card) => card.id === id));
 
-    expect(records).toHaveLength(15);
+    expect(records).toHaveLength(14);
     expect(records.every((card) => Boolean(card?.assistance))).toBe(true);
   });
 

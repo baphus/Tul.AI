@@ -30,7 +30,7 @@ export function MatchMetric({
     );
   }
 
-  const label = `${met} of ${total} requirements met · ${pct}%`;
+  const label = `${met} of ${total} published requirements confirmed`;
 
   return (
     <div className={className}>

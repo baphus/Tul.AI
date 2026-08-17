@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 
 const NAV = [
   { href: ROUTES.discover, label: "discover" },
+  { href: ROUTES.review, label: "review" },
   { href: ROUTES.profile, label: "profile" },
 ] as const;
 

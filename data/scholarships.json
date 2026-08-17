@@ -207,36 +207,6 @@
     "logoUrl": "https://res.cloudinary.com/mewk52ex/image/upload/v1786548905/SM_Foundation_College_Scholarship_Program.png"
   },
   {
-    "id": "amcham-foundation-scholarship-program-32",
-    "name": "AmCham Foundation Scholarship Program",
-    "provider": {
-      "name": "American Chamber Foundation (AmCham Foundation)",
-      "type": "foundation",
-      "website": "https://amchamfoundation.com"
-    },
-    "description": "The AmCham Foundation's education program provides educational assistance to poor but deserving Filipino youth, with alumni accounts describing support through high school and college as well as developmental activities.",
-    "benefits": [
-      "Educational assistance / financial support for schooling",
-      "Life-planning seminars, summer outings, and developmental activities",
-      "Mentorship and career support"
-    ],
-    "deadline": null,
-    "applicationUrl": null,
-    "eligibility": {},
-    "requirements": [
-      "Poor but deserving Filipino youth",
-      "Corporate-sponsored scholarship model",
-      "Holistic development activities"
-    ],
-    "requiredDocuments": [],
-    "tags": [
-      "foundation"
-    ],
-    "lastVerified": "2026-08-12",
-    "verificationSource": "official",
-    "verificationStatus": "Verified"
-  },
-  {
     "id": "bfar-fisheries-scholarship-program-fisherfolk-children-educational-grant-6",
     "name": "BFAR Fisheries Scholarship Program – Fisherfolk Children Educational Grant (BFAR-FSP-FCEG)",
     "provider": {

@@ -74,8 +74,9 @@ import { cn } from "@/lib/utils";
  *   6. free text  — with openers, some of which set a structured field rather
  *                   than writing sensitive prose (spec §2.4).
  *
- * Only 1–3 gate progress. Everything after is optional by design: a blank answer
- * becomes an unknown requirement, never a failed one (AGENTS.md §3).
+ * Study stage and citizenship gate the first question; location and course gate
+ * the next two. Everything after is optional by design: a blank answer becomes
+ * an unknown requirement, never a failed one (AGENTS.md §3).
  */
 
 interface StepMeta {
@@ -299,12 +300,6 @@ export function OnboardingFlow({ step }: { step: number }) {
       dispatch({ type: "SET_FIELD", field, value }),
     [dispatch]
   );
-
-  useEffect(() => {
-    if (state.hydrated && !profile.citizenship) {
-      setField("citizenship", "Filipino");
-    }
-  }, [profile.citizenship, setField, state.hydrated]);
 
   const goTo = useCallback(
     (next: number) => {
@@ -561,7 +556,7 @@ export function OnboardingFlow({ step }: { step: number }) {
             <div className="mt-6 grid max-w-xs gap-2.5">
               <div className="flex items-center justify-between gap-3">
                 <Label htmlFor="citizenship">
-                  {t("onboardingCitizenship")} <span className="t-micro text-ink-mute">— {t("optional")}</span>
+                  {t("onboardingCitizenship")}
                 </Label>
                 <InfoHint label={t("onboardingMoreInfo")}>
                   {t("onboardingCitizenshipHint")}
@@ -580,7 +575,7 @@ export function OnboardingFlow({ step }: { step: number }) {
                     {profile.citizenship === "Filipino" && (
                       <ReactCountryFlag countryCode="PH" svg aria-hidden="true" style={{ width: "1.25em", height: "1.25em" }} />
                     )}
-                    {display(profile.citizenship || "Filipino")}
+                    {profile.citizenship ? display(profile.citizenship) : t("onboardingSelectCitizenship")}
                   </span>
                   <ChevronDownIcon className="size-4 text-ink-mute" aria-hidden="true" />
                 </button>

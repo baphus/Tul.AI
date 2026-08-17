@@ -15,6 +15,7 @@ import {
 const answered = (over: Partial<Profile> = {}): Profile => ({
   ...emptyProfile(),
   city: "Cebu City",
+  citizenship: "Filipino",
   course: "BS Information Systems",
   stage: "College Student",
   ...over,
@@ -57,8 +58,9 @@ describe("dependentsError", () => {
 });
 
 describe("canAdvance", () => {
-  it("requires where the student is in their studies on step 1", () => {
+  it("requires study stage and citizenship on step 1", () => {
     expect(canAdvance(1, emptyProfile())).toBe(false);
+    expect(canAdvance(1, answered({ citizenship: "" }))).toBe(false);
     expect(canAdvance(1, answered())).toBe(true);
   });
 
@@ -123,8 +125,9 @@ describe("isProfileReady", () => {
     expect(isProfileReady(emptyProfile())).toBe(false);
     expect(isProfileReady(answered({ city: "" }))).toBe(false);
     expect(isProfileReady(answered({ course: "" }))).toBe(false);
-    // a missing stage is unknown, never a blocker
+    // A missing stage does not prevent matching after onboarding, but citizenship does.
     expect(isProfileReady(answered({ stage: "" }))).toBe(true);
+    expect(isProfileReady(answered({ citizenship: "" }))).toBe(false);
     expect(isProfileReady(answered())).toBe(true);
   });
 
@@ -144,10 +147,10 @@ describe("isPlanning", () => {
 describe("profileCompleteness", () => {
   it("counts filled fields out of the full set", () => {
     expect(profileCompleteness(emptyProfile())).toEqual({ filled: 0, total: 11 });
-    expect(profileCompleteness(answered()).filled).toBe(3);
+    expect(profileCompleteness(answered()).filled).toBe(4);
     expect(
       profileCompleteness(answered({ chips: ["OFW parent"], income: "Below ₱10,000" })).filled
-    ).toBe(5);
+    ).toBe(6);
   });
 
   it("counts a band and its exact counterpart once between them", () => {

@@ -493,16 +493,16 @@ export function compactMatchReason(result: RankedMatch): string {
   if (notMet.length > 0) {
     const wall = proseList(notMet);
     const alongside = met.length > 0 ? ` even though ${proseList(met)} ${met.length === 1 ? "is" : "are"} on your side` : "";
-    return `${wall} ${notMet.length === 1 ? "isn't" : "aren't"} met under the published rules${alongside} ΓÇö so this cycle is ${result.match.toLowerCase()}. Revisit it if your situation changes.`;
+    return `${wall} ${notMet.length === 1 ? "isn't" : "aren't"} met under the published rules${alongside}. This cycle is ${result.match.toLowerCase()}. Revisit it if your situation changes.`;
   }
 
   if (total === 0) {
-    return "This provider publishes no checks we can run, so nothing counts against you ΓÇö treated as open, not yet confirmed.";
+    return "This provider has not published eligibility requirements we can check. It may be open to you, but this is not yet confirmed.";
   }
 
   if (tone === "strong") {
     const which = proseList(met);
-    return `Every published requirement checks out ΓÇö ${which} ${met.length === 1 ? "clears" : "clear"} the bar. It's the most direct fit in your list right now.`;
+    return `Every published requirement checks out. ${which} ${met.length === 1 ? "clears" : "clear"} the bar. It's the most direct fit in your list right now.`;
   }
 
   const confirm = unknown.length > 0
@@ -510,7 +510,7 @@ export function compactMatchReason(result: RankedMatch): string {
     : "";
 
   if (met.length === 0) {
-    return `Nothing we can check has failed ΓÇö the published criteria just can't be confirmed for you yet.${confirm}`;
+    return `Nothing we can check has failed. The published criteria just can't be confirmed for you yet.${confirm}`;
   }
 
   if (tone === "good") {

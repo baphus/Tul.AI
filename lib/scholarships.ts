@@ -184,7 +184,6 @@ const EXPECTED_2027_CYCLE_IDS = new Set([
   "ched-merit-scholarship-program-cmsp-ay-2026-2027-39",
   "security-bank-foundation-scholarships-internal-external-and-regalo-mo-ki-19",
   "mdfi-gawad-talino-scholarship-21",
-  "amcham-foundation-scholarship-program-32",
   "cebuana-lhuillier-foundation-inc-clfi-nationwide-scholarship-program-29",
   "shell-unlad-sa-pasada-usp-scholarship-program-33",
   "ched-sikap-l-scholarship-legal-education-track-38",

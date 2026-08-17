@@ -65,10 +65,9 @@ export function ScholarshipCard({
           <ProviderWatermark logo={card.logo} className={compact ? "-right-10 top-12 size-40" : "-right-14 top-28 size-54"} />
           <div className={cn("relative flex gap-3", compact ? "justify-end" : "items-start justify-between")}>
             {!compact && (
-              <div>
-                <p className="t-micro text-ink-deep">Your match</p>
-                <p className="mt-1">{result.percent === null ? <span className="t-figure text-ink-deep">-</span> : <CountUp key={card.id} value={result.percent} reduced={reduced} format={(value) => `${value}%`} className="text-[clamp(2.5rem,5vw,3.125rem)] leading-none" />}</p>
-              </div>
+              <p className="t-micro text-ink-deep">
+                {result.total === 0 ? "Requirements not published" : "Match status"}
+              </p>
             )}
             <MatchBadge card={result} className={cn("shrink-0", compact ? "px-1.5 py-0.5 text-[0.625rem] leading-3 [&>span]:size-1" : "mt-1")} />
           </div>
@@ -88,7 +87,7 @@ export function ScholarshipCard({
               </div>
               <div className="relative mt-4 border-t border-hairline pt-4 lg:mt-3 lg:pt-3">
                 <p className="t-micro flex items-center gap-1.5 text-ink-deep"><SparklesIcon className="size-3.5 shrink-0" aria-hidden="true" />Why this matched you</p>
-                <p className="t-caption mt-1.5 text-ink-mute text-pretty line-clamp-3">{compactMatchReason(result)}</p>
+                <p className="t-caption mt-1.5 text-ink-mute text-pretty">{compactMatchReason(result)}</p>
               </div>
             </>
           )}
@@ -102,8 +101,8 @@ export function ScholarshipCard({
           {compact && (
             <div className="relative mt-3 grid grid-cols-2 gap-x-3 gap-y-1 border-t border-hairline pt-2 text-ink-deep">
               <p className="t-caption-strong tabular-nums">
-                <span className="sr-only">Published requirements matched: </span>
-                {result.percent === null ? "—" : `${result.percent}%`}
+                <span className="sr-only">Match status: </span>
+                {result.match}
               </p>
               <p className="t-caption-strong justify-self-end tabular-nums">
                 <span className="sr-only">Published benefit: </span>
@@ -115,18 +114,6 @@ export function ScholarshipCard({
               </p>
             </div>
           )}
-          <div className="hidden">
-          <ProviderWatermark logo={card.logo} className="-right-14 top-28 size-54" />
-          <p className="t-eyebrow mt-2.5 text-[color:var(--tint-ink)] lg:mt-1.5">{card.provider}</p>
-          <h2 className="t-display-lg mt-1 mb-3 text-balance text-[clamp(1.85rem,7.5vw,2.4rem)] leading-[0.96] lg:mb-2 lg:text-[2rem]">{card.title}</h2>
-          <div className="mb-3 flex items-end justify-between border-y border-hairline py-3 text-ink-deep lg:mb-2 lg:py-2">
-            <div><p className="t-micro text-ink-deep">Requirements matched</p><p className="mt-1">{result.percent === null ? <span className="t-figure">—</span> : <CountUp key={card.id} value={result.percent} reduced={reduced} format={(value) => `${value}%`} />}</p></div>
-            <p className="t-caption max-w-[15ch] text-right text-ink-mute">{result.met} of {result.total} published requirements{result.unknown ? ` · ${result.unknown} to confirm` : ""}</p>
-          </div>
-          <p className="t-micro text-ink-deep">Potential grant</p>
-          <p className="mb-auto flex flex-wrap items-baseline gap-2"><CountUp key={card.id} value={card.amount} reduced={reduced} format={formatPeso} /><span className="t-caption text-ink-mute">{card.amountNote}</span></p>
-          <div className="mt-3 flex items-end justify-between border-t border-hairline pt-3 lg:mt-2 lg:pt-2"><div><p className="t-micro text-ink-mute">Deadline</p><p className="t-body-strong">{card.deadline}</p><DeadlineCountdown deadlineIso={card.deadlineIso} /></div>{result.tone !== "possible" && <p className={cn("t-body-strong", result.tone === "strong" ? "text-met" : "text-attention-ink")}>{result.match}</p>}</div>
-          </div>
         </article>
         <article className={cn(faceClass, "[transform:rotateY(180deg)]")} style={{ background: "var(--tint-face-back)" }} aria-hidden={!flipped}>
           <ProviderWatermark logo={card.logo} className="-right-10 bottom-16 size-42" />

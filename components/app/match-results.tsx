@@ -268,7 +268,7 @@ function RequirementScore({
       <div
         className="flex gap-1"
         role="img"
-        aria-label={`${result.match}. ${result.met} of ${result.total} published requirements met, ${result.percent} percent${result.unknown > 0 ? `, ${result.unknown} unknown` : ""}.`}
+        aria-label={`${result.match}. ${result.met} of ${result.total} published requirements confirmed${result.unknown > 0 ? `, ${result.unknown} unknown` : ""}.`}
       >
         {Array.from({ length: result.total }, (_, i) => (
           <span
@@ -281,8 +281,8 @@ function RequirementScore({
         ))}
       </div>
       <p className="t-micro t-num mt-1.5 text-ink-mute" aria-hidden="true">
-        {result.met} of {result.total} requirements met · {result.percent}%
-        {result.unknown > 0 && ` · ${result.unknown} unknown`}
+        {result.met} of {result.total} requirements confirmed
+        {result.unknown > 0 && ` — ${result.unknown} unknown`}
       </p>
     </div>
   );

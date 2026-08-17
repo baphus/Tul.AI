@@ -27,11 +27,10 @@ export function isPlanning(profile: Profile): boolean {
  * Whether a student can move on from an onboarding step.
  *
  * The six steps are: journey, location, studies, academic standing, household,
- * free text (spec §3.3). Only the first three gate anything, and only on the two
- * answers that decide which programmes can apply at all — where they are based
- * and what they study. Money, circumstances and academic standing are optional by
- * design: a blank answer becomes an *unknown* requirement later, never a failed
- * one (AGENTS.md §3).
+ * free text (spec §3.3). Study stage and citizenship gate the first step;
+ * location and course gate the next two. Money, circumstances and academic
+ * standing are optional by design: a blank answer becomes an *unknown*
+ * requirement later, never a failed one (AGENTS.md §3).
  *
  * A student still planning where to study is never asked for a school, so step 3
  * asks them only for a course.
@@ -39,7 +38,7 @@ export function isPlanning(profile: Profile): boolean {
 export function canAdvance(step: number, profile: Profile): boolean {
   switch (step) {
     case 1:
-      return profile.stage.trim() !== "";
+      return profile.stage.trim() !== "" && profile.citizenship.trim() !== "";
     case 2:
       return profile.city.trim() !== "";
     case 3:
@@ -68,10 +67,9 @@ export function matchingRecoveryStep(profile: Profile): number {
 
 /** Enough of a profile to run matching at all. */
 export function isProfileReady(profile: Profile): boolean {
-  // Matching requires the two answers that determine which programmes apply at
-  // all: where the student is based and what they study. Everything else is
-  // optional and resolves to Unknown, never Not Met.
-  return profile.city.trim() !== "" && profile.course.trim() !== "";
+  // Matching requires the student's citizenship, location and course. Other
+  // unanswered requirements remain Unknown, never Not Met.
+  return profile.citizenship.trim() !== "" && profile.city.trim() !== "" && profile.course.trim() !== "";
 }
 
 /**

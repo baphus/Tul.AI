@@ -211,7 +211,7 @@ function chancesReply(cards: Scholarship[], profile: Profile): Answer {
 
 function onboardingReply(): Answer {
   return {
-    text: "I can only answer from your answers so far, and I need where you're studying and what you're studying before I can match you. Finish the two required onboarding questions, then ask me again.",
+    text: "I can only answer from your answers so far. Confirm your citizenship, where you're based, and what you're studying before I can match you. Finish the required onboarding questions, then ask me again.",
     src: null,
   };
 }

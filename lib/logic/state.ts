@@ -11,7 +11,7 @@ import { advisory, type Advice, type Decision } from "./advisory";
  */
 export interface Profile {
   name: string;
-  /** Optional confirmation for programmes that publish a citizenship requirement. */
+  /** Required citizenship confirmation for programmes that publish this requirement. */
   citizenship: string;
   city: string;
   stage: string;
