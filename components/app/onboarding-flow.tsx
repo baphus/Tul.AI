@@ -36,7 +36,7 @@ import type { Profile } from "@/lib/logic/state";
 import { canAdvance, dependentsError, gwaError, isPlanning } from "@/lib/logic/validation";
 import { GWA_BANDS, HOUSEHOLD_BANDS } from "@/lib/reference/bands";
 import { COURSE_GROUPS, type CourseOption } from "@/lib/reference/courses";
-import { LOCATION_OPTIONS } from "@/lib/reference/locations";
+import { CEBU_LOCATION_OPTIONS } from "@/lib/reference/locations";
 import { schoolsFor, type SchoolKind } from "@/lib/reference/schools";
 import {
   CHIP_EXCLUSIVE,
@@ -367,7 +367,7 @@ export function OnboardingFlow({ step }: { step: number }) {
     () => new Map(schools.schools.map((school) => [school.name, school])),
     [schools.schools]
   );
-  const locationNames = useMemo(() => LOCATION_OPTIONS.map((o) => o.value), []);
+  const locationNames = useMemo(() => CEBU_LOCATION_OPTIONS.map((o) => o.value), []);
 
   const display = (value: string) =>
     language === "FIL"
@@ -642,7 +642,7 @@ export function OnboardingFlow({ step }: { step: number }) {
                 items={locationNames}
                 value={profile.city}
                 onValueChange={(value) => setField("city", value)}
-                placeholder={language === "FIL" ? "hal. Iloilo City" : "e.g. Iloilo City"}
+                placeholder={language === "FIL" ? "hal. Cebu City" : "e.g. Cebu City"}
                 emptyMessage={fieldCopy.locationEmpty}
               />
               {otherSelected && (

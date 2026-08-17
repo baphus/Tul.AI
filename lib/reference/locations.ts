@@ -135,6 +135,15 @@ export const LOCATION_OPTIONS: LocationOption[] = [
   { value: "Zamboanga del Sur", kind: "province", province: "Zamboanga del Sur", island: "Mindanao" },
 ];
 
+/**
+ * Visible location suggestions for the Cebu-first MVP. The full catalogue above
+ * remains available to resolve existing profiles and school metadata, while the
+ * onboarding picker only presents places the product currently covers locally.
+ */
+export const CEBU_LOCATION_OPTIONS = LOCATION_OPTIONS.filter(
+  (option) => option.province === "Cebu"
+);
+
 /** The province a stored location value belongs to, or `null` for free text. */
 export function provinceOf(location: string): string | null {
   const trimmed = location.trim();

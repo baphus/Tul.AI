@@ -778,13 +778,13 @@ export default function LandingPage() {
                   {copy.providersTitle}
                 </h2>
                 <p className="t-body-lg mt-6 max-w-[38ch] text-ink-mute text-pretty">
-                  {copy.providersBody(cards.length)}
+                  {copy.providersBody}
                 </p>
                 <Link
                   href={ROUTES.scholarships}
                   className="ring-brand t-body-strong mt-8 inline-flex items-center gap-2 rounded-xs text-ink underline decoration-hairline underline-offset-4 hover:decoration-ink"
                 >
-                  {copy.providersCta} ({cards.length})
+                  {copy.providersCta}
                   <ArrowRightIcon className="size-4" aria-hidden="true" />
                 </Link>
               </div>

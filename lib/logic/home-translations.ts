@@ -10,7 +10,7 @@ export type HomeCopy = {
   sourcesTitle: string;
   sources: { label: string; title: string; body: string; explore: string; imageAlt: string }[];
   providersTitle: string;
-  providersBody: (count: number) => string;
+  providersBody: string;
   providersCta: string;
   supportTitle: string;
   supportBody: string;
@@ -43,8 +43,8 @@ export const homeTranslations: Record<Language, HomeCopy> = {
       { label: "Schools", title: "Opportunities through schools", body: "Programs offered by schools and education partners for students taking the next step in their studies.", explore: "Explore school scholarships", imageAlt: "Three Filipino students studying together" },
       { label: "Foundations", title: "Backing from mission-led partners", body: "Foundation, nonprofit, corporate, and international programs that invest in students and communities.", explore: "Explore foundation scholarships", imageAlt: "Filipino children walking to school" },
     ],
-    providersTitle: "A small index. Real sources.",
-    providersBody: (count) => `${count} opportunities across national agencies, LGUs, universities and foundations.`,
+    providersTitle: "Real sources.",
+    providersBody: "Verified scholarship records from national agencies, LGUs, universities and foundations.",
     providersCta: "See all records",
     supportTitle: "You don't have to figure it all out alone.",
     supportBody: "Looking for support can bring a lot of questions at once. Tul.AI gives you one clear place to explore what's out there, understand the details, and decide what feels worth pursuing.",
@@ -80,8 +80,8 @@ export const homeTranslations: Record<Language, HomeCopy> = {
       { label: "Mga Paaralan", title: "Mga oportunidad sa pamamagitan ng paaralan", body: "Mga programa mula sa mga paaralan at education partner para sa susunod mong hakbang sa pag-aaral.", explore: "Tingnan ang school scholarships", imageAlt: "Tatlong estudyanteng Pilipino na sama-samang nag-aaral" },
       { label: "Mga Foundation", title: "Suporta mula sa mga katuwang", body: "Mga programang mula sa foundation, nonprofit, kumpanya, at international partner para sa mga estudyante at komunidad.", explore: "Tingnan ang foundation scholarships", imageAlt: "Mga batang Pilipino na naglalakad papunta sa paaralan" },
     ],
-    providersTitle: "Maliit na talaan. Tunay na sources.",
-    providersBody: (count) => `${count} oportunidad mula sa pambansang ahensya, LGU, unibersidad, at foundation.`,
+    providersTitle: "Tunay na sources.",
+    providersBody: "Mga verified na scholarship record mula sa pambansang ahensya, LGU, unibersidad, at foundation.",
     providersCta: "Tingnan ang lahat ng tala",
     supportTitle: "Hindi mo kailangang alamin ang lahat nang mag-isa.",
     supportBody: "Maraming tanong ang maaaring lumitaw kapag naghahanap ng suporta. Binibigyan ka ng Tul.AI ng isang malinaw na lugar para tuklasin ang mga oportunidad, unawain ang detalye, at piliin ang sulit subukan.",
@@ -113,8 +113,8 @@ export const homeTranslations: Record<Language, HomeCopy> = {
       { label: "Mga Eskuylahan", title: "Oportunidad pinaagi sa eskuylahan", body: "Mga programa gikan sa eskuylahan ug mga kauban sa edukasyon para sa sunod nimong lakang.", explore: "Susihon ang scholarship sa eskuylahan", imageAlt: "Tulo ka Pilipinong estudyante nga nagtuon" },
       { label: "Mga Foundation", title: "Suporta gikan sa mga kauban", body: "Mga programa gikan sa foundation, nonprofit, kompanya, ug internasyonal nga mga kauban.", explore: "Susihon ang scholarship sa foundation", imageAlt: "Pilipinong mga bata nga naglakaw padulong sa eskuylahan" },
     ],
-    providersTitle: "Gamay nga talaan. Tinuod nga mga tinubdan.",
-    providersBody: (count) => `${count} ka oportunidad gikan sa nasudnong ahensiya, LGU, unibersidad, ug foundation.`,
+    providersTitle: "Tinuod nga mga tinubdan.",
+    providersBody: "Mga verified nga scholarship record gikan sa nasudnong ahensiya, LGU, unibersidad, ug foundation.",
     providersCta: "Tan-awa ang tanang rekord",
     supportTitle: "Dili nimo kinahanglan masabtan ang tanan nga ikaw ra.",
     supportBody: "Daghang pangutana ang moabot kung nangita og suporta. Hatagan ka sa Tul.AI og usa ka klarong lugar aron mosusi, mosabot sa mga detalye, ug mopili unsay angay sundon.",

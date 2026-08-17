@@ -9,7 +9,7 @@ import {
   upperExclusive,
 } from "./bands";
 import { COURSE_GROUPS, COURSE_OPTIONS } from "./courses";
-import { LOCATION_OPTIONS, provinceOf } from "./locations";
+import { CEBU_LOCATION_OPTIONS, LOCATION_OPTIONS, provinceOf } from "./locations";
 import { SCHOOL_OPTIONS, schoolsFor } from "./schools";
 
 describe("bands", () => {
@@ -90,6 +90,11 @@ describe("locations", () => {
   it("resolves a listed city to its province", () => {
     expect(provinceOf("Cebu City")).toBe("Cebu");
     expect(provinceOf("Iloilo City")).toBe("Iloilo");
+  });
+
+  it("only suggests Cebu locations during onboarding", () => {
+    expect(CEBU_LOCATION_OPTIONS.length).toBeGreaterThan(0);
+    expect(CEBU_LOCATION_OPTIONS.every((option) => option.province === "Cebu")).toBe(true);
   });
 
   it("resolves the coarse onboarding quick pills", () => {

@@ -30,6 +30,7 @@ const COLUMNS: { title: TranslationKey; links: { href: string; label: Translatio
     title: "roadmap",
     links: [
       { href: ROUTES.roadmap, label: "footerWhatsNext" },
+      { href: ROUTES.contact, label: "footerContact" },
       { href: "mailto:hello@tul.ai?subject=Publish%20an%20opportunity%20with%20Tul.AI", label: "footerForProviders" },
     ],
   },

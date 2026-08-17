@@ -9,6 +9,7 @@ export const ROUTES = {
   home: "/",
   howItWorks: "/how-it-works",
   roadmap: "/roadmap",
+  contact: "/contact",
   privacy: "/privacy",
   scholarships: "/scholarships",
   scholarship: (id: string) => `/scholarships/${id}`,
